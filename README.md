@@ -1,54 +1,120 @@
-# React + TypeScript + Vite
+# Rev Force Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é o frontend do projeto Rev Force, construído com React 19, Vite e Tailwind CSS.
 
-Currently, two official plugins are available:
+## Visão Geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este projeto foi inicializado usando Vite e está configurado para utilizar:
 
-## Expanding the ESLint configuration
+* **React 19:** A biblioteca JavaScript para construir interfaces de usuário.
+* **Vite:** Uma ferramenta de construção rápida para desenvolvimento web moderno.
+* **Tailwind CSS:** Um framework CSS utilitário para estilização rápida.
+* **TypeScript:** Para tipagem estática e melhor desenvolvimento.
+* **TanStack Query**: Para gerenciamento de estado de dados assíncronos.
+* **TanStack Router**: Para gerenciamento de rotas.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Pré-requisitos
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Antes de começar, certifique-se de ter instalado o seguinte:
+
+* **Node.js:** Versão 22.14.0 ou superior.
+* **npm:** Versão 10.9.2 ou superior.
+
+_Caso não saiba como instalar uma versão do node específica, utilize o Node Version Manager (NVM)_
+
+[Como instalar o NVM - Unix](https://www.youtube.com/watch?v=B9Hd11RT7Bk)
+
+_No Windows é só baixar a versão no próprio site do node_
+
+[Node.js](https://nodejs.org/pt/download)
+## Instalação
+
+1.  Clone o repositório:
+
+    ```bash
+    $ git clone https://tools.ages.pucrs.br/plataforma-de-marketing-e-sales-analytics/revforce-front.git
+
+    $ cd rev-force-frontend
+    ```
+
+2.  Instale as dependências:
+
+    ```bash
+    $ npm install
+    ```
+
+## Scripts
+
+Os seguintes scripts estão disponíveis no `package.json`:
+
+* `npm run dev`: Inicia o servidor de desenvolvimento Vite.
+* `npm run lint`: Executa o ESLint para verificar a qualidade do código.
+
+## Desenvolvimento
+
+Para iniciar o servidor de desenvolvimento:
+
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+O aplicativo estará disponível em `http://localhost:5173/`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Dependencias
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Dependências Principais
+
+```bash
+react: A biblioteca React.
+
+react-dom: O DOM para React.
+
+@tanstack/react-query: Para gerenciamento de dados assíncronos.
+
+@tanstack/react-router: Para gerenciamento de rotas.
+
+class-variance-authority: Para composição de classes condicionais.
+
+clsx: Para manipulação de classes CSS.
+
+lucide-react: Para icones.
+
+tailwind-merge: Para mesclar classes tailwind.
+
+tailwindcss: O framework CSS utilitário.
+
+tailwindcss-animate: Para animações tailwind.
+```
+
+### Dependências de Desenvolvimento
+```bash
+@vitejs/plugin-react: Plugin React para Vite.
+
+typescript: Para tipagem estática.
+
+eslint: Para análise de código.
+
+@tanstack/eslint-plugin-query: Plugin para eslint para tanstack query.
+
+@tanstack/react-router-devtools: Ferramentas para desenvolvedores para o tanstack router.
+
+@tanstack/router-plugin: Plugin para o tanstack router.
+
+@types/react: Definições de tipo para React.
+
+@types/react-dom: Definições de tipo para ReactDOM.
+
+vite: A ferramenta de construção.
+
+@eslint/js: Configurações padrão do eslint.
+
+eslint-plugin-react-hooks: Plugin para regras de hooks do react.
+
+eslint-plugin-react-refresh: Plugin para regras de refresh do react.
+
+globals: Para definir variaveis globais para o eslint.
+
+typescript-eslint: Plugin para typescript e eslint.
+
+@types/node: Definições de tipos para node
 ```
