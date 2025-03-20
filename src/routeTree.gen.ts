@@ -13,6 +13,10 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as SettingsIndexImport } from './routes/settings/index'
+import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as DashboardNewchartImport } from './routes/dashboard/newchart'
+import { Route as DashboardChartdetailsChartIdImport } from './routes/dashboard/chartdetails/$chartId'
 
 // Create/Update Routes
 
@@ -27,6 +31,31 @@ const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const SettingsIndexRoute = SettingsIndexImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardIndexRoute = DashboardIndexImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardNewchartRoute = DashboardNewchartImport.update({
+  id: '/dashboard/newchart',
+  path: '/dashboard/newchart',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardChartdetailsChartIdRoute =
+  DashboardChartdetailsChartIdImport.update({
+    id: '/dashboard/chartdetails/$chartId',
+    path: '/dashboard/chartdetails/$chartId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -46,6 +75,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/newchart': {
+      id: '/dashboard/newchart'
+      path: '/dashboard/newchart'
+      fullPath: '/dashboard/newchart'
+      preLoaderRoute: typeof DashboardNewchartImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/chartdetails/$chartId': {
+      id: '/dashboard/chartdetails/$chartId'
+      path: '/dashboard/chartdetails/$chartId'
+      fullPath: '/dashboard/chartdetails/$chartId'
+      preLoaderRoute: typeof DashboardChartdetailsChartIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +111,75 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard/newchart': typeof DashboardNewchartRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/settings': typeof SettingsIndexRoute
+  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard/newchart': typeof DashboardNewchartRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/settings': typeof SettingsIndexRoute
+  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard/newchart': typeof DashboardNewchartRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/dashboard/newchart'
+    | '/dashboard'
+    | '/settings'
+    | '/dashboard/chartdetails/$chartId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/dashboard/newchart'
+    | '/dashboard'
+    | '/settings'
+    | '/dashboard/chartdetails/$chartId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/dashboard/newchart'
+    | '/dashboard/'
+    | '/settings/'
+    | '/dashboard/chartdetails/$chartId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  DashboardNewchartRoute: typeof DashboardNewchartRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
+  DashboardChartdetailsChartIdRoute: typeof DashboardChartdetailsChartIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  DashboardNewchartRoute: DashboardNewchartRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
+  DashboardChartdetailsChartIdRoute: DashboardChartdetailsChartIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +193,11 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/about",
+        "/dashboard/newchart",
+        "/dashboard/",
+        "/settings/",
+        "/dashboard/chartdetails/$chartId"
       ]
     },
     "/": {
@@ -105,6 +205,18 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/dashboard/newchart": {
+      "filePath": "dashboard/newchart.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.tsx"
+    },
+    "/settings/": {
+      "filePath": "settings/index.tsx"
+    },
+    "/dashboard/chartdetails/$chartId": {
+      "filePath": "dashboard/chartdetails/$chartId.tsx"
     }
   }
 }
