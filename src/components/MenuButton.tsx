@@ -9,7 +9,7 @@ interface Item {
 function MenuButton({ item }: { item: Item }) {
   return (
     <Link
-      className="flex items-center gap-8 pl-4 pr-4 pt-4 pb-4 rounded-lg transition-colors hover:bg-yellow-300 text-black"
+      className="flex items-center gap-12 pl-4 pr-4 pt-2 pb-2 rounded-2xl transition-colors hover:bg-yellow-300 text-black"
       to={item.url}
     >
       <div>
