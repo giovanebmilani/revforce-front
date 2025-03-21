@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { Link } from "@tanstack/react-router";
+import MenuButton from "./MenuButton";
 
 export function AsideBar() {
   const items = [
@@ -42,15 +42,7 @@ export function AsideBar() {
               {items.map((item) => (
                 <SidebarMenuItem className="pl-8 pr-8 mb-5" key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link
-                      className="flex items-center gap-8 pl-4 pr-4 pt-6 pb-6 rounded-lg transition-colors hover:bg-yellow-300 text-black"
-                      to={item.url}
-                    >
-                      <div>
-                        <item.icon size={25}/>
-                      </div>
-                      <span className="text-lg">{item.title}</span>
-                    </Link>
+                    <MenuButton item={item}/>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
