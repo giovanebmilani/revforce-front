@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "tsc -b && vite build"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",
