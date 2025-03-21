@@ -1,0 +1,12 @@
+stages:
+  - build
+
+build_job:
+  stage: build
+  image: node:22.14-alpine
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
