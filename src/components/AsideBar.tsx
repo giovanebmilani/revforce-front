@@ -10,17 +10,18 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import MenuButton from "./MenuButton";
+import { Link } from "@tanstack/react-router";
 
 export function AsideBar() {
   const items = [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/dashboard/",
       icon: Home,
     },
     {
       title: "Settings",
-      url: "/settings",
+      url: "/settings/",
       icon: Settings,
     },
     {
@@ -35,7 +36,9 @@ export function AsideBar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="font-extrabold text-4xl text-black p-8 mb-10">
-            Revforce
+            <Link to='/'>
+              Revforce
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent className="">
             <SidebarMenu>
