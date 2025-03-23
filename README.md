@@ -34,7 +34,7 @@ _No Windows é só baixar a versão no próprio site do node_
     ```bash
     $ git clone https://tools.ages.pucrs.br/plataforma-de-marketing-e-sales-analytics/revforce-front.git
 
-    $ cd rev-force-frontend
+    $ cd revforce-front
     ```
 
 2.  Instale as dependências:
