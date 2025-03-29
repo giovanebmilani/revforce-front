@@ -8,6 +8,6 @@ export const Route = createFileRoute('/dashboard/')({
 function RouteComponent() {
   return <div className="w-full">
     <h1>Welcome to my appsdkgsfjngjsngknskgjndfknglksdfgkdsfngksdfhg</h1>
-    <Paper/> //teste
-  </div>
+    <Paper/>
+  </div> //teste
 }
