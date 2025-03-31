@@ -1,10 +1,10 @@
 
-function Paper() {
+function Paper({ title }: { title?: string }) {
   return (
     <div className="flex justify-center items-center w-full h-full">
       <div className="shadow-md rounded-lg w-1/3 h-1/4 outline-1">
         <div className="h-1/5 outline-1 rounded-t-lg">
-          <h2 className="font-semibold h-full grid items-center ml-2">Charts</h2>
+          <h2 className="font-semibold h-full grid items-center ml-2">{title || 'Charts'}</h2>
         </div>
 
         <div className="h-4/5 w-full flex flex-row justify-center">
