@@ -8,20 +8,19 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function SelectBox() {
+export function SelectBox({ items, title, instruction }: { items: string[], title : string, instruction : string }) {
   return (
     <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a fruit" />
+      <SelectTrigger className="w-[180px] hover:cursor-pointer" >
+        <SelectValue placeholder={instruction}/>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Fruits</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
+          <SelectLabel>{title}</SelectLabel>
+
+          {items.map((item) => (
+            <SelectItem value="apple hover:cursor-pointer">{item}</SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
