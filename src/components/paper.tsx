@@ -1,5 +1,5 @@
 
-function Paper({ title }: { title?: string }) {
+function Paper({ title, children }: { title?: string, children?: React.ReactNode }) {
   return (
     <div className="flex justify-center items-center w-full h-full">
       <div className="shadow-md rounded-lg w-1/3 h-1/4 outline-1">
