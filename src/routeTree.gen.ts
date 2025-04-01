@@ -11,13 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RevforceImport } from './routes/revforce'
 import { Route as IndexImport } from './routes/index'
-import { Route as SettingsIndexImport } from './routes/settings/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
-import { Route as DashboardNewchartImport } from './routes/dashboard/newchart'
-import { Route as DashboardChartdetailsChartIdImport } from './routes/dashboard/chartdetails/$chartId'
+import { Route as RevforceSettingsIndexImport } from './routes/revforce/settings/index'
+import { Route as RevforceDashboardIndexImport } from './routes/revforce/dashboard/index'
+import { Route as RevforceDashboardNewchartImport } from './routes/revforce/dashboard/newchart'
+import { Route as RevforceDashboardChartdetailsChartIdImport } from './routes/revforce/dashboard/chartdetails/$chartId'
 
 // Create/Update Routes
+
+const RevforceRoute = RevforceImport.update({
+  id: '/revforce',
+  path: '/revforce',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -25,29 +32,29 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SettingsIndexRoute = SettingsIndexImport.update({
+const RevforceSettingsIndexRoute = RevforceSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => RevforceRoute,
 } as any)
 
-const DashboardIndexRoute = DashboardIndexImport.update({
+const RevforceDashboardIndexRoute = RevforceDashboardIndexImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => RevforceRoute,
 } as any)
 
-const DashboardNewchartRoute = DashboardNewchartImport.update({
+const RevforceDashboardNewchartRoute = RevforceDashboardNewchartImport.update({
   id: '/dashboard/newchart',
   path: '/dashboard/newchart',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => RevforceRoute,
 } as any)
 
-const DashboardChartdetailsChartIdRoute =
-  DashboardChartdetailsChartIdImport.update({
+const RevforceDashboardChartdetailsChartIdRoute =
+  RevforceDashboardChartdetailsChartIdImport.update({
     id: '/dashboard/chartdetails/$chartId',
     path: '/dashboard/chartdetails/$chartId',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => RevforceRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -61,103 +68,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/newchart': {
-      id: '/dashboard/newchart'
+    '/revforce': {
+      id: '/revforce'
+      path: '/revforce'
+      fullPath: '/revforce'
+      preLoaderRoute: typeof RevforceImport
+      parentRoute: typeof rootRoute
+    }
+    '/revforce/dashboard/newchart': {
+      id: '/revforce/dashboard/newchart'
       path: '/dashboard/newchart'
-      fullPath: '/dashboard/newchart'
-      preLoaderRoute: typeof DashboardNewchartImport
-      parentRoute: typeof rootRoute
+      fullPath: '/revforce/dashboard/newchart'
+      preLoaderRoute: typeof RevforceDashboardNewchartImport
+      parentRoute: typeof RevforceImport
     }
-    '/dashboard/': {
-      id: '/dashboard/'
+    '/revforce/dashboard/': {
+      id: '/revforce/dashboard/'
       path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof rootRoute
+      fullPath: '/revforce/dashboard'
+      preLoaderRoute: typeof RevforceDashboardIndexImport
+      parentRoute: typeof RevforceImport
     }
-    '/settings/': {
-      id: '/settings/'
+    '/revforce/settings/': {
+      id: '/revforce/settings/'
       path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsIndexImport
-      parentRoute: typeof rootRoute
+      fullPath: '/revforce/settings'
+      preLoaderRoute: typeof RevforceSettingsIndexImport
+      parentRoute: typeof RevforceImport
     }
-    '/dashboard/chartdetails/$chartId': {
-      id: '/dashboard/chartdetails/$chartId'
+    '/revforce/dashboard/chartdetails/$chartId': {
+      id: '/revforce/dashboard/chartdetails/$chartId'
       path: '/dashboard/chartdetails/$chartId'
-      fullPath: '/dashboard/chartdetails/$chartId'
-      preLoaderRoute: typeof DashboardChartdetailsChartIdImport
-      parentRoute: typeof rootRoute
+      fullPath: '/revforce/dashboard/chartdetails/$chartId'
+      preLoaderRoute: typeof RevforceDashboardChartdetailsChartIdImport
+      parentRoute: typeof RevforceImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface RevforceRouteChildren {
+  RevforceDashboardNewchartRoute: typeof RevforceDashboardNewchartRoute
+  RevforceDashboardIndexRoute: typeof RevforceDashboardIndexRoute
+  RevforceSettingsIndexRoute: typeof RevforceSettingsIndexRoute
+  RevforceDashboardChartdetailsChartIdRoute: typeof RevforceDashboardChartdetailsChartIdRoute
+}
+
+const RevforceRouteChildren: RevforceRouteChildren = {
+  RevforceDashboardNewchartRoute: RevforceDashboardNewchartRoute,
+  RevforceDashboardIndexRoute: RevforceDashboardIndexRoute,
+  RevforceSettingsIndexRoute: RevforceSettingsIndexRoute,
+  RevforceDashboardChartdetailsChartIdRoute:
+    RevforceDashboardChartdetailsChartIdRoute,
+}
+
+const RevforceRouteWithChildren = RevforceRoute._addFileChildren(
+  RevforceRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard/newchart': typeof DashboardNewchartRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/settings': typeof SettingsIndexRoute
-  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
+  '/revforce': typeof RevforceRouteWithChildren
+  '/revforce/dashboard/newchart': typeof RevforceDashboardNewchartRoute
+  '/revforce/dashboard': typeof RevforceDashboardIndexRoute
+  '/revforce/settings': typeof RevforceSettingsIndexRoute
+  '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard/newchart': typeof DashboardNewchartRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/settings': typeof SettingsIndexRoute
-  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
+  '/revforce': typeof RevforceRouteWithChildren
+  '/revforce/dashboard/newchart': typeof RevforceDashboardNewchartRoute
+  '/revforce/dashboard': typeof RevforceDashboardIndexRoute
+  '/revforce/settings': typeof RevforceSettingsIndexRoute
+  '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/dashboard/newchart': typeof DashboardNewchartRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/settings/': typeof SettingsIndexRoute
-  '/dashboard/chartdetails/$chartId': typeof DashboardChartdetailsChartIdRoute
+  '/revforce': typeof RevforceRouteWithChildren
+  '/revforce/dashboard/newchart': typeof RevforceDashboardNewchartRoute
+  '/revforce/dashboard/': typeof RevforceDashboardIndexRoute
+  '/revforce/settings/': typeof RevforceSettingsIndexRoute
+  '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/dashboard/newchart'
-    | '/dashboard'
-    | '/settings'
-    | '/dashboard/chartdetails/$chartId'
+    | '/revforce'
+    | '/revforce/dashboard/newchart'
+    | '/revforce/dashboard'
+    | '/revforce/settings'
+    | '/revforce/dashboard/chartdetails/$chartId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard/newchart'
-    | '/dashboard'
-    | '/settings'
-    | '/dashboard/chartdetails/$chartId'
+    | '/revforce'
+    | '/revforce/dashboard/newchart'
+    | '/revforce/dashboard'
+    | '/revforce/settings'
+    | '/revforce/dashboard/chartdetails/$chartId'
   id:
     | '__root__'
     | '/'
-    | '/dashboard/newchart'
-    | '/dashboard/'
-    | '/settings/'
-    | '/dashboard/chartdetails/$chartId'
+    | '/revforce'
+    | '/revforce/dashboard/newchart'
+    | '/revforce/dashboard/'
+    | '/revforce/settings/'
+    | '/revforce/dashboard/chartdetails/$chartId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardNewchartRoute: typeof DashboardNewchartRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  SettingsIndexRoute: typeof SettingsIndexRoute
-  DashboardChartdetailsChartIdRoute: typeof DashboardChartdetailsChartIdRoute
+  RevforceRoute: typeof RevforceRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardNewchartRoute: DashboardNewchartRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-  SettingsIndexRoute: SettingsIndexRoute,
-  DashboardChartdetailsChartIdRoute: DashboardChartdetailsChartIdRoute,
+  RevforceRoute: RevforceRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -171,26 +204,36 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard/newchart",
-        "/dashboard/",
-        "/settings/",
-        "/dashboard/chartdetails/$chartId"
+        "/revforce"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/dashboard/newchart": {
-      "filePath": "dashboard/newchart.tsx"
+    "/revforce": {
+      "filePath": "revforce.tsx",
+      "children": [
+        "/revforce/dashboard/newchart",
+        "/revforce/dashboard/",
+        "/revforce/settings/",
+        "/revforce/dashboard/chartdetails/$chartId"
+      ]
     },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx"
+    "/revforce/dashboard/newchart": {
+      "filePath": "revforce/dashboard/newchart.tsx",
+      "parent": "/revforce"
     },
-    "/settings/": {
-      "filePath": "settings/index.tsx"
+    "/revforce/dashboard/": {
+      "filePath": "revforce/dashboard/index.tsx",
+      "parent": "/revforce"
     },
-    "/dashboard/chartdetails/$chartId": {
-      "filePath": "dashboard/chartdetails/$chartId.tsx"
+    "/revforce/settings/": {
+      "filePath": "revforce/settings/index.tsx",
+      "parent": "/revforce"
+    },
+    "/revforce/dashboard/chartdetails/$chartId": {
+      "filePath": "revforce/dashboard/chartdetails/$chartId.tsx",
+      "parent": "/revforce"
     }
   }
 }
