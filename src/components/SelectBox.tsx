@@ -8,18 +8,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function SelectBox({ items, title, instruction }: { items: string[], title : string, instruction : string }) {
+export function SelectBox({ items, selectLabel, placeholderText }: { items: string[], selectLabel? : string, placeholderText : string }) {
   return (
     <Select>
       <SelectTrigger className="w-[180px] hover:cursor-pointer" >
-        <SelectValue placeholder={instruction}/>
+        <SelectValue placeholder={placeholderText}/>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{title}</SelectLabel>
+          <SelectLabel>{selectLabel}</SelectLabel>
 
           {items.map((item) => (
-            <SelectItem value="apple hover:cursor-pointer">{item}</SelectItem>
+            <SelectItem value="hover:cursor-pointer">{item}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
