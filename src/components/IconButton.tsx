@@ -9,14 +9,13 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 function IconButton({icon: Icon, disabled, ...props}: IconButtonProps) {
     return (
         <Button
-            variant="outline"
+            variant="outlinePointer"
             size="icon"
             disabled={disabled}
-            className={`border-1 border-primary rounded-lg p-2 hover:bg-slate-50
-            ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className='size-11 border-2 border-primary rounded-lg p-2 hover:bg-slate-50'
             {...props}
         >
-            <Icon className="size-6 text-gray-400"/>
+            <Icon className="size-7 text-gray-400"/>
         </Button>
     );
 }
