@@ -20,7 +20,7 @@ function RouteComponent() {
             <LabelInput inputTitle="ID da Conta" props={{ className: "w-80 p-2 border border-input rounded-md bg-background text-foreground" }} />
             <LabelInput inputTitle="Chave de Acesso" props={{ className: "w-80 p-2 border border-input rounded-md bg-background text-foreground" }} />
             </div>
-            <Button className="mt-4 font-bold" variant="default">SALVAR</Button>
+            <Button className="mt-4 font-bold" variant="pointer">SALVAR</Button>
           </div>
         ))}
       </div>
