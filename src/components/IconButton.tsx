@@ -1,18 +1,24 @@
 import {Button} from "./ui/button"
+import {LucideIcon} from "lucide-react";
 
-function IconButton({icon: Icon, disabled, ...props}) {
+interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    icon: LucideIcon;
+    disabled?: boolean;
+}
+
+function IconButton({icon: Icon, disabled, ...props}: IconButtonProps) {
     return (
         <Button
             variant="outline"
             size="icon"
             disabled={disabled}
-            className={`border-2 border-yellow-400 rounded-lg p-2 hover:bg-yellow-100
+            className={`border-1 border-primary rounded-lg p-2 hover:bg-slate-50
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             {...props}
         >
-            <Icon className="size-6 text-gray-600"/>
+            <Icon className="size-6 text-gray-400"/>
         </Button>
     );
 }
 
-export {IconButton};
+export default IconButton;
