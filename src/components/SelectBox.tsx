@@ -8,7 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function SelectBox({ items, selectLabel, placeholderText }: { items: string[], selectLabel? : string, placeholderText : string }) {
+interface Items {
+  value: any;
+  label: string;
+}
+
+export function SelectBox({ items, selectLabel, placeholderText }: { items: Items[], selectLabel? : string, placeholderText : string }) {
   return (
     <Select>
       <SelectTrigger className="w-[180px] hover:cursor-pointer" >
@@ -19,7 +24,7 @@ export function SelectBox({ items, selectLabel, placeholderText }: { items: stri
           <SelectLabel>{selectLabel}</SelectLabel>
 
           {items.map((item) => (
-            <SelectItem value="hover:cursor-pointer">{item}</SelectItem>
+            <SelectItem value={item.value} className="hover:cursor-pointer">{item.label}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
