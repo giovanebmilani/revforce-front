@@ -9,7 +9,7 @@ function Paper({ title, children }: { title?: string, children?: React.ReactNode
 
         <div className="h-4/5 w-full flex flex-row justify-center">
           <div className=" h-full w-7/8">
-            {/* TODO: botar os grafico aq */}
+            {children}
           </div>
 
           <div className="w-1/8 text-2xl flex align-middle justify-center items-center">
