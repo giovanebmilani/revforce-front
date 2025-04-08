@@ -16,12 +16,12 @@ export function AsideBar() {
   const items = [
     {
       title: "Dashboard",
-      url: "/dashboard/",
+      url: "/revforce/dashboard/",
       icon: Home,
     },
     {
       title: "Settings",
-      url: "/settings/",
+      url: "/revforce/settings/",
       icon: Settings,
     },
     {
