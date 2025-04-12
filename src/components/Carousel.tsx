@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-export function CarouselSize() {
+export function CarouselSize({ children }: { children?: React.ReactNode }) {
   return (
     <Carousel
       opts={{

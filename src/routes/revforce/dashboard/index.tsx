@@ -1,3 +1,4 @@
+import { CarouselSize } from '@/components/Carousel'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/revforce/dashboard/')({
@@ -5,5 +6,8 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/dashboard/"!</div>
+  return <div className="w-full">
+    <h1>la vida</h1>
+    <CarouselSize />
+  </div> //teste
 }
