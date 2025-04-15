@@ -23,18 +23,18 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "#2563eb",
+    color: "#FFDF20",
   },
   mobile: {
     label: "Mobile",
-    color: "#60a5fa",
+    color: "#FDC700",
   },
 } satisfies ChartConfig
 
 function RouteComponent() {
-  return <div className='w-full h-full flex flex-col'>
-    <div className='flex flex-row justify-end'>
-      <h1 className='text-3xl font-bold'>Dashboard</h1>
+  return <div className='w-full h-full flex flex-col gap-4'>
+    <div className='flex flex-row justify-end border-b pb-3'>
+      <h1 className='text-3xl font-bold h-full items-center flex align-items'>Dashboard</h1>
       <div className='w-3/4'> </div> {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
       <div className='flex flex-row gap-2 items-center'>
         <IconButton icon={icons.RefreshCcw} />
@@ -47,12 +47,12 @@ function RouteComponent() {
     <div className='flex flex-row gap-4 items-center'>
       <Card>
         <CardHeader className='border-b'>
-          <CardTitle className='flex flex-row justify-between' >
+          <CardTitle className='flex flex-row items-center content-normal justify-between' >
             Chart
             <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-          </CardTitle>
-          
+          </CardTitle>  
         </CardHeader>
+
         <ChartContainer config={chartConfig} className="h-40 w-80">
           <BarChart accessibilityLayer data={chartData}>
             <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
@@ -62,6 +62,13 @@ function RouteComponent() {
       </Card>
 
       <Card>
+        <CardHeader className='border-b'>
+          <CardTitle className='flex flex-row items-center content-normal justify-between' >
+            Chart
+            <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+          </CardTitle>  
+        </CardHeader>
+
         <ChartContainer config={chartConfig} className="h-40 w-80">
           <BarChart accessibilityLayer data={chartData}>
             <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
