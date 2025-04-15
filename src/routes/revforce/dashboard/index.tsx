@@ -9,12 +9,10 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 
 function RouteComponent() {
   return <div className='w-full h-full flex flex-row justify-end'>
-    <h1 className='text-2xl font-bold'>Dashboard</h1>
-    <div className='w-2/3'> </div>
+    <h1 className='text-3xl font-bold'>Dashboard</h1>
+    <div className='w-3/4'> </div> {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
     <div className='flex flex-row gap-2 items-center'>
-      <IconButton icon={icons.Funnel} />
       <IconButton icon={icons.RefreshCcw} />
-      <IconButton icon={icons.SquarePen} />
       <Button className='text-white'>
         <Plus /> New Chart
       </Button>
