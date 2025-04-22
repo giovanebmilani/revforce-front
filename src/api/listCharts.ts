@@ -4,7 +4,7 @@ import { getErrorMessage } from "./utils";
 // const API_BASE_URL = import.meta.env.VITE_API_URL;
 // const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/list_charts`;
 
-interface Chart {
+export interface Chart {
   type: "Pie" | "Bar" | "Line"
   entries: ChartEntry[]
 }

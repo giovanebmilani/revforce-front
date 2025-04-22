@@ -2,7 +2,7 @@ import IconButton from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import { icons, Plus } from 'lucide-react'
-import { Bar, BarChart } from "recharts"
+import { Bar, BarChart, Pie, PieChart } from "recharts"
 
 export const Route = createFileRoute('/revforce/dashboard/')({
   component: RouteComponent,
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import { listCharts } from '@/api/listCharts'
+import { listCharts, Chart } from '@/api/listCharts'
  
 const chartConfig = {
   desktop: {
@@ -39,25 +39,42 @@ async function RouteComponent() {
     </div>
 
     <div className='flex flex-row gap-4 items-center'>
-      {chartData.map((chart: any) => {
+      {chartData.map((chart: Chart) => {
         //TODO: add possible chart types
-        return <Card>
-          <CardHeader className='border-b'>
-            <CardTitle className='flex flex-row items-center content-normal justify-between' >
-              Chart
-              <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-            </CardTitle>  
-          </CardHeader>
+        if (chart.type == "Bar") {
+          return <Card>
+            <CardHeader className='border-b'>
+              <CardTitle className='flex flex-row items-center content-normal justify-between' >
+                Chart
+                <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+              </CardTitle>  
+            </CardHeader>
 
-          <ChartContainer config={chartConfig} className="h-40 w-80">
-            <BarChart accessibilityLayer data={chart}>
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
-          </ChartContainer>
-        </Card>
+            <ChartContainer config={chartConfig} className="h-40 w-80">
+              <BarChart accessibilityLayer data={chart.entries}>
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          </Card>
+        } else if (chart.type == "Pie") {
+          return <Card>
+            <CardHeader className='border-b'>
+              <CardTitle className='flex flex-row items-center content-normal justify-between' >
+                Chart
+                <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+              </CardTitle>  
+            </CardHeader>
+
+            <ChartContainer config={chartConfig} className="h-40 w-80">
+              <PieChart data={chart.entries}>
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Pie data={chart.entries} dataKey="value" fill="#8884d8" />
+              </PieChart>
+            </ChartContainer>
+          </Card>
+        }
+        
       })}
     </div>
   </div>
