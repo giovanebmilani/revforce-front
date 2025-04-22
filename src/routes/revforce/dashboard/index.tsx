@@ -8,7 +8,7 @@ export const Route = createFileRoute('/revforce/dashboard/')({
   component: RouteComponent,
 })
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
  
 const chartData = [
@@ -55,6 +55,8 @@ function RouteComponent() {
 
         <ChartContainer config={chartConfig} className="h-40 w-80">
           <BarChart accessibilityLayer data={chartData}>
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
             <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
           </BarChart>
@@ -71,6 +73,8 @@ function RouteComponent() {
 
         <ChartContainer config={chartConfig} className="h-40 w-80">
           <BarChart accessibilityLayer data={chartData}>
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
             <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
           </BarChart>
