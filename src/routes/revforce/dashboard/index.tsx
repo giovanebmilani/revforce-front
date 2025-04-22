@@ -10,15 +10,7 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
- 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+import { listCharts } from '@/api/listCharts'
  
 const chartConfig = {
   desktop: {
@@ -31,7 +23,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function RouteComponent() {
+async function RouteComponent() {
+  const chartData = await listCharts()
+
   return <div className='w-full h-full flex flex-col gap-4'>
     <div className='flex flex-row justify-end border-b pb-3'>
       <h1 className='text-3xl font-bold h-full items-center flex align-items'>Dashboard</h1>
@@ -45,41 +39,26 @@ function RouteComponent() {
     </div>
 
     <div className='flex flex-row gap-4 items-center'>
-      <Card>
-        <CardHeader className='border-b'>
-          <CardTitle className='flex flex-row items-center content-normal justify-between' >
-            Chart
-            <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-          </CardTitle>  
-        </CardHeader>
+      {chartData.map((chart: any) => {
+        //TODO: add possible chart types
+        return <Card>
+          <CardHeader className='border-b'>
+            <CardTitle className='flex flex-row items-center content-normal justify-between' >
+              Chart
+              <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+            </CardTitle>  
+          </CardHeader>
 
-        <ChartContainer config={chartConfig} className="h-40 w-80">
-          <BarChart accessibilityLayer data={chartData}>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-          </BarChart>
-        </ChartContainer>
-      </Card>
-
-      <Card>
-        <CardHeader className='border-b'>
-          <CardTitle className='flex flex-row items-center content-normal justify-between' >
-            Chart
-            <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-          </CardTitle>  
-        </CardHeader>
-
-        <ChartContainer config={chartConfig} className="h-40 w-80">
-          <BarChart accessibilityLayer data={chartData}>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-          </BarChart>
-        </ChartContainer>
-      </Card>
+          <ChartContainer config={chartConfig} className="h-40 w-80">
+            <BarChart accessibilityLayer data={chart}>
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </Card>
+      })}
     </div>
   </div>
 }
