@@ -8,10 +8,10 @@ export const Route = createFileRoute('/revforce/dashboard/')({
   component: RouteComponent,
 })
 
-import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { listCharts, Chart } from '@/api/listCharts'
- 
+
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -32,7 +32,7 @@ async function RouteComponent() {
       <div className='w-3/4'> </div> {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
       <div className='flex flex-row gap-2 items-center'>
         <IconButton icon={icons.RefreshCcw} />
-        <Button className='text-white'>
+        <Button className='text-white cursor-pointer'>
           <Plus /> New Chart
         </Button>
       </div>
@@ -41,40 +41,41 @@ async function RouteComponent() {
     <div className='flex flex-row gap-4 items-center'>
       {chartData.map((chart: Chart) => {
         //TODO: add possible chart types
-        if (chart.type == "Bar") {
-          return <Card>
-            <CardHeader className='border-b'>
-              <CardTitle className='flex flex-row items-center content-normal justify-between' >
-                Chart
-                <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-              </CardTitle>  
-            </CardHeader>
+        switch (chart.chartType) {
+          case "Bar":
+            return <Card>
+              <CardHeader className='border-b'>
+                <CardTitle className='flex flex-row items-center content-normal justify-between' >
+                  Chart
+                  <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+                </CardTitle>
+              </CardHeader>
 
-            <ChartContainer config={chartConfig} className="h-40 w-80">
-              <BarChart accessibilityLayer data={chart.entries}>
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </Card>
-        } else if (chart.type == "Pie") {
-          return <Card>
-            <CardHeader className='border-b'>
-              <CardTitle className='flex flex-row items-center content-normal justify-between' >
-                Chart
-                <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
-              </CardTitle>  
-            </CardHeader>
+              <ChartContainer config={chartConfig} className="h-40 w-80">
+                <BarChart accessibilityLayer data={chart.entries}>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
+                </BarChart>
+              </ChartContainer>
+            </Card>
 
-            <ChartContainer config={chartConfig} className="h-40 w-80">
-              <PieChart data={chart.entries}>
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Pie data={chart.entries} dataKey="value" fill="#8884d8" />
-              </PieChart>
-            </ChartContainer>
-          </Card>
+          case "Pie":
+            return <Card>
+              <CardHeader className='border-b'>
+                <CardTitle className='flex flex-row items-center content-normal justify-between' >
+                  Chart
+                  <Button variant={'ghost'} className='text-blue-500'>Ver mais {">"}</Button>
+                </CardTitle>
+              </CardHeader>
+
+              <ChartContainer config={chartConfig} className="h-40 w-80">
+                <PieChart data={chart.entries}>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Pie data={chart.entries} dataKey="value" fill="#8884d8" />
+                </PieChart>
+              </ChartContainer>
+            </Card>
         }
-        
       })}
     </div>
   </div>
