@@ -120,31 +120,33 @@ function createChartComponent(chart: Chart) {
             tickMargin={8}
             tickFormatter={(value) => value.slice(0, 3)}
           />
+
+          <defs>
+            {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+              <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                  stopOpacity={0.8} />
+                <stop
+                  offset="95%"
+                  stopColor={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                  stopOpacity={0.1} />
+              </linearGradient>
+            ))}
+          </defs>
+
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
           {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
-            <>
-              <defs>
-                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.8} />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-desktop)"
-                    stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <Area
-                dataKey={key}
-                type="natural"
-                fill="url(#fillDesktop)"
-                fillOpacity={0.4}
-                stroke="var(--color-mobile)"
-                stackId="a" />
-            </>
+            <Area
+              key={key}
+              dataKey={key}
+              type="natural"
+              fill={`url(#fillGradient-${key})`}
+              fillOpacity={0.4}
+              stroke={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+              stackId="a" />
           ))}
-
         </AreaChart>
       </ChartContainer>
     case "Radar":
