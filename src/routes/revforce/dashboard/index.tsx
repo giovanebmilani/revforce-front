@@ -39,7 +39,7 @@ async function RouteComponent() {
     </div>
 
     <div className='flex flex-row gap-4 items-center'>
-      {chartData.map((chart: Chart) => {
+      {chartData.map((chart: Chart) => { //TODO: Make card header the same for every chart without having to duplicate the code
         switch (chart.chartType) {
           case "Bar":
             return <Card>
