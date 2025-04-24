@@ -5,13 +5,12 @@ import { getErrorMessage } from "./utils";
 // const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/list_charts`;
 
 export interface Chart {
-  chartType: "Pie" | "Bar" | "Line"
-  entries: ChartEntry[][]
+  chartType: "Pie" | "Bar" | "Line" | "Area" | "Radar" | "BarNegative"
+  entries: ChartEntry[]
 }
 
-interface ChartEntry { //;-;
-  identifier: string;
-  [key : string]: number;
+interface ChartEntry { //
+  [key: string]: number | string;
 }
 
 type ListChartsResponse = Chart[]
@@ -25,24 +24,12 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
         chartType: "Bar",
 
         entries: [
-          [
-            { identifier: "January", value: 186 },
-            { identifier: "February", value: 305 },
-            { identifier: "March", value: 237 },
-            { identifier: "April", value: 73 },
-            { identifier: "May", value: 209 },
-            { identifier: "June", value: 214 },
-          ],
-
-          [
-            { identifier: "April", value: 73 },
-            { identifier: "May", value: 209 },
-            { identifier: "June", value: 214 },
-            { identifier: "January", value: 186 },
-            { identifier: "February", value: 305 },
-            { identifier: "March", value: 237 },
-
-          ]
+          { identifier: "January", value: 186, otherValue : 20 },
+          { identifier: "February", value: 305, otherValue : 40 },
+          { identifier: "March", value: 237, otherValue : 60 },
+          { identifier: "April", value: 73, otherValue : 200 },
+          { identifier: "May", value: 209, otherValue : 120 },
+          { identifier: "June", value: 214, otherValue : 140 },
         ]
       },
 
@@ -50,18 +37,10 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
         chartType: "Pie",
 
         entries: [
-          [
-            { identifier: 'Group A', value: 400 },
-            { identifier: 'Group B', value: 300 },
-            { identifier: 'Group C', value: 200 },
-            { identifier: 'Group D', value: 100 },
-          ],
-          [
-            { identifier: 'Group C', value: 200 },
-            { identifier: 'Group D', value: 100 },
-            { identifier: 'Group A', value: 400 },
-            { identifier: 'Group B', value: 300 },
-          ]
+          { identifier: 'Group A', value: 400 },
+          { identifier: 'Group B', value: 300 },
+          { identifier: 'Group C', value: 200 },
+          { identifier: 'Group D', value: 100 },
         ]
       }
     ]

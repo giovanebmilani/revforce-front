@@ -2,7 +2,7 @@ import IconButton from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import { icons, Plus } from 'lucide-react'
-import { Bar, BarChart, Pie, PieChart } from "recharts"
+import { Bar, BarChart, Cell, Pie, PieChart } from "recharts"
 
 export const Route = createFileRoute('/revforce/dashboard/')({
   component: RouteComponent,
@@ -24,7 +24,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 async function RouteComponent() {
-  const chartData = await listCharts()
+  const chartData = await listCharts() //puxa a lista de chats
 
   return <div className='w-full h-full flex flex-col gap-4'>
     <div className='flex flex-row justify-end border-b pb-3'>
@@ -40,7 +40,6 @@ async function RouteComponent() {
 
     <div className='flex flex-row gap-4 items-center'>
       {chartData.map((chart: Chart) => {
-        //TODO: add possible chart types
         switch (chart.chartType) {
           case "Bar":
             return <Card>
@@ -54,7 +53,19 @@ async function RouteComponent() {
               <ChartContainer config={chartConfig} className="h-40 w-80">
                 <BarChart accessibilityLayer data={chart.entries}>
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
+
+                  { // nao me pergunte, copilot fez td
+                    Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+                      <Bar
+                        key={key}
+                        dataKey={key}
+                        fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                        radius={4}
+                      />
+                    ))
+                  }
+
+                  {/*<Bar dataKey="value" fill="var(--color-desktop)" radius={4} />*/}
                 </BarChart>
               </ChartContainer>
             </Card>
@@ -68,10 +79,30 @@ async function RouteComponent() {
                 </CardTitle>
               </CardHeader>
 
-              <ChartContainer config={chartConfig} className="h-40 w-80">
-                <PieChart data={chart.entries}>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Pie data={chart.entries} dataKey="value" fill="#8884d8" />
+              <ChartContainer config={chartConfig} className="h-40 w-80 mx-auto aspect-square pb-0 [&_.recharts-pie-label-text]:fill-foreground">
+                <PieChart>
+                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                  {
+                    Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key) => (
+                      <Pie
+                        data={chart.entries}
+                        key={key}
+                        dataKey={key}
+                        fill="#8884d8" // Default color
+                        label
+                        nameKey="identifier"
+                      >
+                        {
+                          chart.entries.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                            />
+                          ))
+                        }
+                      </Pie>
+                    ))
+                  }
                 </PieChart>
               </ChartContainer>
             </Card>
