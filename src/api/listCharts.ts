@@ -88,6 +88,20 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { identifier: "June", value: 214, otherValue : 140 },
         ]
       },
+
+      {
+        chartId: "6",
+        chartType: "BarNegative",
+
+        entries: [
+          { identifier: "January", value: 186, otherValue : 20 },
+          { identifier: "February", value: 305, otherValue : 40 },
+          { identifier: "March", value: 237, otherValue : 60 },
+          { identifier: "April", value: 73, otherValue : 200 },
+          { identifier: "May", value: 209, otherValue : 120 },
+          { identifier: "June", value: 214, otherValue : 140 },
+        ]
+      },
     ]
   } catch (error) {
     if (axios.isAxiosError(error)) {

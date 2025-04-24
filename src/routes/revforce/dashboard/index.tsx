@@ -174,22 +174,7 @@ function createChartComponent(chart: Chart) {
         </RadarChart>
       </ChartContainer>
     case "BarNegative":
-      return <ChartContainer config={chartConfig} className="h-2/3 w-full">
-        <BarChart accessibilityLayer data={chart.entries}>
-          <ChartTooltip content={<ChartTooltipContent />} />
-
-          { // nao me pergunte, copilot fez td
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
-              <Bar
-                key={key}
-                dataKey={key}
-                fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-                radius={4}
-              />
-            ))
-          }
-        </BarChart>
-      </ChartContainer>
+      return //TODO: BAR NEGATIVE
   }
 }
 
