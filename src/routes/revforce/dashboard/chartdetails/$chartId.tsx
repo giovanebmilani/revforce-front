@@ -137,9 +137,9 @@ React.useEffect(() => {
   const fetchChartData = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/charts/data"); // sua rota real
+      const response = await fetch("/api/charts/data");
       const json = await response.json();
-      setChartData(json); // certifique-se de que json é um array compatível
+      setChartData(json);
     } catch (error) {
       console.error("Erro ao buscar dados do gráfico", error);
     } finally {
