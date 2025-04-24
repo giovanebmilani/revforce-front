@@ -40,8 +40,6 @@ function createChartComponent(chart: Chart) {
               />
             ))
           }
-
-          {/*<Bar dataKey="value" fill="var(--color-desktop)" radius={4} />*/}
         </BarChart>
       </ChartContainer>
 
@@ -210,7 +208,7 @@ async function RouteComponent() {
     </div>
 
     <div className='flex flex-row gap-4 items-center flex-wrap'>
-      {chartData.map((chart: Chart) => { //TODO: Make card header the same for every chart without having to duplicate the code
+      {chartData.map((chart: Chart) => {
         return <Card key={chart.chartId} className='w-10/31 h-70'>
           <CardHeader className='border-b'>
             <CardTitle className='flex flex-row items-center content-normal justify-between'>
