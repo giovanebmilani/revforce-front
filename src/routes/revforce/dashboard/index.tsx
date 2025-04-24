@@ -13,7 +13,8 @@ function RouteComponent() {
 
   return (
     <div>
-       <Button onClick={() => mutate()}>TESTE</Button>
+       <Button onClick={() => mutate}>TESTE</Button>
+       <h1>{data}</h1>
     </div>
   );
 }
