@@ -1,8 +1,8 @@
 import LabelInput from "@/components/LabelInput";
 import { SelectBox } from "@/components/SelectBox";
 import { Button } from "@/components/ui/button";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { use, useState } from "react";
 import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 
@@ -56,6 +56,8 @@ function RouteComponent() {
   ];
 
   const handleCreateChart = () => {
+    //Chama o hook de criar o gráfico
+    //Passa os parâmetros necessários para criar o gráfico
     console.log("name:" + name);
     console.log("chart:" + selectedChart);
     console.log("metric:" + selectedMetric);
@@ -84,14 +86,15 @@ function RouteComponent() {
     ""
   );
 
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col w-full gap-3">
-      <div className="w-[317px]">
-        <h2 className="text-gray-300">Dashboard /</h2>
-        <h1 className="text-2xl font-semibold italic mb-3">New Chart</h1>
+      <h2 className="text-gray-300">Dashboard /</h2>
+      <h1 className="text-2xl font-semibold italic mb-3">New Chart</h1>
+      <hr className="ml-[-32px] max-w-screen border-gray-200 mb-2" />
 
-        <hr className="ml-[-32px] border-gray-200 mt-2 mb-2" />
-
+      <div className="w-[360px]">
         <LabelInput
           inputTitle="Name:"
           props={{
@@ -111,13 +114,13 @@ function RouteComponent() {
         </div>
       </section>
 
-      <div className="w-[317px]">
+      <div className="w-[360px]">
         <h3 className="font-medium">Chart Metric:</h3>
         <SelectBox
           items={[
             { value: "ctr", label: "CTR" },
             { value: "click", label: "Click's" },
-            { value: "impressions", label: "Impressions" },
+            { value: "impression", label: "Impressions" },
             { value: "spend", label: "Spend" },
           ]}
           selectLabel="Chart Metric"
@@ -127,18 +130,18 @@ function RouteComponent() {
         ></SelectBox>
       </div>
 
-      <hr className="ml-[-32px] max-w-[349px] border-gray-200 mt-2" />
+      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
-      <div className="w-[317px]">
+      <div className="w-[360px]">
         <h3 className="font-medium">Chart Period:</h3>
 
         <h3 className="font-medium mt-2">Type</h3>
         <SelectBox
           items={[
+            { value: "hour", label: "Hour" },
             { value: "day", label: "Day" },
             { value: "week", label: "Week" },
             { value: "month", label: "Month" },
-            { value: "year", label: "Year" },
           ]}
           selectLabel="Chart Period"
           placeholderText="Select the metric to display in the chart..."
@@ -158,19 +161,19 @@ function RouteComponent() {
         ></LabelInput>
       </div>
 
-      <hr className="ml-[-32px] max-w-[349px] border-gray-200 mt-2" />
+      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
       {selectedChart !== ChartType.pizza && (
-        <div className="w-[317px]">
+        <div className="w-[360px]">
           <h3 className="font-medium">Chart Granularity:</h3>
 
           <h3 className="font-medium mt-2">Type</h3>
           <SelectBox
             items={[
+              { value: "hour", label: "Hour" },
               { value: "day", label: "Day" },
               { value: "week", label: "Week" },
               { value: "month", label: "Month" },
-              { value: "year", label: "Year" },
             ]}
             selectLabel="Chart Granularity"
             placeholderText="Select the granularity to display in the chart..."
@@ -189,11 +192,11 @@ function RouteComponent() {
             }}
           ></LabelInput>
 
-          <hr className="ml-[-32px] max-w-[349px] border-gray-200 mt-5" />
+          <hr className="ml-[-32px] w-[392px] border-gray-200 mt-5" />
         </div>
       )}
 
-      <div className="w-[317px]">
+      <div className="w-[360px]">
         <h3 className="font-medium">Chart Source:</h3>
         <SelectBox
           items={[
@@ -207,9 +210,9 @@ function RouteComponent() {
         ></SelectBox>
       </div>
 
-      <hr className="ml-[-32px] max-w-[349px] border-gray-200 mt-2" />
+      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
-      <div className="w-[317px]">
+      <div className="w-[360px]">
         <h3 className="font-medium">Chart Segment:</h3>
         <SelectBox
           items={[
@@ -223,20 +226,14 @@ function RouteComponent() {
         ></SelectBox>
       </div>
 
-      <div className="flex gap-3 justify-between lg:mr-0 lg:justify-end">
+      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
+
+      <div className="flex gap-3 lg:gap-5 justify-between lg:mr-0 lg:justify-end">
         <Button
           variant="secondaryPointer"
           className="w-40"
           onClick={() => {
-            setName("");
-            setSelectedChart("");
-            setSelectedMetric("");
-            setSelectedPeriodType("");
-            setSelectedPeriodAmount("");
-            setSelectedGranularityType("");
-            setSelectedGranularityAmount("");
-            setSelectedSource("");
-            setSelectedSegment("");
+           navigate({to: "/revforce/dashboard"})
           }}
         >
           Cancel
