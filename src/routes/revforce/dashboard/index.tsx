@@ -26,7 +26,7 @@ const chartConfig = {
 function createChartComponent(chart: Chart) {
   switch (chart.chartType) {
     case "Bar":
-      return <ChartContainer config={chartConfig} className="h-2/3 w-full">
+      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <BarChart accessibilityLayer data={chart.entries}>
           <XAxis
             dataKey="identifier"
@@ -51,7 +51,7 @@ function createChartComponent(chart: Chart) {
       </ChartContainer>
 
     case "Pie":
-      return <ChartContainer config={chartConfig} className="h-2/3 w-full mx-auto aspect-square pb-0 [&_.recharts-pie-label-text]:fill-foreground">
+      return <ChartContainer config={chartConfig} className="h-3/5 w-full mx-auto aspect-square pb-0 [&_.recharts-pie-label-text]:fill-foreground">
         <PieChart>
           <ChartTooltip content={<ChartTooltipContent hideLabel />} />
           {
@@ -79,7 +79,7 @@ function createChartComponent(chart: Chart) {
       </ChartContainer>
 
     case "Line":
-      return <ChartContainer config={chartConfig} className="h-2/3 w-full">
+      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <LineChart
           accessibilityLayer
           data={chart.entries}
@@ -110,7 +110,7 @@ function createChartComponent(chart: Chart) {
       </ChartContainer>
 
     case "Area":
-      return <ChartContainer config={chartConfig} className="h-2/3 w-full">
+      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <AreaChart
           accessibilityLayer
           data={chart.entries}
@@ -159,7 +159,7 @@ function createChartComponent(chart: Chart) {
     case "Radar":
       return <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square h-2/3 w-full"
+        className="mx-auto aspect-square h-3/5 w-full"
       >
         <RadarChart data={chart.entries}>
           <ChartTooltip
@@ -187,12 +187,11 @@ function createChartComponent(chart: Chart) {
           />
           {
             Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
-
               <Bar dataKey={key}>
-                <LabelList position="top" dataKey={key} fillOpacity={1} />
+                <LabelList position="top" dataKey="identifier" fillOpacity={1} />
                 {chart.entries.map((item) => (
                   <Cell
-                    key={item.month}
+                    key={item.identifier}
                     fill={index > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
                   />
                 ))}
@@ -214,7 +213,7 @@ async function RouteComponent() {
       {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
       <div className='flex flex-row gap-2 items-center'>
         <IconButton icon={icons.RefreshCcw} />
-        <Button className='text-white cursor-pointer'>
+        <Button className='text-white cursor-pointer h-full'>
           <Plus /> New Chart
         </Button>
       </div>
