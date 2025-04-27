@@ -192,7 +192,7 @@ function createChartComponent(chart: Chart) {
                 {chart.entries.map((item) => (
                   <Cell
                     key={item.identifier}
-                    fill={index > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                    fill={(item[key] as number) > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
                   />
                 ))}
               </Bar>
