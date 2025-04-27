@@ -11,6 +11,7 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { listCharts, Chart } from '@/api/listCharts'
+import { DraggableList } from '@/components/DraggableList'
 
 const chartConfig = {
   desktop: {
@@ -205,6 +206,29 @@ function createChartComponent(chart: Chart) {
 
 async function RouteComponent() {
   const chartData = await listCharts() //puxa a lista de chats
+  const chartsDraggable = chartData.map((chart: Chart) => ({ //para por no draggable
+    id: chart.chartId,  
+    content: (
+      <Card key={chart.chartId} className="w-full h-70 pt-2 pb-0">
+        <CardHeader className="border-b h-12">
+          <CardTitle className="flex flex-row items-center justify-between">
+            Chart
+            <Link
+              to="/revforce/dashboard/chartdetails/$chartId"
+              params={{ chartId: chart.chartId }}
+            >
+              <Button variant="ghost" className="text-blue-500 cursor-pointer">
+                Ver mais {">"}
+              </Button>
+            </Link>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="h-11/10">
+          {createChartComponent(chart)}
+        </CardContent>
+      </Card>
+    ),
+  }));
 
   return <div className='w-full h-full flex flex-col gap-4'>
     <div className='flex flex-row justify-end border-b pb-3'>
@@ -218,28 +242,16 @@ async function RouteComponent() {
         </Button>
       </div>
     </div>
-
-    <div className='flex flex-row gap-4 items-center flex-wrap'>
-      {chartData.map((chart: Chart) => {
-        return <Card key={chart.chartId} className='w-10/31 h-70 pt-2 pb-0'>
-          <CardHeader className='border-b h-12'>
-            <CardTitle className='flex flex-row items-center content-normal justify-between'>
-              Chart
-              <Link to="/revforce/dashboard/chartdetails/$chartId"
-                params={{ chartId: chart.chartId }}>
-                <Button variant={'ghost'} className='text-blue-500 cursor-pointer'>
-                  Ver mais {">"}
-                </Button>
-              </Link>
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className='h-11/10'>
-            {createChartComponent(chart)}
-          </CardContent>
-        </Card>
-      })}
-    </div>
+    <DraggableList
+        initialItems={chartsDraggable}
+        direction="auto"
+        className="gap-4"
+        itemClassName="w-10/31" 
+        onOrderChange={(newOrder) => {
+          //salvar no back?
+        }}
+      />
+    
   </div>
 }
  
