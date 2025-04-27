@@ -28,6 +28,13 @@ function createChartComponent(chart: Chart) {
     case "Bar":
       return <ChartContainer config={chartConfig} className="h-2/3 w-full">
         <BarChart accessibilityLayer data={chart.entries}>
+          <XAxis
+            dataKey="identifier"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
           <ChartTooltip content={<ChartTooltipContent />} />
 
           { // nao me pergunte, copilot fez td
@@ -58,7 +65,7 @@ function createChartComponent(chart: Chart) {
                 nameKey="identifier"
               >
                 {
-                  chart.entries.map((entry, index) => (
+                  chart.entries.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -161,7 +168,7 @@ function createChartComponent(chart: Chart) {
           />
           <PolarAngleAxis dataKey="identifier" />
           <PolarGrid />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key) => (
 
             <Radar
               dataKey={key}
@@ -196,8 +203,8 @@ async function RouteComponent() {
 
     <div className='flex flex-row gap-4 items-center flex-wrap'>
       {chartData.map((chart: Chart) => {
-        return <Card key={chart.chartId} className='w-10/31 h-70'>
-          <CardHeader className='border-b'>
+        return <Card key={chart.chartId} className='w-10/31 h-70 pt-2'>
+          <CardHeader className='border-b h-13'>
             <CardTitle className='flex flex-row items-center content-normal justify-between'>
               Chart
               <Link to="/revforce/dashboard/chartdetails/$chartId"
