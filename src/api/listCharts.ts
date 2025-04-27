@@ -4,17 +4,53 @@ import { getErrorMessage } from "./utils";
 // const API_BASE_URL = import.meta.env.VITE_API_URL;
 // const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/list_charts`;
 
+type ChartType = "Pie" | "Bar" | "Line" | "Area" | "Radar" | "BarNegative"
+type ChartMetric = "Ctr" | "Click" | "Impression" | "spend"
+type ChartSegment = "Device" | "Date"
+
+type DeviceType = "Mobile" | "Desktop" | "Tablet" | "Other"
+type SourceTable = "Campaign" | "Ad"
+type PeriodType = "Month" | "Week" | "Day" | "Hour"
+
+interface PeriodResponse{
+  id: string
+  type: PeriodType
+  amount: number
+}
+
+interface SourceResponse {
+  id: string
+  chart_id: string
+  source_table: SourceTable
+  source_id: string
+}
+
 export interface Chart {
-  chartId: string
-  chartType: "Pie" | "Bar" | "Line" | "Area" | "Radar" | "BarNegative"
-  entries: ChartEntry[]
+  id: string
+  account_id: string
+  name: string
+  type: ChartType 
+  metric: ChartMetric
+  period: PeriodResponse
+  granularity: PeriodResponse
+  sources: SourceResponse[]
+  segment: ChartSegment | null | undefined
 }
 
-interface ChartEntry { //
-  [key: string]: number | string;
+interface DataPoint {
+  source_id: string
+  source_table: SourceTable
+  value: number
+  date: Date
+  device: DeviceType | null | undefined
 }
 
-type ListChartsResponse = Chart[]
+interface ChartResponse {
+  chart: Chart
+  data: DataPoint[]
+}
+
+type ListChartsResponse = ChartResponse[]
 
 export const listCharts = async (): Promise<ListChartsResponse> => {
   try {
@@ -22,85 +58,36 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
     // return response.data;
     return [
       {
-        chartId: "1",
-        chartType: "Bar",
-
-        entries: [
-          { identifier: "January", value: 186, otherValue : 20 },
-          { identifier: "February", value: 305, otherValue : 40 },
-          { identifier: "March", value: 237, otherValue : 60 },
-          { identifier: "April", value: 73, otherValue : 200 },
-          { identifier: "May", value: 209, otherValue : 120 },
-          { identifier: "June", value: 214, otherValue : 140 },
-        ]
-      },
-
-      {
-        chartId: "2",
-        chartType: "Pie",
-
-        entries: [
-          { identifier: 'Group A', value: 400 },
-          { identifier: 'Group B', value: 300 },
-          { identifier: 'Group C', value: 200 },
-          { identifier: 'Group D', value: 100 },
-        ]
-      },
-
-      {
-        chartId: "3",
-        chartType: "Line",
-
-        entries: [
-          { identifier: "January", value: 186, otherValue : 20 },
-          { identifier: "February", value: 305, otherValue : 40 },
-          { identifier: "March", value: 237, otherValue : 60 },
-          { identifier: "April", value: 73, otherValue : 200 },
-          { identifier: "May", value: 209, otherValue : 120 },
-          { identifier: "June", value: 214, otherValue : 140 },
-        ]
-      },
-
-      {
-        chartId: "4",
-        chartType: "Area",
-
-        entries: [
-          { identifier: "January", value: 186, otherValue : 20 },
-          { identifier: "February", value: 305, otherValue : 40 },
-          { identifier: "March", value: 237, otherValue : 60 },
-          { identifier: "April", value: 73, otherValue : 200 },
-          { identifier: "May", value: 209, otherValue : 120 },
-          { identifier: "June", value: 214, otherValue : 140 },
-        ]
-      },
-
-      {
-        chartId: "5",
-        chartType: "Radar",
-
-        entries: [
-          { identifier: "January", value: 186, otherValue : 20 },
-          { identifier: "February", value: 305, otherValue : 40 },
-          { identifier: "March", value: 237, otherValue : 60 },
-          { identifier: "April", value: 73, otherValue : 200 },
-          { identifier: "May", value: 209, otherValue : 120 },
-          { identifier: "June", value: 214, otherValue : 140 },
-        ]
-      },
-
-      {
-        chartId: "6",
-        chartType: "BarNegative",
-
-        entries: [
-          { identifier: 'Group A', value: 400 },
-          { identifier: 'Group B', value: -300 },
-          { identifier: 'Group C', value: 200 },
-          { identifier: 'Group D', value: 100 },
-          { identifier: 'Group E', value: -150 },
-        ]
-      },
+        chart: {
+            id: '456',
+            account_id: "asd",
+            name: "linha que desce",
+            type: 'Line',
+            metric: 'Ctr',
+            period: {
+              id: "23",
+              type: "Month",
+              amount: 3
+            },
+            granularity: {
+              id: "13",
+              type: "Week",
+              amount: 1
+            },
+            sources: [ { 
+              id: "224",
+              chart_id: "456",
+              source_table: "Ad",
+              source_id: "12" } ],
+            segment: null
+        },
+            data: [
+            { source_table: 'Campaign', source_id: 'acb', value: 5842, date: new Date(2025,1,1), device: null},
+            { source_table: 'Campaign', source_id: 'acb', value: 5382, date: new Date(2025,2,1), device: null},
+            { source_table: 'Campaign', source_id: 'acb', value: 382, date: new Date(2025,3,1), device: null},
+            { source_table: 'Campaign', source_id: 'acb', value: 12, date: new Date(2025,4,1), device: null},
+        ],
+    }
     ]
   } catch (error) {
     if (axios.isAxiosError(error)) {
