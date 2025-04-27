@@ -3,14 +3,15 @@ export enum ChartType {
   barVertical = "bar",
   barVerticalMultiple = "grouped_bar",
   barHorizontal = "horizontal_bar",
+  barNegative = "negative_bar",
   line = "line",
-  //lineMultiple = "lineMultiple",
-  //area = "area",
+  lineMultiple = "line_multiple",
+  radar = "radar_",
+  area = "area",
   //areaStacked = "areaStacked",
 }
 
-
-const ChartTypeData: Record<
+export const ChartTypeData: Record<
   ChartType,
   { label: string; image: string; description: string }
 > = {
@@ -24,7 +25,7 @@ const ChartTypeData: Record<
     image: "/src/assets/charts/bar-vertical.png",
     description: "Displays data clearly with vertical bars.",
   },
-  
+
   [ChartType.barVerticalMultiple]: {
     label: "Bar Chart - Multiple",
     image: "/src/assets/charts/bar-vertical-multiple.png",
@@ -35,29 +36,32 @@ const ChartTypeData: Record<
     image: "/src/assets/charts/bar-horizontal.png",
     description: "Shows data with horizontal bars.",
   },
+  [ChartType.barNegative]: {
+    label: "Bar Chart - Negative",
+    image: "/src/assets/charts/bar-negative.png",
+    description: "Displays positives and negatives values with bars.",
+  },
   [ChartType.line]: {
     label: "Line Chart",
     image: "/src/assets/charts/line.png",
     description: "Connects data points with lines.",
   },
-  /*
+
   [ChartType.lineMultiple]: {
     label: "Line Chart - Multiple",
     image: "/src/assets/charts/line-multiple.png",
-    description:
-      "Compares trends with multiple lines.",
+    description: "Compares trends with multiple lines.",
+  },
+  [ChartType.radar]: {
+    label: "Radar Chart - Multiple",
+    image: "/src/assets/charts/radar.png",
+    description: "Compares multiple variables in a circular layout.",
   },
   [ChartType.area]: {
     label: "Area Chart",
     image: "/src/assets/charts/area.png",
     description: "Fills the area below a line to show volume.",
   },
-  [ChartType.areaStacked]: {
-    label: "Area Chart - Stacked",
-    image: "/src/assets/charts/area-stacked.png",
-    description: "Stacks areas to show overall change.",
-  },
-  */
 };
 
 interface ChartTypeProps {
@@ -69,7 +73,10 @@ function ChartSelect({ type, onClick }: ChartTypeProps) {
   const { label, image, description } = ChartTypeData[type];
 
   return (
-    <div className="rounded-xl flex flex-col items-center bg-white hover:cursor-pointer" onClick={onClick}>
+    <div
+      className="rounded-xl flex flex-col items-center bg-white hover:cursor-pointer hover:scale-105 transition duration-200 ease-in-out"
+      onClick={onClick}
+    >
       <img
         src={image}
         alt={label}

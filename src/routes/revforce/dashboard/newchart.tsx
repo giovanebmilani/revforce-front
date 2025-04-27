@@ -2,9 +2,10 @@ import LabelInput from "@/components/LabelInput";
 import { SelectBox } from "@/components/SelectBox";
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { use, useState } from "react";
-import ChartSelect, { ChartType } from "@/components/ChartSelect";
+import { useState } from "react";
+import ChartSelect, { ChartType, ChartTypeData } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
+import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
@@ -33,6 +34,11 @@ function RouteComponent() {
       type={ChartType.barHorizontal}
     ></ChartSelect>,
     <ChartSelect
+      onClick={() => setSelectedChart(ChartType.barNegative)}
+      key={ChartType.barNegative}
+      type={ChartType.barNegative}
+    ></ChartSelect>,
+    <ChartSelect
       onClick={() => setSelectedChart(ChartType.pizza)}
       key={ChartType.pizza}
       type={ChartType.pizza}
@@ -42,32 +48,13 @@ function RouteComponent() {
       key={ChartType.line}
       type={ChartType.line}
     ></ChartSelect>,
-    /*
     <ChartSelect
       key={ChartType.lineMultiple}
       type={ChartType.lineMultiple}
     ></ChartSelect>,
+    <ChartSelect key={ChartType.radar} type={ChartType.radar}></ChartSelect>,
     <ChartSelect key={ChartType.area} type={ChartType.area}></ChartSelect>,
-    <ChartSelect
-      key={ChartType.areaStacked}
-      type={ChartType.areaStacked}
-    ></ChartSelect>,
-    */
   ];
-
-  const handleCreateChart = () => {
-    //Chama o hook de criar o gráfico
-    //Passa os parâmetros necessários para criar o gráfico
-    console.log("name:" + name);
-    console.log("chart:" + selectedChart);
-    console.log("metric:" + selectedMetric);
-    console.log("period type:" + selectedPeriodType);
-    console.log("period amount:" + selectedPeriodAmount);
-    console.log("granularity type:" + selectedGranularityType);
-    console.log("granularity amount:" + selectedGranularityAmount);
-    console.log("source:" + selectedSource);
-    console.log("segment:" + selectedSegment);
-  };
 
   const [name, setName] = useState("");
   const [selectedChart, setSelectedChart] = useState<ChartType | string>("");
@@ -87,6 +74,44 @@ function RouteComponent() {
   );
 
   const navigate = useNavigate();
+
+  const { mutate: postNewChart, isPending: isPostNewChartPending } =
+    usePostNewChart({
+      onSuccess: () => {
+        setName("");
+        setSelectedChart("");
+        setSelectedMetric("");
+        setSelectedPeriodType("");
+        setSelectedPeriodAmount("");
+        setSelectedGranularityType("");
+        setSelectedGranularityAmount("");
+        setSelectedSource("");
+        setSelectedSegment("");
+      },
+    });
+
+  const handleCreateChart = () => {
+    postNewChart({
+      name: name,
+      type: selectedChart,
+      metric: selectedMetric,
+      period: {
+        type: selectedPeriodType,
+        amount: Number(selectedPeriodAmount),
+      },
+      granularity: {
+        type: selectedGranularityType,
+        amount: Number(selectedGranularityAmount),
+      },
+      sources: [
+        {
+          source_table: selectedSource,
+          source_id: "1",
+        },
+      ],
+      segment: selectedSegment,
+    });
+  };
 
   return (
     <div className="flex flex-col w-full gap-3">
@@ -111,6 +136,10 @@ function RouteComponent() {
         <hr className="border-1" />
         <div className="flex-1 px-4 py-4">
           <CarouselSize children={charts}></CarouselSize>
+        </div>
+        <div className="flex px-4 pb-4 gap-2">
+          <h3 className="font-semibold">Selected:</h3>
+          <p>{ChartTypeData[selectedChart as ChartType]?.label}</p>
         </div>
       </section>
 
@@ -233,7 +262,7 @@ function RouteComponent() {
           variant="secondaryPointer"
           className="w-40"
           onClick={() => {
-           navigate({to: "/revforce/dashboard"})
+            navigate({ to: "/revforce/dashboard" });
           }}
         >
           Cancel
@@ -245,7 +274,7 @@ function RouteComponent() {
             handleCreateChart();
           }}
         >
-          Create
+          {isPostNewChartPending ? "Creating..." : "Create"}
         </Button>
       </div>
     </div>
