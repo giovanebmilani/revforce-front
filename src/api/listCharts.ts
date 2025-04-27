@@ -94,12 +94,11 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
         chartType: "BarNegative",
 
         entries: [
-          { identifier: "January", value: 186, otherValue : 20 },
-          { identifier: "February", value: 305, otherValue : 40 },
-          { identifier: "March", value: 237, otherValue : 60 },
-          { identifier: "April", value: 73, otherValue : 200 },
-          { identifier: "May", value: 209, otherValue : 120 },
-          { identifier: "June", value: 214, otherValue : 140 },
+          { identifier: 'Group A', value: 400 },
+          { identifier: 'Group B', value: -300 },
+          { identifier: 'Group C', value: 200 },
+          { identifier: 'Group D', value: 100 },
+          { identifier: 'Group E', value: -150 },
         ]
       },
     ]

@@ -2,14 +2,14 @@ import IconButton from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { icons, Plus } from 'lucide-react'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis } from "recharts"
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, Pie, PieChart, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis } from "recharts"
 
 export const Route = createFileRoute('/revforce/dashboard/')({
   component: RouteComponent,
 })
 
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { listCharts, Chart } from '@/api/listCharts'
 
 const chartConfig = {
@@ -168,11 +168,11 @@ function createChartComponent(chart: Chart) {
           />
           <PolarAngleAxis dataKey="identifier" />
           <PolarGrid />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key) => (
+          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
 
             <Radar
               dataKey={key}
-              fill="var(--color-desktop)"
+              fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
               fillOpacity={0.6}
             />
 
@@ -181,7 +181,30 @@ function createChartComponent(chart: Chart) {
         </RadarChart>
       </ChartContainer>
     case "BarNegative":
-      return //TODO: BAR NEGATIVE
+      return <ChartContainer config={chartConfig} className="mx-auto aspect-square h-2/3 w-full">
+      <BarChart accessibilityLayer data={chart.entries}>
+        <CartesianGrid vertical={false} />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel hideIndicator />}
+        />
+        {
+            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+              
+              <Bar dataKey={key}>
+                <LabelList position="top" dataKey={key} fillOpacity={1} />
+                {chart.entries.map((item) => (
+                  <Cell
+                    key={item.month}
+                    fill={index > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                  />
+                ))}
+              </Bar>
+            ))
+          }
+        
+      </BarChart>
+    </ChartContainer>
   }
 }
 
@@ -203,8 +226,8 @@ async function RouteComponent() {
 
     <div className='flex flex-row gap-4 items-center flex-wrap'>
       {chartData.map((chart: Chart) => {
-        return <Card key={chart.chartId} className='w-10/31 h-70 pt-2'>
-          <CardHeader className='border-b h-13'>
+        return <Card key={chart.chartId} className='w-10/31 h-70 pt-2 pb-0'>
+          <CardHeader className='border-b h-12'>
             <CardTitle className='flex flex-row items-center content-normal justify-between'>
               Chart
               <Link to="/revforce/dashboard/chartdetails/$chartId"
@@ -215,7 +238,10 @@ async function RouteComponent() {
               </Link>
             </CardTitle>
           </CardHeader>
-          {createChartComponent(chart)}
+
+          <CardContent className='h-11/10'>
+            {createChartComponent(chart)}
+          </CardContent>
         </Card>
       })}
     </div>
