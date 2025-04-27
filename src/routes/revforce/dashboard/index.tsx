@@ -169,28 +169,25 @@ function createChartComponent(chart: Chart) {
           <PolarAngleAxis dataKey="identifier" />
           <PolarGrid />
           {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
-
             <Radar
               dataKey={key}
               fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
               fillOpacity={0.6}
             />
-
           ))}
-
         </RadarChart>
       </ChartContainer>
     case "BarNegative":
       return <ChartContainer config={chartConfig} className="mx-auto aspect-square h-2/3 w-full">
-      <BarChart accessibilityLayer data={chart.entries}>
-        <CartesianGrid vertical={false} />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel hideIndicator />}
-        />
-        {
+        <BarChart accessibilityLayer data={chart.entries}>
+          <CartesianGrid vertical={false} />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel hideIndicator />}
+          />
+          {
             Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
-              
+
               <Bar dataKey={key}>
                 <LabelList position="top" dataKey={key} fillOpacity={1} />
                 {chart.entries.map((item) => (
@@ -202,9 +199,8 @@ function createChartComponent(chart: Chart) {
               </Bar>
             ))
           }
-        
-      </BarChart>
-    </ChartContainer>
+        </BarChart>
+      </ChartContainer>
   }
 }
 
