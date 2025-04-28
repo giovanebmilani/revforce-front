@@ -10,7 +10,7 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { listCharts, Chart } from '@/api/listCharts'
+import { listCharts, Chart, ChartResponse } from '@/api/listCharts'
 import { DraggableList } from '@/components/DraggableList'
 
 const chartConfig = {
@@ -24,11 +24,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function createChartComponent(chart: Chart) {
-  switch (chart.chartType) {
+function createChartComponent(response: ChartResponse) {
+  switch (response.chart.type) {
     case "Bar":
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <BarChart accessibilityLayer data={chart.entries}>
+        <BarChart accessibilityLayer data={response.data}>
           <XAxis
             dataKey="identifier"
             tickLine={false}
@@ -39,7 +39,7 @@ function createChartComponent(chart: Chart) {
           <ChartTooltip content={<ChartTooltipContent />} />
 
           { // nao me pergunte, copilot fez td
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+            Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
               <Bar
                 key={key}
                 dataKey={key}
@@ -56,9 +56,9 @@ function createChartComponent(chart: Chart) {
         <PieChart>
           <ChartTooltip content={<ChartTooltipContent hideLabel />} />
           {
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key) => (
+            Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key) => (
               <Pie
-                data={chart.entries}
+                data={response.entries}
                 key={key}
                 dataKey={key}
                 fill="#8884d8" // Default color
@@ -66,7 +66,7 @@ function createChartComponent(chart: Chart) {
                 nameKey="identifier"
               >
                 {
-                  chart.entries.map((_, index) => (
+                  response.entries.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -83,7 +83,7 @@ function createChartComponent(chart: Chart) {
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <LineChart
           accessibilityLayer
-          data={chart.entries}
+          data={response.entries}
           margin={{
             left: 12,
             right: 12,
@@ -98,7 +98,7 @@ function createChartComponent(chart: Chart) {
             tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Line
               dataKey={key}
               type="monotone"
@@ -114,7 +114,7 @@ function createChartComponent(chart: Chart) {
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <AreaChart
           accessibilityLayer
-          data={chart.entries}
+          data={response.entries}
           margin={{
             left: 12,
             right: 12,
@@ -130,7 +130,7 @@ function createChartComponent(chart: Chart) {
           />
 
           <defs>
-            {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+            {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
               <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -145,7 +145,7 @@ function createChartComponent(chart: Chart) {
           </defs>
 
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Area
               key={key}
               dataKey={key}
@@ -162,14 +162,14 @@ function createChartComponent(chart: Chart) {
         config={chartConfig}
         className="mx-auto aspect-square h-3/5 w-full"
       >
-        <RadarChart data={chart.entries}>
+        <RadarChart data={response.entries}>
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent indicator="line" />}
           />
           <PolarAngleAxis dataKey="identifier" />
           <PolarGrid />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Radar
               dataKey={key}
               fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -180,17 +180,17 @@ function createChartComponent(chart: Chart) {
       </ChartContainer>
     case "BarNegative":
       return <ChartContainer config={chartConfig} className="mx-auto aspect-square h-2/3 w-full">
-        <BarChart accessibilityLayer data={chart.entries}>
+        <BarChart accessibilityLayer data={response.entries}>
           <CartesianGrid vertical={false} />
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent hideLabel hideIndicator />}
           />
           {
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+            Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
               <Bar dataKey={key}>
                 <LabelList position="top" dataKey="identifier" fillOpacity={1} />
-                {chart.entries.map((item) => (
+                {response.entries.map((item) => (
                   <Cell
                     key={item.identifier}
                     fill={(item[key] as number) > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -206,16 +206,16 @@ function createChartComponent(chart: Chart) {
 
 async function RouteComponent() {
   const chartData = await listCharts() //puxa a lista de chats
-  const chartsDraggable = chartData.map((chart: Chart) => ({ //para por no draggable
-    id: chart.chartId,  
+  const chartsDraggable = chartData.map((response: ChartResponse) => ({ //para por no draggable
+    id: response.chart.id,  
     content: (
-      <Card key={chart.chartId} className="w-full h-70 pt-2 pb-0">
+      <Card key={response.chart.id} className="w-full h-70 pt-2 pb-0">
         <CardHeader className="border-b h-12">
           <CardTitle className="flex flex-row items-center justify-between">
             Chart
             <Link
               to="/revforce/dashboard/chartdetails/$chartId"
-              params={{ chartId: chart.chartId }}
+              params={{ chartId: response.chart.id }}
             >
               <Button variant="ghost" className="text-blue-500 cursor-pointer">
                 Ver mais {">"}
@@ -224,7 +224,7 @@ async function RouteComponent() {
           </CardTitle>
         </CardHeader>
         <CardContent className="h-11/10">
-          {createChartComponent(chart)}
+          {createChartComponent(response)}
         </CardContent>
       </Card>
     ),

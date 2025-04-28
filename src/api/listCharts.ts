@@ -45,12 +45,12 @@ export interface DataPoint {
   device: DeviceType | null | undefined
 }
 
-interface ChartResponse {
+export interface ChartResponse {
   chart: Chart
   data: DataPoint[]
 }
 
-type ListChartsResponse = ChartResponse[]
+export type ListChartsResponse = ChartResponse[]
 
 export const listCharts = async (): Promise<ListChartsResponse> => {
   try {
