@@ -10,10 +10,10 @@ export const Route = createFileRoute('/revforce/dashboard/')({
 
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { listCharts, Chart } from '@/api/listCharts'
+import { listCharts, Chart, ChartResponse } from '@/api/listCharts'
 import { DraggableList } from '@/components/DraggableList'
 
-const chartConfig = {
+const chartConfig = { //cores placeholder, adequar a identidade visual
   desktop: {
     label: "Desktop",
     color: "#FFDF20",
@@ -22,32 +22,69 @@ const chartConfig = {
     label: "Mobile",
     color: "#FDC700",
   },
+  tablet: {
+    label: "Tablet",
+    color: "#FFC72C",
+  },
+  other: {
+    label: "Other",
+    color: "#FFB81C",
+  }
 } satisfies ChartConfig
 
-function createChartComponent(chart: Chart) {
-  switch (chart.chartType) {
+function createChartComponent(response: ChartResponse) {
+  switch (response.chart.type) { //revisar Bar e Pie
     case "Bar":
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <BarChart accessibilityLayer data={chart.entries}>
+        <BarChart accessibilityLayer data={response.data}>
           <XAxis
-            dataKey="identifier"
+            dataKey="date"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(dataKey) => {
+              const date = new Date(dataKey);
+              switch (response.chart.granularity.type) {
+                case "Month":
+                  return date.toLocaleString('default', { month: 'short' });
+                case "Week":
+                  return `Week ${Math.ceil(date.getDate() / 7)}`;
+                case "Day":
+                  return date.getDate().toString();
+                case "Hour":
+                  return date.getHours().toString();
+                default:
+                  return dataKey;
+              }
+            }}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
 
-          { // nao me pergunte, copilot fez td
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {response.chart.segment === "Device" ? ( //por device
+            ["Mobile", "Desktop", "Tablet", "Other"].map((device) => (
               <Bar
-                key={key}
-                dataKey={key}
-                fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+                key={device}
+                dataKey="value"
+                name={device}
+                fill={
+                  device === "Desktop" ? chartConfig.desktop.color :
+                    device === "Mobile" ? chartConfig.mobile.color :
+                      device === "Tablet" ? chartConfig.tablet.color :
+                        chartConfig.other.color
+                }
                 radius={4}
+                stackId="a"
+                isAnimationActive={false}
               />
             ))
-          }
+          ) : (
+            <Bar //outro tipo
+              dataKey="value" 
+              fill={chartConfig.desktop.color} //definir cor padrao
+              radius={4}
+              isAnimationActive={false}
+            />
+          )}
         </BarChart>
       </ChartContainer>
 
@@ -55,35 +92,36 @@ function createChartComponent(chart: Chart) {
       return <ChartContainer config={chartConfig} className="h-3/5 w-full mx-auto aspect-square pb-0 [&_.recharts-pie-label-text]:fill-foreground">
         <PieChart>
           <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-          {
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key) => (
-              <Pie
-                data={chart.entries}
-                key={key}
-                dataKey={key}
-                fill="#8884d8" // Default color
-                label
-                nameKey="identifier"
-              >
-                {
-                  chart.entries.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-                    />
-                  ))
-                }
-              </Pie>
-            ))
-          }
+          {response.chart.segment === "Device" && (
+            <Pie
+              data={response.data}
+              dataKey="value"
+              nameKey="device"
+              fill="#8884d8"
+              label
+            >
+              {response.data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={
+                    entry.device === "Mobile" ? chartConfig.mobile.color
+                      : entry.device === "Desktop" ? chartConfig.desktop.color
+                        : entry.device === "Tablet" ? chartConfig.tablet.color
+                          : chartConfig.other.color
+                  }
+                />
+              ))}
+            </Pie>
+          )}
         </PieChart>
       </ChartContainer>
 
-    case "Line":
+    //Consertar tudo abaixo dessa linha: 
+    /* case "Line":
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <LineChart
           accessibilityLayer
-          data={chart.entries}
+          data={response.entries}
           margin={{
             left: 12,
             right: 12,
@@ -98,7 +136,7 @@ function createChartComponent(chart: Chart) {
             tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Line
               dataKey={key}
               type="monotone"
@@ -114,7 +152,7 @@ function createChartComponent(chart: Chart) {
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
         <AreaChart
           accessibilityLayer
-          data={chart.entries}
+          data={response.entries}
           margin={{
             left: 12,
             right: 12,
@@ -130,7 +168,7 @@ function createChartComponent(chart: Chart) {
           />
 
           <defs>
-            {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+            {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
               <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -145,7 +183,7 @@ function createChartComponent(chart: Chart) {
           </defs>
 
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Area
               key={key}
               dataKey={key}
@@ -162,14 +200,14 @@ function createChartComponent(chart: Chart) {
         config={chartConfig}
         className="mx-auto aspect-square h-3/5 w-full"
       >
-        <RadarChart data={chart.entries}>
+        <RadarChart data={response.entries}>
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent indicator="line" />}
           />
           <PolarAngleAxis dataKey="identifier" />
           <PolarGrid />
-          {Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
             <Radar
               dataKey={key}
               fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -180,17 +218,17 @@ function createChartComponent(chart: Chart) {
       </ChartContainer>
     case "BarNegative":
       return <ChartContainer config={chartConfig} className="mx-auto aspect-square h-2/3 w-full">
-        <BarChart accessibilityLayer data={chart.entries}>
+        <BarChart accessibilityLayer data={response.entries}>
           <CartesianGrid vertical={false} />
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent hideLabel hideIndicator />}
           />
           {
-            Object.keys(chart.entries[0] || {}).filter(key => typeof chart.entries[0][key] !== 'string').map((key, index) => (
+            Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
               <Bar dataKey={key}>
                 <LabelList position="top" dataKey="identifier" fillOpacity={1} />
-                {chart.entries.map((item) => (
+                {response.entries.map((item) => (
                   <Cell
                     key={item.identifier}
                     fill={(item[key] as number) > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
@@ -200,22 +238,23 @@ function createChartComponent(chart: Chart) {
             ))
           }
         </BarChart>
-      </ChartContainer>
+      </ChartContainer> */
   }
 }
 
+//possivelmente sem necessidade de ajuste
 async function RouteComponent() {
   const chartData = await listCharts() //puxa a lista de chats
-  const chartsDraggable = chartData.map((chart: Chart) => ({ //para por no draggable
-    id: chart.chartId,  
+  const chartsDraggable = chartData.map((response: ChartResponse) => ({ //para por no draggable
+    id: response.chart.id, //para o draggable
     content: (
-      <Card key={chart.chartId} className="w-full h-70 pt-2 pb-0">
+      <Card key={response.chart.id} className="w-full h-70 pt-2 pb-0">
         <CardHeader className="border-b h-12">
           <CardTitle className="flex flex-row items-center justify-between">
             Chart
             <Link
               to="/revforce/dashboard/chartdetails/$chartId"
-              params={{ chartId: chart.chartId }}
+              params={{ chartId: response.chart.id }}
             >
               <Button variant="ghost" className="text-blue-500 cursor-pointer">
                 Ver mais {">"}
@@ -224,7 +263,7 @@ async function RouteComponent() {
           </CardTitle>
         </CardHeader>
         <CardContent className="h-11/10">
-          {createChartComponent(chart)}
+          {createChartComponent(response)}
         </CardContent>
       </Card>
     ),
@@ -243,15 +282,14 @@ async function RouteComponent() {
       </div>
     </div>
     <DraggableList
-        initialItems={chartsDraggable}
-        direction="auto"
-        className="gap-4"
-        itemClassName="w-10/31" 
-        onOrderChange={(newOrder) => {
-          //salvar no back?
-        }}
-      />
-    
+      initialItems={chartsDraggable}
+      direction="auto"
+      className="gap-4"
+      itemClassName="w-10/31"
+      onOrderChange={(newOrder) => {
+        //salvar no back?
+      }}
+    />
+
   </div>
 }
- 
