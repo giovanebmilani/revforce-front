@@ -9,8 +9,6 @@ import ChartSelect, {
 } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
-import { useGetNextRefresh } from "@/hooks/refresh/useGetNextRefresh";
-import { usePostRefresh } from "@/hooks/refresh/usePostRefresh";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
