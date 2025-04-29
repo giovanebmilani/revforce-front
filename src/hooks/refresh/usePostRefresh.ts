@@ -9,7 +9,6 @@ export const usePostRefresh = () =>
       const response = await axios.post(`${API_BASE_URL}/refresh`, 
         {account_id},
       );
-      console.log("response", {account_id});
       return response.data;
     },
     onSuccess: (_data, account_id) => {
