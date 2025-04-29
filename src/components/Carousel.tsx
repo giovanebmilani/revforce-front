@@ -15,12 +15,12 @@ export function CarouselSize({ children, cardsShownAmount }: { children: React.R
       }}
       className="max-w-[350px] lg:max-w-[600px]"
     >
-      <CarouselContent className="max-h-full">
+      <CarouselContent className="h-fit">
         {children.map((child, index) => (
           <CarouselItem key={index} className={`basis-1/2 md:basis-1/2 lg:basis-1/${cardsShownAmount || 3} w-full h-full`}>
             <div>
               <Card className="min-h-full p-1">
-                <CardContent className="flex aspect-square items-center justify-center p-0">
+                <CardContent className="flex aspect-square items-center justify-center p-0 hover:px-1">
                   {child}
                 </CardContent>
               </Card>
