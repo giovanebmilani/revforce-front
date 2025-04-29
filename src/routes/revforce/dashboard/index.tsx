@@ -73,7 +73,6 @@ function createChartComponent(response: ChartResponse) {
                         chartConfig.other.color
                 }
                 radius={4}
-                stackId="a"
                 isAnimationActive={false}
               />
             ))
