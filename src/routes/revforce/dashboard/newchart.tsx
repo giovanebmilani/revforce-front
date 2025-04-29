@@ -3,9 +3,14 @@ import { SelectBox } from "@/components/SelectBox";
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import ChartSelect, { ChartType, ChartTypeData } from "@/components/ChartSelect";
+import ChartSelect, {
+  ChartType,
+  ChartTypeData,
+} from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
+import { useGetNextRefresh } from "@/hooks/refresh/useGetNextRefresh";
+import { usePostRefresh } from "@/hooks/refresh/usePostRefresh";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,

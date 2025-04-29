@@ -3,12 +3,13 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/main";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-export const useRefreshMutation = () =>
+export const usePostRefresh = () =>
   useMutation({
     mutationFn: async (account_id: string) => {
-      const response = await axios.post(`${API_BASE_URL}/refresh`, {
-        account_id,
-      });
+      const response = await axios.post(`${API_BASE_URL}/refresh`, 
+        {account_id},
+      );
+      console.log("response", {account_id});
       return response.data;
     },
     onSuccess: (_data, account_id) => {
