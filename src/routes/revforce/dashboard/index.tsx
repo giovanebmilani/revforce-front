@@ -250,7 +250,7 @@ async function RouteComponent() {
       <Card key={response.chart.id} className="w-full h-70 pt-2 pb-0">
         <CardHeader className="border-b h-12">
           <CardTitle className="flex flex-row items-center justify-between">
-            Chart
+            {response.chart.name}
             <Link
               to="/revforce/dashboard/chartdetails/$chartId"
               params={{ chartId: response.chart.id }}
