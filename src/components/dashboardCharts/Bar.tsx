@@ -1,47 +1,58 @@
 import { ChartResponse } from "@/api/listCharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Bar, BarChart, XAxis } from "recharts"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, XAxis } from "recharts";
 
+export function createDashboardBarChartComponent(
+  response: ChartResponse,
+  chartConfig: ChartConfig
+) {
+  return (
+    <ChartContainer config={chartConfig} className="h-3/4 w-full">
+      <BarChart accessibilityLayer data={response.data}>
+        <XAxis
+          dataKey="date"
+          tickLine={false}
+          tickMargin={10}
+          axisLine={false}
+          tickFormatter={(dataKey) => {
+            const date = new Date(dataKey);
+            switch (response.chart.granularity.type) {
+              case "month":
+                return date.toLocaleString("default", { month: "short" });
+              case "week":
+                return `Week ${Math.ceil(date.getDate() / 7)}`;
+              case "day":
+                return date.getDate().toString();
+              case "hour":
+                return date.getHours().toString();
+              default:
+                return dataKey;
+            }
+          }}
+        />
+        <ChartTooltip content={<ChartTooltipContent />} />
 
-export function createDashboardBarChartComponent(response: ChartResponse, chartConfig: ChartConfig) {
-    return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <BarChart accessibilityLayer data={response.data}>
-            <XAxis
-                dataKey="date"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(dataKey) => {
-                    const date = new Date(dataKey);
-                    switch (response.chart.granularity.type) {
-                        case "month":
-                            return date.toLocaleString('default', { month: 'short' });
-                        case "week":
-                            return `Week ${Math.ceil(date.getDate() / 7)}`;
-                        case "day":
-                            return date.getDate().toString();
-                        case "hour":
-                            return date.getHours().toString();
-                        default:
-                            return dataKey;
-                    }
-                }}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
+        {response.data.map((entry) => (
+          <Bar
+            key={response.chart.segment}
+            data={response.data}
+            dataKey="value"
+            name={response.chart.segment as string}
+            fill={
+              chartConfig[response.chart.segment as keyof typeof chartConfig]
+                ?.color || chartConfig.default.color
+            }
+            radius={4}
+            isAnimationActive={false}
+          />
+        ))}
 
-            {response.data.map((entry) => (
-                <Bar
-                    key={response.chart.segment as keyof typeof entry}
-                    
-                    dataKey="value"
-                    name={response.chart.segment as string}
-                    fill={chartConfig[response.chart.segment as keyof typeof chartConfig]?.color || chartConfig.default.color}
-                    radius={4}
-                    isAnimationActive={false}
-                />
-            ))}
-
-            {/* {response.chart.segment === "Device" ? ( //por device
+        {/* {response.chart.segment === "Device" ? ( //por device
                 ["Mobile", "Desktop", "Tablet", "Other"].map((device) => (
                     <Bar
                         key={device}
@@ -65,6 +76,7 @@ export function createDashboardBarChartComponent(response: ChartResponse, chartC
                     isAnimationActive={false}
                 />
             )} */}
-        </BarChart>
+      </BarChart>
     </ChartContainer>
+  );
 }

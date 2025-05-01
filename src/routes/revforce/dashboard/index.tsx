@@ -1,48 +1,55 @@
-import IconButton from '@/components/IconButton'
-import { Button } from '@/components/ui/button'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { icons, Plus } from 'lucide-react'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, Pie, PieChart, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis } from "recharts"
+import IconButton from "@/components/IconButton";
+import { Button } from "@/components/ui/button";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { icons, Plus } from "lucide-react";
 
-export const Route = createFileRoute('/revforce/dashboard/')({
+export const Route = createFileRoute("/revforce/dashboard/")({
   component: RouteComponent,
-})
+});
 
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { listCharts, Chart, ChartResponse } from '@/api/listCharts'
-import { DraggableList } from '@/components/DraggableList'
-import { createDashboardBarChartComponent } from '@/components/dashboardCharts/Bar'
-import { createDashboardPieChartComponent } from '@/components/dashboardCharts/Pie'
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { listCharts, Chart, ChartResponse } from "@/api/listCharts";
+import { DraggableList } from "@/components/DraggableList";
+import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
+import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 
-const chartConfig = { //cores placeholder, adequar a identidade visual
+const chartConfig = {
+  //cores placeholder, adequar a identidade visual
   desktop: {
     label: "Desktop",
-    color: "#FFDF20",
+    color: "#916860",
   },
   mobile: {
     label: "Mobile",
-    color: "#FDC700",
+    color: "#E1AD00",
   },
   tablet: {
     label: "Tablet",
-    color: "#FFC72C",
+    color: "#008080",
   },
   other: {
     label: "Other",
-    color: "#FFB81C",
-  }
-} satisfies ChartConfig
+    color: "#BE7405",
+  },
+} satisfies ChartConfig;
 
 function createChartComponent(response: ChartResponse) {
-  switch (response.chart.type) { //revisar Bar e Pie
-    case "Bar":
+  switch (
+    response.chart.type //revisar Bar e Pie
+  ) {
+    case "bar":
       return createDashboardBarChartComponent(response, chartConfig);
 
-    case "Pie":
+    case "pie":
       return createDashboardPieChartComponent(response, chartConfig);
 
-    //Consertar tudo abaixo dessa linha: 
+    //Consertar tudo abaixo dessa linha:
     /* case "Line":
       
 
@@ -142,8 +149,9 @@ function createChartComponent(response: ChartResponse) {
 
 //possivelmente sem necessidade de ajuste
 async function RouteComponent() {
-  const chartData = await listCharts() //puxa a lista de chats
-  const chartsDraggable = chartData.map((response: ChartResponse) => ({ //para por no draggable
+  const chartData = await listCharts(); //puxa a lista de chats
+  const chartsDraggable = chartData.map((response: ChartResponse) => ({
+    //para por no draggable
     id: response.chart.id, //para o draggable
     content: (
       <Card key={response.chart.id} className="w-full h-70 pt-2 pb-0">
@@ -167,27 +175,30 @@ async function RouteComponent() {
     ),
   }));
 
-  return <div className='w-full h-full flex flex-col gap-4'>
-    <div className='flex flex-row justify-end border-b pb-3'>
-      <h1 className='text-3xl font-bold h-full items-center flex align-items'>Dashboard</h1>
-      <div className='w-3/4'></div>
-      {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
-      <div className='flex flex-row gap-2 items-center'>
-        <IconButton icon={icons.RefreshCcw} />
-        <Button className='text-white cursor-pointer h-full'>
-          <Plus /> New Chart
-        </Button>
+  return (
+    <div className="w-full h-full flex flex-col gap-4">
+      <div className="flex flex-row justify-end border-b pb-3">
+        <h1 className="text-3xl font-bold h-full items-center flex align-items">
+          Dashboard
+        </h1>
+        <div className="w-3/4"></div>
+        {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
+        <div className="flex flex-row gap-2 items-center">
+          <IconButton icon={icons.RefreshCcw} />
+          <Button className="text-white cursor-pointer h-full">
+            <Plus /> New Chart
+          </Button>
+        </div>
       </div>
+      <DraggableList
+        initialItems={chartsDraggable}
+        direction="auto"
+        className="gap-4"
+        itemClassName="w-10/31"
+        onOrderChange={(newOrder) => {
+          //salvar no back?
+        }}
+      />
     </div>
-    <DraggableList
-      initialItems={chartsDraggable}
-      direction="auto"
-      className="gap-4"
-      itemClassName="w-10/31"
-      onOrderChange={(newOrder) => {
-        //salvar no back?
-      }}
-    />
-
-  </div>
+  );
 }
