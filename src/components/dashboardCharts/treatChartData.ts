@@ -29,6 +29,16 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
         });
     })
     
+    chartData.forEach((item) => {
+        Object.keys(item).forEach((key) => {
+            chartData.forEach((item) => {
+                if (item[key] === undefined) {
+                    item[key] = 0;
+                }
+            });
+        });
+    });
+
     console.log(response.chart.segment)
 
     return chartData
