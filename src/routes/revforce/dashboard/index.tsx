@@ -18,6 +18,7 @@ import { listCharts, Chart, ChartResponse } from "@/api/listCharts";
 import { DraggableList } from "@/components/DraggableList";
 import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
+import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";
 
 const chartConfig = {
   //cores placeholder, adequar a identidade visual
@@ -43,11 +44,14 @@ function createChartComponent(response: ChartResponse) {
   switch (
     response.chart.type //revisar Bar e Pie
   ) {
-    case "bar":
-      return createDashboardBarChartComponent(response, chartConfig);
+    // case "bar":
+    //   return createDashboardBarChartComponent(response, chartConfig);
 
-    case "pie":
-      return createDashboardPieChartComponent(response, chartConfig);
+    // case "pie":
+    //   return createDashboardPieChartComponent(response, chartConfig);
+
+    case "line":
+      return createDashboardLineChartComponent(response, chartConfig);
 
     //Consertar tudo abaixo dessa linha:
     /* case "Line":
