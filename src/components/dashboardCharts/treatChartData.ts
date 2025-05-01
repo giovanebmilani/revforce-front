@@ -25,9 +25,11 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
                 day: "2-digit",
                 year: "2-digit",
             }),
-            [item.device || ""]: item.value,
+            [(typeof response.chart.segment === "string") ? String(item[response.chart.segment] || "") : "All"]: item.value,
         });
     })
     
+    console.log(response.chart.segment)
+
     return chartData
 }
