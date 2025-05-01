@@ -103,51 +103,7 @@ function createChartComponent(response: ChartResponse) {
               stackId="a" />
           ))}
         </AreaChart>
-      </ChartContainer>
-    case "Radar":
-      return <ChartContainer
-        config={chartConfig}
-        className="mx-auto aspect-square h-3/5 w-full"
-      >
-        <RadarChart data={response.entries}>
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent indicator="line" />}
-          />
-          <PolarAngleAxis dataKey="identifier" />
-          <PolarGrid />
-          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
-            <Radar
-              dataKey={key}
-              fill={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-              fillOpacity={0.6}
-            />
-          ))}
-        </RadarChart>
-      </ChartContainer>
-    case "BarNegative":
-      return <ChartContainer config={chartConfig} className="mx-auto aspect-square h-2/3 w-full">
-        <BarChart accessibilityLayer data={response.entries}>
-          <CartesianGrid vertical={false} />
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent hideLabel hideIndicator />}
-          />
-          {
-            Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
-              <Bar dataKey={key}>
-                <LabelList position="top" dataKey="identifier" fillOpacity={1} />
-                {response.entries.map((item) => (
-                  <Cell
-                    key={item.identifier}
-                    fill={(item[key] as number) > 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-                  />
-                ))}
-              </Bar>
-            ))
-          }
-        </BarChart>
-      </ChartContainer> */
+      </ChartContainer>*/
   }
 }
 
