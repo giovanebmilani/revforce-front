@@ -16,7 +16,7 @@ function MenuButton({ item }: { item: Item }) {
 
   return (
     <Link
-      className={`flex items-center gap-12 pl-4 pr-4 pt-2 pb-2 rounded-2xl transition-colors text-black ${
+      className={`flex items-center gap-6 pl-4 pr-4 pt-2 pb-2 rounded-2xl transition-colors text-black ${
         isActive ? "bg-yellow-300" : "hover:bg-yellow-300"
       }`}
       to={item.url}
