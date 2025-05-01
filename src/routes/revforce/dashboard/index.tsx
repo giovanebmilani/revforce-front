@@ -12,6 +12,8 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { listCharts, Chart, ChartResponse } from '@/api/listCharts'
 import { DraggableList } from '@/components/DraggableList'
+import { createDashboardBarChartComponent } from '@/components/dashboardCharts/Bar'
+import { createDashboardPieChartComponent } from '@/components/dashboardCharts/Pie'
 
 const chartConfig = { //cores placeholder, adequar a identidade visual
   desktop: {
@@ -35,117 +37,14 @@ const chartConfig = { //cores placeholder, adequar a identidade visual
 function createChartComponent(response: ChartResponse) {
   switch (response.chart.type) { //revisar Bar e Pie
     case "Bar":
-      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <BarChart accessibilityLayer data={response.data}>
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(dataKey) => {
-              const date = new Date(dataKey);
-              switch (response.chart.granularity.type) {
-                case "Month":
-                  return date.toLocaleString('default', { month: 'short' });
-                case "Week":
-                  return `Week ${Math.ceil(date.getDate() / 7)}`;
-                case "Day":
-                  return date.getDate().toString();
-                case "Hour":
-                  return date.getHours().toString();
-                default:
-                  return dataKey;
-              }
-            }}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-
-          {response.chart.segment === "Device" ? ( //por device
-            ["Mobile", "Desktop", "Tablet", "Other"].map((device) => (
-              <Bar
-                key={device}
-                dataKey="value"
-                name={device}
-                fill={
-                  device === "Desktop" ? chartConfig.desktop.color :
-                    device === "Mobile" ? chartConfig.mobile.color :
-                      device === "Tablet" ? chartConfig.tablet.color :
-                        chartConfig.other.color
-                }
-                radius={4}
-                isAnimationActive={false}
-              />
-            ))
-          ) : (
-            <Bar //outro tipo
-              dataKey="value" 
-              fill={chartConfig.desktop.color} //definir cor padrao
-              radius={4}
-              isAnimationActive={false}
-            />
-          )}
-        </BarChart>
-      </ChartContainer>
+      return createDashboardBarChartComponent(response, chartConfig);
 
     case "Pie":
-      return <ChartContainer config={chartConfig} className="h-3/5 w-full mx-auto aspect-square pb-0 [&_.recharts-pie-label-text]:fill-foreground">
-        <PieChart>
-          <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-          {response.chart.segment === "Device" && (
-            <Pie
-              data={response.data}
-              dataKey="value"
-              nameKey="device"
-              fill="#8884d8"
-              label
-            >
-              {response.data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={
-                    entry.device === "Mobile" ? chartConfig.mobile.color
-                      : entry.device === "Desktop" ? chartConfig.desktop.color
-                        : entry.device === "Tablet" ? chartConfig.tablet.color
-                          : chartConfig.other.color
-                  }
-                />
-              ))}
-            </Pie>
-          )}
-        </PieChart>
-      </ChartContainer>
+      return createDashboardPieChartComponent(response, chartConfig);
 
     //Consertar tudo abaixo dessa linha: 
     /* case "Line":
-      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <LineChart
-          accessibilityLayer
-          data={response.entries}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="identifier"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
-            <Line
-              dataKey={key}
-              type="monotone"
-              stroke={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-              strokeWidth={2}
-              dot={false}
-            />
-          ))}
-        </LineChart>
-      </ChartContainer>
+      
 
     case "Area":
       return <ChartContainer config={chartConfig} className="h-3/4 w-full">
