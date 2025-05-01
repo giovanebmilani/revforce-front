@@ -14,13 +14,13 @@ export function createDashboardBarChartComponent(response: ChartResponse, chartC
                 tickFormatter={(dataKey) => {
                     const date = new Date(dataKey);
                     switch (response.chart.granularity.type) {
-                        case "Month":
+                        case "month":
                             return date.toLocaleString('default', { month: 'short' });
-                        case "Week":
+                        case "week":
                             return `Week ${Math.ceil(date.getDate() / 7)}`;
-                        case "Day":
+                        case "day":
                             return date.getDate().toString();
-                        case "Hour":
+                        case "hour":
                             return date.getHours().toString();
                         default:
                             return dataKey;
@@ -29,7 +29,19 @@ export function createDashboardBarChartComponent(response: ChartResponse, chartC
             />
             <ChartTooltip content={<ChartTooltipContent />} />
 
-            {response.chart.segment === "Device" ? ( //por device
+            {response.data.map((entry) => (
+                <Bar
+                    key={response.chart.segment as keyof typeof entry}
+                    
+                    dataKey="value"
+                    name={response.chart.segment as string}
+                    fill={chartConfig[response.chart.segment as keyof typeof chartConfig]?.color || chartConfig.default.color}
+                    radius={4}
+                    isAnimationActive={false}
+                />
+            ))}
+
+            {/* {response.chart.segment === "Device" ? ( //por device
                 ["Mobile", "Desktop", "Tablet", "Other"].map((device) => (
                     <Bar
                         key={device}
@@ -52,7 +64,7 @@ export function createDashboardBarChartComponent(response: ChartResponse, chartC
                     radius={4}
                     isAnimationActive={false}
                 />
-            )}
+            )} */}
         </BarChart>
     </ChartContainer>
 }

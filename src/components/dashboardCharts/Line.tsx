@@ -4,7 +4,8 @@ import { ChartResponse } from "@/api/listCharts"
 
 export function createDashboardLineChartComponent(response: ChartResponse, chartConfig: ChartConfig) {
     return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <LineChart
+        <div></div>
+        {/* <LineChart
           accessibilityLayer
           data={response.entries}
           margin={{
@@ -30,6 +31,6 @@ export function createDashboardLineChartComponent(response: ChartResponse, chart
               dot={false}
             />
           ))}
-        </LineChart>
+        </LineChart> */}
       </ChartContainer>
 }
