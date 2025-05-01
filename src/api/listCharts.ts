@@ -185,7 +185,7 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
         chart: {
           id: '102',
           account_id: "asd",
-          name: "spend over time",
+          name: "spend over time (nao sei oq aconteceu aq)",
           type: 'area',
           metric: 'spend',
           period: {

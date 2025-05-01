@@ -19,6 +19,7 @@ import { DraggableList } from "@/components/DraggableList";
 import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";
+import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area";
 
 const chartConfig = {
   //cores placeholder, adequar a identidade visual
@@ -53,57 +54,8 @@ function createChartComponent(response: ChartResponse) {
     case "line":
       return createDashboardLineChartComponent(response, chartConfig);
 
-    //Consertar tudo abaixo dessa linha:
-    /* case "Line":
-      
-
-    case "Area":
-      return <ChartContainer config={chartConfig} className="h-3/4 w-full">
-        <AreaChart
-          accessibilityLayer
-          data={response.entries}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="identifier"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-
-          <defs>
-            {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
-              <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-                  stopOpacity={0.8} />
-                <stop
-                  offset="95%"
-                  stopColor={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-                  stopOpacity={0.1} />
-              </linearGradient>
-            ))}
-          </defs>
-
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          {Object.keys(response.entries[0] || {}).filter(key => typeof response.entries[0][key] !== 'string').map((key, index) => (
-            <Area
-              key={key}
-              dataKey={key}
-              type="natural"
-              fill={`url(#fillGradient-${key})`}
-              fillOpacity={0.4}
-              stroke={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
-              stackId="a" />
-          ))}
-        </AreaChart>
-      </ChartContainer>*/
+    case "area":
+      return createDashboardAreaChartComponent(response, chartConfig);
   }
 }
 

@@ -6,8 +6,6 @@ import { treatChartData } from "./treatChartData"
 export function createDashboardLineChartComponent(response: ChartResponse, chartConfig: ChartConfig) {
   const entries = treatChartData(response)
 
-  console.log(entries)
-
   return <ChartContainer config={chartConfig} className="h-3/4 w-full">
     <LineChart
       accessibilityLayer
