@@ -80,7 +80,7 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
             source_table: "ad",
             source_id: "12"
           }],
-          segment: null
+          segment: "device"
         },
         data: [
           { source_table: 'campaign', source_id: 'acb', value: 5842, date: new Date(2025, 1, 1), device: "desktop" },
@@ -89,6 +89,13 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'campaign', source_id: 'acb', value: 12, date: new Date(2025, 4, 1), device: "mobile" },
           { source_table: 'campaign', source_id: 'acb', value: 1000, date: new Date(2025, 5, 1), device: "mobile" },
           { source_table: 'campaign', source_id: 'acb', value: 2000, date: new Date(2025, 6, 1), device: "mobile" },
+          // Additional random entries
+          { source_table: 'campaign', source_id: 'acb', value: 3500, date: new Date(2025, 7, 1), device: "tablet" },
+          { source_table: 'campaign', source_id: 'acb', value: 4200, date: new Date(2025, 8, 1), device: "tablet" },
+          { source_table: 'campaign', source_id: 'acb', value: 2800, date: new Date(2025, 9, 1), device: "desktop" },
+          { source_table: 'campaign', source_id: 'acb', value: 1750, date: new Date(2025, 10, 1), device: "desktop" },
+          { source_table: 'campaign', source_id: 'acb', value: 950, date: new Date(2025, 11, 1), device: "mobile" },
+          { source_table: 'campaign', source_id: 'acb', value: 2250, date: new Date(2025, 12, 1), device: "mobile" },
         ],
       },
       // Pie chart example
@@ -124,6 +131,13 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'campaign', source_id: '15', value: 100, date: new Date(2025, 4, 1), device: "other" },
           { source_table: 'campaign', source_id: '15', value: 200, date: new Date(2025, 4, 2), device: "mobile" },
           { source_table: 'campaign', source_id: '15', value: 400, date: new Date(2025, 4, 2), device: "desktop" },
+          // Additional random entries
+          { source_table: 'campaign', source_id: '15', value: 950, date: new Date(2025, 4, 2), device: "tablet" },
+          { source_table: 'campaign', source_id: '15', value: 150, date: new Date(2025, 4, 2), device: "other" },
+          { source_table: 'campaign', source_id: '15', value: 1800, date: new Date(2025, 4, 3), device: "mobile" },
+          { source_table: 'campaign', source_id: '15', value: 750, date: new Date(2025, 4, 3), device: "desktop" },
+          { source_table: 'campaign', source_id: '15', value: 450, date: new Date(2025, 4, 3), device: "tablet" },
+          { source_table: 'campaign', source_id: '15', value: 200, date: new Date(2025, 4, 3), device: "other" },
         ]
       },
       // Bar chart example
@@ -158,6 +172,12 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'ad', source_id: '16', value: 15000, date: new Date(2025, 3, 1), device: null },
           { source_table: 'ad', source_id: '16', value: 21000, date: new Date(2025, 4, 1), device: null },
           { source_table: 'ad', source_id: '16', value: 25000, date: new Date(2025, 5, 1), device: null },
+          // Additional random entries
+          { source_table: 'ad', source_id: '16', value: 19500, date: new Date(2025, 6, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 22800, date: new Date(2025, 7, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 30000, date: new Date(2025, 8, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 28500, date: new Date(2025, 9, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 26200, date: new Date(2025, 10, 1), device: null },
         ]
       },
       // Area chart example
@@ -193,6 +213,13 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'campaign', source_id: '17', value: 200, date: new Date(2025, 3, 31), device: null },
           { source_table: 'campaign', source_id: '17', value: 225, date: new Date(2025, 4, 1), device: null },
           { source_table: 'campaign', source_id: '17', value: 250, date: new Date(2025, 4, 2), device: null },
+          // Additional random entries
+          { source_table: 'campaign', source_id: '17', value: 285, date: new Date(2025, 4, 3), device: null },
+          { source_table: 'campaign', source_id: '17', value: 310, date: new Date(2025, 4, 4), device: null },
+          { source_table: 'campaign', source_id: '17', value: 275, date: new Date(2025, 4, 5), device: null },
+          { source_table: 'campaign', source_id: '17', value: 320, date: new Date(2025, 4, 6), device: null },
+          { source_table: 'campaign', source_id: '17', value: 350, date: new Date(2025, 4, 7), device: null },
+          { source_table: 'campaign', source_id: '17', value: 330, date: new Date(2025, 4, 8), device: null },
         ]
       },
       // Radar chart example
@@ -238,6 +265,15 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'ad', source_id: '19', value: 2.1, date: new Date(2025, 4, 1), device: "tablet" },
           { source_table: 'ad', source_id: '19', value: 3.5, date: new Date(2025, 4, 2), device: "mobile" },
           { source_table: 'ad', source_id: '19', value: 3.0, date: new Date(2025, 4, 2), device: "desktop" },
+          // Additional random entries
+          { source_table: 'ad', source_id: '18', value: 2.8, date: new Date(2025, 4, 2), device: "mobile" },
+          { source_table: 'ad', source_id: '18', value: 3.3, date: new Date(2025, 4, 2), device: "desktop" },
+          { source_table: 'ad', source_id: '18', value: 2.0, date: new Date(2025, 4, 2), device: "tablet" },
+          { source_table: 'ad', source_id: '18', value: 1.5, date: new Date(2025, 4, 2), device: "other" },
+          { source_table: 'ad', source_id: '19', value: 2.7, date: new Date(2025, 4, 2), device: "tablet" },
+          { source_table: 'ad', source_id: '19', value: 3.7, date: new Date(2025, 4, 3), device: "mobile" },
+          { source_table: 'ad', source_id: '19', value: 3.4, date: new Date(2025, 4, 3), device: "desktop" },
+          { source_table: 'ad', source_id: '19', value: 2.5, date: new Date(2025, 4, 3), device: "tablet" },
         ]
       },
       // BarNegative chart example
@@ -271,6 +307,11 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'campaign', source_id: '20', value: 200, date: new Date(2025, 3, 1), device: null },
           { source_table: 'campaign', source_id: '20', value: -300, date: new Date(2025, 4, 1), device: null },
           { source_table: 'campaign', source_id: '20', value: 100, date: new Date(2025, 5, 1), device: null },
+          // Additional random entries
+          { source_table: 'campaign', source_id: '20', value: -450, date: new Date(2025, 6, 1), device: null },
+          { source_table: 'campaign', source_id: '20', value: 350, date: new Date(2025, 7, 1), device: null },
+          { source_table: 'campaign', source_id: '20', value: -200, date: new Date(2025, 8, 1), device: null },
+          { source_table: 'campaign', source_id: '20', value: 175, date: new Date(2025, 9, 1), device: null },
         ]
       }
     ]
