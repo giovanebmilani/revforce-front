@@ -20,66 +20,85 @@ type SourceType = "campaign" | "ad";
 type SegmentType = "source" | "segment";
 
 function RouteComponent() {
+  
+  const [name, setName] = useState("");
+  const [selectedChart, setSelectedChart] = useState<ChartType | string>("");
+  const [selectedMetric, setSelectedMetric] = useState<MetricType | string>("");
+  const [selectedPeriodType, setSelectedPeriodType] = useState<
+  PeriodType | string
+  >("");
+  const [selectedPeriodAmount, setSelectedPeriodAmount] = useState<string>("");
+  const [selectedGranularityType, setSelectedGranularityType] = useState<
+  PeriodType | string
+  >("");
+  const [selectedGranularityAmount, setSelectedGranularityAmount] =
+  useState<string>("");
+  const [selectedSource, setSelectedSource] = useState<SourceType | string>("");
+  const [selectedSegment, setSelectedSegment] = useState<SegmentType | string>(
+    ""
+  );
+  
+  const navigate = useNavigate();
+  
   const charts = [
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.barVertical)}
       key={ChartType.barVertical}
       type={ChartType.barVertical}
+      isSelected={selectedChart === ChartType.barVertical}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.barVerticalMultiple)}
       key={ChartType.barVerticalMultiple}
       type={ChartType.barVerticalMultiple}
+      isSelected={selectedChart === ChartType.barVerticalMultiple}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.barHorizontal)}
       key={ChartType.barHorizontal}
       type={ChartType.barHorizontal}
+      isSelected={selectedChart === ChartType.barHorizontal}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.barNegative)}
       key={ChartType.barNegative}
       type={ChartType.barNegative}
+      isSelected={selectedChart === ChartType.barNegative}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.pizza)}
       key={ChartType.pizza}
       type={ChartType.pizza}
+      isSelected={selectedChart === ChartType.pizza}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.line)}
       key={ChartType.line}
       type={ChartType.line}
+      isSelected={selectedChart === ChartType.line}
     ></ChartSelect>,
     <ChartSelect
       key={ChartType.lineMultiple}
       type={ChartType.lineMultiple}
+      onClick={() => setSelectedChart(ChartType.lineMultiple)}
+      isSelected={selectedChart === ChartType.lineMultiple}
     ></ChartSelect>,
-    <ChartSelect key={ChartType.radar} type={ChartType.radar}></ChartSelect>,
-    <ChartSelect key={ChartType.area} type={ChartType.area}></ChartSelect>,
+    <ChartSelect
+      key={ChartType.radar}
+      type={ChartType.radar}
+      onClick={() => setSelectedChart(ChartType.radar)}
+      isSelected={selectedChart === ChartType.radar}
+    ></ChartSelect>,
+    <ChartSelect
+      key={ChartType.area}
+      type={ChartType.area}
+      onClick={() => setSelectedChart(ChartType.area)}
+      isSelected={selectedChart === ChartType.area} 
+    ></ChartSelect>,
   ];
 
-  const [name, setName] = useState("");
-  const [selectedChart, setSelectedChart] = useState<ChartType | string>("");
-  const [selectedMetric, setSelectedMetric] = useState<MetricType | string>("");
-  const [selectedPeriodType, setSelectedPeriodType] = useState<
-    PeriodType | string
-  >("");
-  const [selectedPeriodAmount, setSelectedPeriodAmount] = useState<string>("");
-  const [selectedGranularityType, setSelectedGranularityType] = useState<
-    PeriodType | string
-  >("");
-  const [selectedGranularityAmount, setSelectedGranularityAmount] =
-    useState<string>("");
-  const [selectedSource, setSelectedSource] = useState<SourceType | string>("");
-  const [selectedSegment, setSelectedSegment] = useState<SegmentType | string>(
-    ""
-  );
-
-  const navigate = useNavigate();
-
   const { mutate: postNewChart, isPending: isPostNewChartPending } =
-    usePostNewChart({
+  usePostNewChart({
       onSuccess: () => {
         setName("");
         setSelectedChart("");
@@ -137,15 +156,9 @@ function RouteComponent() {
       <section className="flex flex-col w-fit rounded-sm border-1">
         <h2 className="font-semibold p-4">Charts</h2>
         <hr className="border-1" />
-        <div className="flex-1 px-4 py-4">
+        <div className="flex-1 px-2 py-2">
           <CarouselSize children={charts}></CarouselSize>
         </div>
-        {selectedChart && (
-          <div className="flex px-4 pb-4 gap-2">
-            <h3 className="font-semibold">Selected:</h3>
-            <p>{ChartTypeData[selectedChart as ChartType]?.label}</p>
-          </div>
-        )}
       </section>
 
       <div className="w-[360px]">
