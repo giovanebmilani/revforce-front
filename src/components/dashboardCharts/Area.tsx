@@ -76,7 +76,7 @@ export function createDashboardAreaChartComponent(
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         {Object.keys(entries[0] || {})
           .filter((key) => typeof entries[0][key] !== "string")
-          .map((key, index) => (
+          .map((key) => (
             <Area
               key={key}
               dataKey={key}

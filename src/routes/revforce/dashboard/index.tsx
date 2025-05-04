@@ -112,7 +112,7 @@ async function RouteComponent() {
         direction="auto"
         className="gap-4"
         itemClassName="w-10/31"
-        onOrderChange={(newOrder) => {
+        onOrderChange={() => {
           //salvar no back?
         }}
       />
