@@ -3,7 +3,9 @@ stages:
 
 build_job:
   stage: build
-  image: node:22.14-alpine
+  image: node:22.15
+  tags:
+    - aws
   script:
     - npm install
     - npm run build
