@@ -7,14 +7,9 @@ export const Route = createFileRoute("/revforce/dashboard/")({
   component: RouteComponent,
 });
 
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartConfig } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { listCharts, Chart, ChartResponse } from "@/api/listCharts";
+import { listCharts, ChartResponse } from "@/api/listCharts";
 import { DraggableList } from "@/components/DraggableList";
 import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
