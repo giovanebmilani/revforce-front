@@ -97,9 +97,11 @@ async function RouteComponent() {
         {/* pra separar o dashboard do resto (chinelagem, ajude ages 3) */}
         <div className="flex flex-row gap-2 items-center">
           <IconButton icon={icons.RefreshCcw} />
-          <Button className="text-white cursor-pointer h-full">
-            <Plus /> New Chart
-          </Button>
+          <Link to="/revforce/dashboard/newchart">
+            <Button className="text-white cursor-pointer h-11 flex items-center justify-center gap-2">
+              <Plus /> New Chart
+            </Button>
+          </Link>
         </div>
       </div>
       <DraggableList
