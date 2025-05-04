@@ -6,7 +6,7 @@ import { getErrorMessage } from "./utils";
 
 type ChartType = "pie" | "bar" | "line" | "area"
 type ChartMetric = "ctr" | "click" | "impression" | "spend"
-type ChartSegment = "device" | "date"
+type ChartSegment = "device" | "date" | "source_table" | "source_id"
 
 type DeviceType = "mobile" | "desktop" | "tablet" | "other"
 type SourceTable = "campaign" | "ad"
@@ -204,22 +204,22 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
             source_table: "campaign",
             source_id: "17"
           }],
-          segment: "date"
+          segment: "source_table"
         },
         data: [
-          { source_table: 'campaign', source_id: '17', value: 125, date: new Date(2025, 3, 28), device: null },
-          { source_table: 'campaign', source_id: '17', value: 150, date: new Date(2025, 3, 29), device: null },
-          { source_table: 'campaign', source_id: '17', value: 175, date: new Date(2025, 3, 30), device: null },
-          { source_table: 'campaign', source_id: '17', value: 200, date: new Date(2025, 3, 31), device: null },
-          { source_table: 'campaign', source_id: '17', value: 225, date: new Date(2025, 4, 1), device: null },
-          { source_table: 'campaign', source_id: '17', value: 250, date: new Date(2025, 4, 2), device: null },
+          { source_table: 'campaign', source_id: '17', value: 125, date: new Date(2025, 3, 28), device: "tablet" },
+          { source_table: 'campaign', source_id: '17', value: 150, date: new Date(2025, 3, 29), device: "mobile" },
+          { source_table: 'ad', source_id: '17', value: 175, date: new Date(2025, 3, 30), device: "tablet" },
+          { source_table: 'ad', source_id: '17', value: 200, date: new Date(2025, 3, 31), device: "tablet" },
+          { source_table: 'ad', source_id: '17', value: 225, date: new Date(2025, 4, 1), device: "mobile" },
+          { source_table: 'ad', source_id: '17', value: 250, date: new Date(2025, 4, 2), device: "desktop" },
           // Additional random entries
-          { source_table: 'campaign', source_id: '17', value: 285, date: new Date(2025, 4, 3), device: null },
-          { source_table: 'campaign', source_id: '17', value: 310, date: new Date(2025, 4, 4), device: null },
-          { source_table: 'campaign', source_id: '17', value: 275, date: new Date(2025, 4, 5), device: null },
-          { source_table: 'campaign', source_id: '17', value: 320, date: new Date(2025, 4, 6), device: null },
-          { source_table: 'campaign', source_id: '17', value: 350, date: new Date(2025, 4, 7), device: null },
-          { source_table: 'campaign', source_id: '17', value: 330, date: new Date(2025, 4, 8), device: null },
+          { source_table: 'campaign', source_id: '17', value: 285, date: new Date(2025, 4, 3), device: "desktop" },
+          { source_table: 'campaign', source_id: '17', value: 310, date: new Date(2025, 4, 4), device: "other" },
+          { source_table: 'ad', source_id: '17', value: 275, date: new Date(2025, 4, 5), device: "mobile" },
+          { source_table: 'ad', source_id: '17', value: 320, date: new Date(2025, 4, 6), device: "desktop" },
+          { source_table: 'campaign', source_id: '17', value: 350, date: new Date(2025, 4, 7), device: "tablet" },
+          { source_table: 'ad', source_id: '17', value: 330, date: new Date(2025, 4, 8), device: "desktop" },
         ]
       },
     ]
