@@ -5,7 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { treatChartData } from "./treatChartData";
 
 export function createDashboardBarChartComponent(
@@ -14,9 +14,12 @@ export function createDashboardBarChartComponent(
 ) {
   const entries = treatChartData(response)
 
+  console.log("entries", entries)
+
   return (
     <ChartContainer config={chartConfig} className="h-3/4 w-full">
       <BarChart accessibilityLayer data={entries}>
+        <CartesianGrid vertical={false} />
         <XAxis
           dataKey="identifier"
           tickLine={false}
@@ -24,18 +27,13 @@ export function createDashboardBarChartComponent(
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
-
-        {
-          Object.keys(entries[0] || {}).filter(key => typeof entries[0][key] !== 'string').map((key, index) => (
-            <Bar
-              key={key}
-              dataKey={key}
-              fill={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
-              radius={4}
-            />
-          ))
-        }
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent indicator="dashed" />}
+        />
+        {Object.keys(entries[0] || {}).map((key) => (
+          key !== "identifier" && <Bar dataKey={key} fill={`var(--color-${key})`} radius={4} />
+        ))}
       </BarChart>
     </ChartContainer>
   );

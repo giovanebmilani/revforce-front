@@ -29,7 +29,7 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
         });
     });
 
-    console.log(response.chart.segment)
+    //console.log(response.chart.segment)
 
     return chartData
 }

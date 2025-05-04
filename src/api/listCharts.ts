@@ -167,17 +167,17 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           segment: "device"
         },
         data: [
-          { source_table: 'ad', source_id: '16', value: 12000, date: new Date(2025, 1, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 18000, date: new Date(2025, 2, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 15000, date: new Date(2025, 3, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 21000, date: new Date(2025, 4, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 25000, date: new Date(2025, 5, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 12000, date: new Date(2025, 1, 1), device: "mobile" },
+          { source_table: 'ad', source_id: '16', value: 18000, date: new Date(2025, 2, 1), device: "desktop" },
+          { source_table: 'ad', source_id: '16', value: 15000, date: new Date(2025, 3, 1), device: "mobile" },
+          { source_table: 'ad', source_id: '16', value: 21000, date: new Date(2025, 4, 1), device: "tablet" },
+          { source_table: 'ad', source_id: '16', value: 25000, date: new Date(2025, 5, 1), device: "mobile" },
           // Additional random entries
-          { source_table: 'ad', source_id: '16', value: 19500, date: new Date(2025, 6, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 22800, date: new Date(2025, 7, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 30000, date: new Date(2025, 8, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 28500, date: new Date(2025, 9, 1), device: null },
-          { source_table: 'ad', source_id: '16', value: 26200, date: new Date(2025, 10, 1), device: null },
+          { source_table: 'ad', source_id: '16', value: 19500, date: new Date(2025, 6, 1), device: "mobile" },
+          { source_table: 'ad', source_id: '16', value: 22800, date: new Date(2025, 7, 1), device: "desktop" },
+          { source_table: 'ad', source_id: '16', value: 30000, date: new Date(2025, 8, 1), device: "tablet" },
+          { source_table: 'ad', source_id: '16', value: 28500, date: new Date(2025, 9, 1), device: "mobile" },
+          { source_table: 'ad', source_id: '16', value: 26200, date: new Date(2025, 10, 1), device: "desktop" },
         ]
       },
       // Area chart example
