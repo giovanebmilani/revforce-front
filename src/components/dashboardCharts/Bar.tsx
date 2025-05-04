@@ -6,76 +6,36 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, XAxis } from "recharts";
+import { treatChartData } from "./treatChartData";
 
 export function createDashboardBarChartComponent(
   response: ChartResponse,
   chartConfig: ChartConfig
 ) {
+  const entries = treatChartData(response)
+
   return (
     <ChartContainer config={chartConfig} className="h-3/4 w-full">
-      <BarChart accessibilityLayer data={response.data}>
+      <BarChart accessibilityLayer data={entries}>
         <XAxis
-          dataKey="date"
+          dataKey="identifier"
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(dataKey) => {
-            const date = new Date(dataKey);
-            switch (response.chart.granularity.type) {
-              case "month":
-                return date.toLocaleString("default", { month: "short" });
-              case "week":
-                return `Week ${Math.ceil(date.getDate() / 7)}`;
-              case "day":
-                return date.getDate().toString();
-              case "hour":
-                return date.getHours().toString();
-              default:
-                return dataKey;
-            }
-          }}
+          tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
 
-        {response.data.map((entry) => (
-          <Bar
-            key={response.chart.segment}
-            data={response.data}
-            dataKey="value"
-            name={response.chart.segment as string}
-            fill={
-              chartConfig[response.chart.segment as keyof typeof chartConfig]
-                ?.color || chartConfig.default.color
-            }
-            radius={4}
-            isAnimationActive={false}
-          />
-        ))}
-
-        {/* {response.chart.segment === "Device" ? ( //por device
-                ["Mobile", "Desktop", "Tablet", "Other"].map((device) => (
-                    <Bar
-                        key={device}
-                        dataKey="value"
-                        name={device}
-                        fill={
-                            device === "Desktop" ? chartConfig.desktop.color :
-                                device === "Mobile" ? chartConfig.mobile.color :
-                                    device === "Tablet" ? chartConfig.tablet.color :
-                                        chartConfig.other.color
-                        }
-                        radius={4}
-                        isAnimationActive={false}
-                    />
-                ))
-            ) : (
-                <Bar //outro tipo
-                    dataKey="value"
-                    fill={chartConfig.desktop.color} //definir cor padrao
-                    radius={4}
-                    isAnimationActive={false}
-                />
-            )} */}
+        {
+          Object.keys(entries[0] || {}).filter(key => typeof entries[0][key] !== 'string').map((key, index) => (
+            <Bar
+              key={key}
+              dataKey={key}
+              fill={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
+              radius={4}
+            />
+          ))
+        }
       </BarChart>
     </ChartContainer>
   );

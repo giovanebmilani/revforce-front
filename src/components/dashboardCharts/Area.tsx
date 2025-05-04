@@ -38,11 +38,11 @@ export function createDashboardAreaChartComponent(
                         <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
                             <stop
                                 offset="5%"
-                                stopColor={chartConfig["desktop"].color}
+                                stopColor={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
                                 stopOpacity={0.8} />
                             <stop
                                 offset="95%"
-                                stopColor={chartConfig["desktop"].color}
+                                stopColor={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
                                 stopOpacity={0.1} />
                         </linearGradient>
                     ))}
@@ -56,7 +56,7 @@ export function createDashboardAreaChartComponent(
                         type="natural"
                         fill={`url(#fillGradient-${key})`}
                         fillOpacity={0.4}
-                        stroke={chartConfig["desktop"].color}
+                        stroke={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
                         stackId="a" />
                 ))}
             </AreaChart>
