@@ -4,13 +4,13 @@ import { getErrorMessage } from "./utils";
 // const API_BASE_URL = import.meta.env.VITE_API_URL;
 // const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/list_charts`;
 
-type ChartType = "pie" | "bar" | "line" | "area"
-type ChartMetric = "ctr" | "click" | "impression" | "spend"
-type ChartSegment = "device" | "date" | "source_table" | "source_id"
+export type ChartType = "pie" | "bar" | "line" | "area"
+export type ChartMetric = "ctr" | "click" | "impression" | "spend"
+export type ChartSegment = "device" | "date" | "source_table" | "source_id"
 
-type DeviceType = "mobile" | "desktop" | "tablet" | "other"
-type SourceTable = "campaign" | "ad"
-type PeriodType = "month" | "week" | "day" | "hour"
+export type DeviceType = "mobile" | "desktop" | "tablet" | "other"
+export type SourceTable = "campaign" | "ad"
+export type PeriodType = "month" | "week" | "day" | "hour"
 
 interface PeriodResponse {
   type: PeriodType

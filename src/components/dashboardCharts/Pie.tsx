@@ -38,8 +38,6 @@ function treatDataForPie(response: ChartResponse): PieChartDataItem[] {
     });
   });
 
-  console.log("pieData", pieData);
-
   return pieData;
 }
 

@@ -12,9 +12,9 @@ export function createDashboardBarChartComponent(
   response: ChartResponse,
   chartConfig: ChartConfig
 ) {
-  const entries = treatChartData(response)
+  const entries = treatChartData(response);
 
-  console.log("entries", entries)
+  console.log("entries", entries);
 
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
@@ -25,15 +25,17 @@ export function createDashboardBarChartComponent(
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="dashed" />}
         />
-        {Object.keys(entries[0] || {}).map((key) => (
-          key !== "identifier" && <Bar dataKey={key} fill={`var(--color-${key})`} radius={4} />
-        ))}
+        {Object.keys(entries[0] || {}).map(
+          (key) =>
+            key !== "identifier" && (
+              <Bar dataKey={key} fill={`var(--color-${key})`} radius={4} />
+            )
+        )}
       </BarChart>
     </ChartContainer>
   );
