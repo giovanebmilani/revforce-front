@@ -13,13 +13,11 @@ type SourceTable = "campaign" | "ad"
 type PeriodType = "month" | "week" | "day" | "hour"
 
 interface PeriodResponse {
-  id: string
   type: PeriodType
   amount: number
 }
 
 interface SourceResponse {
-  id: string
   chart_id: string
   source_table: SourceTable
   source_id: string
@@ -65,17 +63,14 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           type: 'line',
           metric: 'ctr',
           period: {
-            id: "23",
             type: "month",
             amount: 3
           },
           granularity: {
-            id: "13",
             type: "week",
             amount: 1
           },
           sources: [{
-            id: "224",
             chart_id: "456",
             source_table: "ad",
             source_id: "12"
@@ -107,17 +102,14 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           type: 'pie',
           metric: 'click',
           period: {
-            id: "24",
             type: "month",
             amount: 1
           },
           granularity: {
-            id: "14",
             type: "day",
             amount: 1
           },
           sources: [{
-            id: "225",
             chart_id: "789",
             source_table: "campaign",
             source_id: "15"
@@ -149,17 +141,14 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           type: 'bar',
           metric: 'impression',
           period: {
-            id: "25",
             type: "month",
             amount: 4
           },
           granularity: {
-            id: "15",
             type: "month",
             amount: 1
           },
           sources: [{
-            id: "226",
             chart_id: "101",
             source_table: "ad",
             source_id: "16"
@@ -189,17 +178,14 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           type: 'area',
           metric: 'spend',
           period: {
-            id: "26",
             type: "week",
             amount: 2
           },
           granularity: {
-            id: "16",
             type: "day",
             amount: 1
           },
           sources: [{
-            id: "227",
             chart_id: "102",
             source_table: "campaign",
             source_id: "17"
