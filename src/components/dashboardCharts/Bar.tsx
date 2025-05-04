@@ -17,7 +17,7 @@ export function createDashboardBarChartComponent(
   console.log("entries", entries)
 
   return (
-    <ChartContainer config={chartConfig} className="h-3/4 w-full">
+    <ChartContainer config={chartConfig} className="h-full w-full">
       <BarChart accessibilityLayer data={entries}>
         <CartesianGrid vertical={false} />
         <XAxis
