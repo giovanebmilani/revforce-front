@@ -5,7 +5,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { treatChartData } from "./treatChartData";
 
 export function createDashboardAreaChartComponent(
@@ -35,14 +35,16 @@ export function createDashboardAreaChartComponent(
 
                 <defs>
                     {Object.keys(entries[0] || {}).filter(key => typeof entries[0][key] !== 'string').map((key, index) => (
+                        console.log(key, index, Object.keys(chartConfig).length, chartConfig, index % Object.keys(chartConfig).length),
+
                         <linearGradient key={key} id={`fillGradient-${key}`} x1="0" y1="0" x2="0" y2="1">
                             <stop
                                 offset="5%"
-                                stopColor={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
-                                stopOpacity={0.8} />
+                                stopColor={chartConfig[key]?.color || chartConfig.other.color}
+                                stopOpacity={1} />
                             <stop
                                 offset="95%"
-                                stopColor={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
+                                stopColor={chartConfig[key]?.color || chartConfig.other.color}
                                 stopOpacity={0.1} />
                         </linearGradient>
                     ))}
@@ -56,7 +58,7 @@ export function createDashboardAreaChartComponent(
                         type="natural"
                         fill={`url(#fillGradient-${key})`}
                         fillOpacity={0.4}
-                        stroke={chartConfig[index % Object.keys(chartConfig).length] || chartConfig.other.color}
+                        stroke={chartConfig[key]?.color || chartConfig.other.color}
                         stackId="a" />
                 ))}
             </AreaChart>
