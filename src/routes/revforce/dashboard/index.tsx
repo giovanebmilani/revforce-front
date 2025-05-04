@@ -69,7 +69,7 @@ async function RouteComponent() {
     //para por no draggable
     id: response.chart.id, //para o draggable
     content: (
-      <Card key={response.chart.id} className="w-full h-100 pt-2 pb-0">
+      <Card key={response.chart.id} className="w-full h-1/1 pt-2 pb-0 overflow-hidden">
         <CardHeader className="border-b">
           <CardTitle className="flex flex-row items-center justify-between">
             {response.chart.name}
@@ -83,7 +83,7 @@ async function RouteComponent() {
             </Link>
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col h-full pt-4">
+        <CardContent className="flex flex-col h-max p-6">
           {createChartComponent(response)}
         </CardContent>
       </Card>
