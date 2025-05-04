@@ -4,7 +4,7 @@ import { getErrorMessage } from "./utils";
 // const API_BASE_URL = import.meta.env.VITE_API_URL;
 // const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/list_charts`;
 
-type ChartType = "pie" | "bar" | "line" | "area" | "radar" | "bar_negative"
+type ChartType = "pie" | "bar" | "line" | "area"
 type ChartMetric = "ctr" | "click" | "impression" | "spend"
 type ChartSegment = "device" | "date"
 
@@ -222,98 +222,6 @@ export const listCharts = async (): Promise<ListChartsResponse> => {
           { source_table: 'campaign', source_id: '17', value: 330, date: new Date(2025, 4, 8), device: null },
         ]
       },
-      // Radar chart example
-      {
-        chart: {
-          id: '103',
-          account_id: "asd",
-          name: "performance metrics",
-          type: 'radar',
-          metric: 'ctr',
-          period: {
-            id: "27",
-            type: "month",
-            amount: 1
-          },
-          granularity: {
-            id: "17",
-            type: "week",
-            amount: 1
-          },
-          sources: [
-            {
-              id: "228",
-              chart_id: "103",
-              source_table: "ad",
-              source_id: "18"
-            },
-            {
-              id: "229",
-              chart_id: "103",
-              source_table: "ad",
-              source_id: "19"
-            }
-          ],
-          segment: "device"
-        },
-        data: [
-          { source_table: 'ad', source_id: '18', value: 2.5, date: new Date(2025, 4, 1), device: "mobile" },
-          { source_table: 'ad', source_id: '18', value: 3.1, date: new Date(2025, 4, 1), device: "desktop" },
-          { source_table: 'ad', source_id: '18', value: 1.8, date: new Date(2025, 4, 1), device: "tablet" },
-          { source_table: 'ad', source_id: '19', value: 3.2, date: new Date(2025, 4, 1), device: "mobile" },
-          { source_table: 'ad', source_id: '19', value: 2.9, date: new Date(2025, 4, 1), device: "desktop" },
-          { source_table: 'ad', source_id: '19', value: 2.1, date: new Date(2025, 4, 1), device: "tablet" },
-          { source_table: 'ad', source_id: '19', value: 3.5, date: new Date(2025, 4, 2), device: "mobile" },
-          { source_table: 'ad', source_id: '19', value: 3.0, date: new Date(2025, 4, 2), device: "desktop" },
-          // Additional random entries
-          { source_table: 'ad', source_id: '18', value: 2.8, date: new Date(2025, 4, 2), device: "mobile" },
-          { source_table: 'ad', source_id: '18', value: 3.3, date: new Date(2025, 4, 2), device: "desktop" },
-          { source_table: 'ad', source_id: '18', value: 2.0, date: new Date(2025, 4, 2), device: "tablet" },
-          { source_table: 'ad', source_id: '18', value: 1.5, date: new Date(2025, 4, 2), device: "other" },
-          { source_table: 'ad', source_id: '19', value: 2.7, date: new Date(2025, 4, 2), device: "tablet" },
-          { source_table: 'ad', source_id: '19', value: 3.7, date: new Date(2025, 4, 3), device: "mobile" },
-          { source_table: 'ad', source_id: '19', value: 3.4, date: new Date(2025, 4, 3), device: "desktop" },
-          { source_table: 'ad', source_id: '19', value: 2.5, date: new Date(2025, 4, 3), device: "tablet" },
-        ]
-      },
-      // BarNegative chart example
-      {
-        chart: {
-          id: '104',
-          account_id: "asd",
-          name: "budget variance",
-          type: 'bar_negative',
-          metric: 'spend',
-          period: {
-            id: "28",
-            type: "month",
-            amount: 3
-          },
-          granularity: {
-            id: "18",
-            type: "month",
-            amount: 1
-          },
-          sources: [{
-            id: "230",
-            chart_id: "104",
-            source_table: "campaign",
-            source_id: "20"
-          }],
-          segment: null
-        },
-        data: [
-          { source_table: 'campaign', source_id: '20', value: -500, date: new Date(2025, 2, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: 200, date: new Date(2025, 3, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: -300, date: new Date(2025, 4, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: 100, date: new Date(2025, 5, 1), device: null },
-          // Additional random entries
-          { source_table: 'campaign', source_id: '20', value: -450, date: new Date(2025, 6, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: 350, date: new Date(2025, 7, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: -200, date: new Date(2025, 8, 1), device: null },
-          { source_table: 'campaign', source_id: '20', value: 175, date: new Date(2025, 9, 1), device: null },
-        ]
-      }
     ]
   } catch (error) {
     if (axios.isAxiosError(error)) {
