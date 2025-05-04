@@ -1,4 +1,4 @@
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, Pie, PieChart, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { ChartResponse } from "@/api/listCharts"
 import { treatChartData } from "./treatChartData"
@@ -24,11 +24,11 @@ export function createDashboardLineChartComponent(response: ChartResponse, chart
         tickFormatter={(value) => value.slice(0, 3)}
       />
       <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-      {Object.keys(entries[0] || {}).filter(key => typeof entries[0][key] !== 'string').map((key, index) => (
+      {Object.keys(entries[0] || {}).filter(key => typeof entries[0][key] !== 'string').map((key) => (
         <Line
           dataKey={key}
           type="monotone"
-          stroke={index % 2 === 0 ? chartConfig.desktop.color : chartConfig.mobile.color}
+          stroke={chartConfig[key]?.color || chartConfig.other.color}
           strokeWidth={2}
           dot={false}
         />
