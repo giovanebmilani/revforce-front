@@ -34,6 +34,14 @@ const chartConfig = {
     label: "Other",
     color: "#BE7405",
   },
+  ad: {
+    label: "Desktop",
+    color: "#916860",
+  },
+  campaign: {
+    label: "Mobile",
+    color: "#E1AD00",
+  },
 } satisfies ChartConfig;
 
 function createChartComponent(response: ChartResponse) {
