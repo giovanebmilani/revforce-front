@@ -23,7 +23,7 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
         Object.keys(item).forEach((key) => {
             chartData.forEach((item) => {
                 if (item[key] === undefined) {
-                    item[key] = 0;
+                    item[key] = 0; //TODO: valor anterior
                 }
             });
         });
