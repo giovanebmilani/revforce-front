@@ -1,12 +1,26 @@
 stages:
   - build
+  - deploy
 
 build_job:
   stage: build
-  image: node:22.14-alpine
+  image: node:22.15
+  tags:
+    - aws
   script:
     - npm install
     - npm run build
   artifacts:
     paths:
       - dist/
+
+deploy_job:
+  stage: deploy
+  image: node:22.15
+  tags:
+    - aws
+  script:
+    - npm ci
+    - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY npm run prod
+  only:
+    - main
