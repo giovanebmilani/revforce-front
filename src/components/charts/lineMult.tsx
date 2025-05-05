@@ -1,3 +1,5 @@
+// REFATORAR COMO OS OUTROS GRÁFICOS
+
 "use client"
 
 import { TrendingUp } from "lucide-react"
@@ -37,7 +39,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function Component() {
+export async function Component() {
   return (
     <Card>
       <CardHeader>

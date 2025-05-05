@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -10,43 +10,53 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+} from "@/components/ui/chart";
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
+const mockData = [
+  { month: "January", desktop: 186, mobile: 80, isMock: true },
+  { month: "February", desktop: 305, mobile: 200, isMock: true },
+  { month: "March", desktop: 237, mobile: 120, isMock: true },
+  { month: "April", desktop: 73, mobile: 190, isMock: true },
+  { month: "May", desktop: 209, mobile: 130, isMock: true },
+  { month: "June", desktop: 214, mobile: 140, isMock: true },
+];
 
-export function Component() {
+export async function Component({
+  data,
+  config,
+  title,
+  description,
+}: {
+  data: any;
+  config: ChartConfig;
+  title: string;
+  description?: string;
+}) {
+  const isEmpty = !Array.isArray(data) || data.length === 0;
+  const chartData = isEmpty ? mockData : data;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>
+          {title ?? "Bar Chart"}
+          {isEmpty && (
+            <span className="ml-2 text-xs text-red-500">(Mock Data)</span>
+          )}
+        </CardTitle>
+        <CardDescription>
+          {description ?? "This is the description."}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+      <CardContent className="h-full">
+        <ChartContainer config={config}>
+          <BarChart data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -59,19 +69,25 @@ export function Component() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            {Object.keys(config).map((device) => (
+              <Bar
+                key={device}
+                dataKey={device}
+                fill={config[device].color}
+                radius={4}
+              />
+            ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Info 1 this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          {isEmpty ? "Usando dados mockados!" : "Dados reais carregados"}
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

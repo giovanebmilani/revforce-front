@@ -1,3 +1,5 @@
+// REFATORAR COMO OS OUTROS GRÁFICOS
+
 "use client"
 
 import { TrendingUp } from "lucide-react"
@@ -17,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -33,7 +36,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function Component() {
+export async function Component() {
   return (
     <Card>
       <CardHeader>

@@ -1,3 +1,5 @@
+// REFATORAR COMO OS OUTROS GRÁFICOS
+
 "use client"
 
 import { Pie, PieChart } from "recharts"
@@ -49,7 +51,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function Component() {
+export async function Component() {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
