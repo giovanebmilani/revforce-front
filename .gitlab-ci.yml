@@ -16,7 +16,7 @@ build_job:
 
 deploy_job:
   stage: deploy
-  image: node:22.15
+  image: sleavely/node-awscli:22.x
   tags:
     - aws
   script:
