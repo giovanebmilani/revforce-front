@@ -3,12 +3,10 @@ import { SelectBox } from "@/components/SelectBox";
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import ChartSelect, {
-  ChartType,
-  ChartTypeData,
-} from "@/components/ChartSelect";
+import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
+import { Plus } from "lucide-react";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
@@ -20,26 +18,31 @@ type SourceType = "campaign" | "ad";
 type SegmentType = "source" | "segment";
 
 function RouteComponent() {
-  
   const [name, setName] = useState("");
   const [selectedChart, setSelectedChart] = useState<ChartType | string>("");
   const [selectedMetric, setSelectedMetric] = useState<MetricType | string>("");
   const [selectedPeriodType, setSelectedPeriodType] = useState<
-  PeriodType | string
+    PeriodType | string
   >("");
   const [selectedPeriodAmount, setSelectedPeriodAmount] = useState<string>("");
   const [selectedGranularityType, setSelectedGranularityType] = useState<
-  PeriodType | string
+    PeriodType | string
   >("");
   const [selectedGranularityAmount, setSelectedGranularityAmount] =
-  useState<string>("");
-  const [selectedSource, setSelectedSource] = useState<SourceType | string>("");
+    useState<string>("");
+  const [selectedSources, setSelectedSources] = useState<
+    SourceType[] | string[]
+  >([]);
+  const [selectedSourcesTable, setSelectedSourcesTable] = useState<string[]>(
+    []
+  );
   const [selectedSegment, setSelectedSegment] = useState<SegmentType | string>(
     ""
   );
-  
+  const [sourceClick, setSourceClick] = useState(0);
+
   const navigate = useNavigate();
-  
+
   const charts = [
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.barVertical)}
@@ -93,12 +96,12 @@ function RouteComponent() {
       key={ChartType.area}
       type={ChartType.area}
       onClick={() => setSelectedChart(ChartType.area)}
-      isSelected={selectedChart === ChartType.area} 
+      isSelected={selectedChart === ChartType.area}
     ></ChartSelect>,
   ];
 
   const { mutate: postNewChart, isPending: isPostNewChartPending } =
-  usePostNewChart({
+    usePostNewChart({
       onSuccess: () => {
         setName("");
         setSelectedChart("");
@@ -107,7 +110,7 @@ function RouteComponent() {
         setSelectedPeriodAmount("");
         setSelectedGranularityType("");
         setSelectedGranularityAmount("");
-        setSelectedSource("");
+        setSelectedSources([]);
         setSelectedSegment("");
       },
     });
@@ -125,16 +128,21 @@ function RouteComponent() {
         type: selectedGranularityType,
         amount: Number(selectedGranularityAmount),
       },
-      sources: [
-        {
-          source_table: selectedSource,
-          source_id: "1",
-        },
-      ],
+      sources: createSource(),
       segment: selectedSegment,
     });
   };
 
+  const createSource = () => {
+    return selectedSources.map((source, index) => ({
+      source_table: selectedSourcesTable[index],
+      source_id: source,
+    }));
+  };
+
+  //console.log("selectedSources", selectedSources);
+  //console.log("selectedSourcesTable", selectedSourcesTable);
+  //console.log("source", createSource());
   return (
     <div className="flex flex-col w-full gap-3">
       <h2 className="text-gray-300">Dashboard /</h2>
@@ -244,18 +252,73 @@ function RouteComponent() {
       )}
 
       <div className="w-[360px]">
-        <h3 className="font-medium">Chart Source:</h3>
-        <SelectBox
-          items={[
-            { value: "campaign", label: "Campaign" },
-            { value: "ad", label: "Ad" },
-          ]}
-          selectLabel="Chart Source:"
-          placeholderText="Select the source to display in the chart..."
-          onChange={setSelectedSource}
-          className="w-full"
-        ></SelectBox>
-        
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium">Add chart source</h3>
+          <Button onClick={() => setSourceClick(sourceClick + 1)}>
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div>
+          {Array.from({ length: sourceClick }).map((_, index) => (
+            <div className="mb-5">
+              <h3 className="font-medium">Chart Source {index + 1}</h3>
+              <SelectBox
+                items={[
+                  { value: "campaign", label: "Campaign" },
+                  { value: "ad", label: "Ad" },
+                ]}
+                selectLabel={`Chart Source ${index}:`}
+                placeholderText="Select the source to display in the chart..."
+                onChange={(value) => {
+                  setSelectedSources((prev) => {
+                    const updatedSources = [...prev];
+                    updatedSources[index] = value;
+                    return updatedSources;
+                  });
+                }}
+                className="mb-2"
+              />
+
+              {selectedSources[index] === "ad" && (
+                <div className="mb-2">
+                  <h3 className="font-medium">Source Table {index + 1}</h3>
+                  <SelectBox
+                    items={[{ value: "id", label: "111" }]}
+                    selectLabel={`Source Table ${index}:`}
+                    placeholderText="Select the source to display in the chart..."
+                    onChange={(value) => {
+                      setSelectedSourcesTable((prev) => {
+                        const updatedSources = [...prev];
+                        updatedSources[index] = value;
+                        return updatedSources;
+                      });
+                    }}
+                    className="w-full mb-2"
+                  ></SelectBox>
+                </div>
+              )}
+              {selectedSources[index] === "campaign" && (
+                <div className="mb-2">
+                  <h3 className="font-medium">Source Table {index + 1}</h3>
+                  <SelectBox
+                    items={[{ value: "id", label: "222" }]}
+                    selectLabel={`Source Table ${index}:`}
+                    placeholderText="Select the source to display in the chart..."
+                    onChange={(value) => {
+                      setSelectedSourcesTable((prev) => {
+                        const updatedSources = [...prev];
+                        updatedSources[index] = value;
+                        return updatedSources;
+                      });
+                    }}
+                    className="w-full mb-2"
+                  ></SelectBox>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
