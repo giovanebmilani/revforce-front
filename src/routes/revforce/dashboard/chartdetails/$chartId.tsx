@@ -101,7 +101,7 @@ function RouteComponent() {
       <ChartProvider config={chartConfig}>
         <ChartStyle id="external-legend" config={chartConfig} />
         <Card>
-          <CardHeader className="flex flex-wrap items-center justify-between gap-2 space-y-0 border-b sm:flex-row">
+          <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
             <DateRangePresets
               onChange={(newRange) => {
                 const result = data.data
