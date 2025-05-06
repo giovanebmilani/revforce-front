@@ -67,14 +67,15 @@ export const ChartTypeData: Record<
 interface ChartTypeProps {
   type: ChartType;
   onClick?: () => void;
+  isSelected?: boolean;
 }
 
-function ChartSelect({ type, onClick }: ChartTypeProps) {
+function ChartSelect({ type, onClick, isSelected}: ChartTypeProps) {
   const { label, image, description } = ChartTypeData[type];
 
   return (
     <div
-      className="max-w-full rounded-xl flex flex-col items-center bg-white hover:cursor-pointer hover:scale-105 transition duration-200 ease-in-out"
+      className={`max-w-full rounded-xl flex flex-col items-center bg-white border-1 ${isSelected ? "border-blue-500 shadow-lg" : "border-gray-300"}`}
       onClick={onClick}
     >
       <img
