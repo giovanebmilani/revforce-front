@@ -5,7 +5,7 @@ import { getErrorMessage } from "./utils";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const ACCOUNT_ID = localStorage.getItem("account_id");
 const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/chart/${ACCOUNT_ID}/all`;
-console.log("LIST_CHARTS_ENDPOINT", LIST_CHARTS_ENDPOINT);
+const makeGetChartEndpoint = (chartId: string) => `${API_BASE_URL}/chart/${chartId}`;
 
 export type ChartType = "pizza" | "bar" | "line" | "area";
 export type ChartMetric = "ctr" | "click" | "impression" | "spend";
@@ -81,7 +81,33 @@ export const useListCharts = () => {
       }
     },
     refetchOnWindowFocus: true,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000,
+  });
+};
+
+export const useGetChart = (chartId: string) => {
+  return useQuery<ChartResponse, Error>({
+    queryKey: [`get-${chartId}`],
+    queryFn: async () => {
+      try {
+        const response = await axios.get<ChartResponse>(
+          makeGetChartEndpoint(chartId),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+    },
+    refetchOnWindowFocus: true,
   });
 };

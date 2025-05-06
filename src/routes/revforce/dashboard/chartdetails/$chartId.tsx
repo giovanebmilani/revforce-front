@@ -7,55 +7,17 @@ import { Filter, RefreshCw, Pencil } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartConfig, ChartContext, ChartStyle } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
-import { chartsMap } from "@/components/charts/chartsMap";
 import { DateRangePresets } from "@/components/ui/dateRangePresets";
+import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area"
+import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar"
+import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line"
+import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie"
+
+import { ChartResponse, useGetChart } from "@/api/charts";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
-)({
-  component: RouteComponent,
-  loader: async ({ params }) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5173/api/charts/${params.chartId}`
-      );
-      const json = await response.json();
-      return {
-        chartData: json.data,
-        chartInfo: json.chart,
-      };
-    } catch (error) {
-      console.error("Erro ao buscar dados do gráfico", error);
-
-      const mockData = [
-        { date: "2025-05-01", desktop: 100, mobile: 50, mock: true },
-        { date: "2025-05-02", desktop: 120, mobile: 60, mock: true },
-        { date: "2025-04-20", desktop: 130, mobile: 70, mock: true },
-        { date: "2025-03-04", desktop: 110, mobile: 55, mock: true },
-        { date: "2025-01-05", desktop: 140, mobile: 75, mock: true },
-        { date: "2024-05-04", desktop: 110, mobile: 55, mock: true },
-        { date: "2024-05-05", desktop: 140, mobile: 75, mock: true },
-        { date: "2023-05-04", desktop: 110, mobile: 55, mock: true },
-        { date: "2022-05-05", desktop: 140, mobile: 75, mock: true },
-      ];
-
-      const mockChart = {
-        title: "Mocked Chart",
-        description: "Isso é um mock.",
-        colors: {
-          desktop: "#916860",
-          mobile: "#E1AD00",
-        },
-        type: "areaStacked",
-      };
-
-      return {
-        chartData: mockData,
-        chartInfo: mockChart,
-      };
-    }
-  },
-});
+)({ component: RouteComponent });
 
 function handleRefresh() {
   // Espaço para atualizar dados
@@ -66,47 +28,75 @@ function handleEdit() {
   window.location.href = "/revforce/dashboard/newchart";
 }
 
-function ChartProvider({
-  config,
-  children,
-}: {
-  config: ChartConfig;
+type ChartProviderProps = { 
+  config: ChartConfig; 
   children: React.ReactNode;
-}) {
+}
+
+function ChartProvider({ config, children }: ChartProviderProps) {
   return (
-    <ChartContext.Provider value={{ config }}>{children}</ChartContext.Provider>
+    <ChartContext.Provider value={{ config }}>
+      {children}
+    </ChartContext.Provider>
   );
 }
 
+function ErrorScreen() {
+  return (
+    <div>
+      <h1>Something went wrong :(</h1>
+    </div>
+  )
+}
+
+const chartConfig = {
+  desktop: { label: "Desktop", color: "#916860" },
+  mobile: { label: "Mobile", color: "#E1AD00" },
+  tablet: { label: "Tablet", color: "#008080" },
+  other: { label: "Other", color: "#BE7405" },
+  ad: { label: "Desktop", color: "#916860" },
+  campaign: { label: "Mobile", color: "#E1AD00" },
+} satisfies ChartConfig;
+
+const createChartComponent = (response: ChartResponse) => {
+  switch (response.chart.type) {
+    case "bar":
+      return createDashboardBarChartComponent(response, chartConfig);
+    case "pizza":
+      return createDashboardPieChartComponent(response, chartConfig);
+    case "line":
+      return createDashboardLineChartComponent(response, chartConfig);
+    case "area":
+      return createDashboardAreaChartComponent(response, chartConfig);
+    default:
+      return null;
+  }
+};
+
 function RouteComponent() {
-  const [filteredData, setFilteredData] = React.useState<any[]>([]);
+  const { chartId } = Route.useParams()
+  const { data, isError } = useGetChart(chartId)
 
-  const { chartData, chartInfo } = Route.useLoaderData() as {
-    chartData: any[];
-    chartInfo: any;
-  };
+  if (isError || !data) {
+    return <ErrorScreen />
+  }
 
-  const chartEntry = chartsMap[chartInfo?.type];
-  const adaptedData = chartEntry?.adaptData
-    ? chartEntry.adaptData({ chart: chartInfo, data: chartData })
-    : [];
 
   const chartConfig: ChartConfig = {};
 
-  if (chartInfo?.colors) {
-    Object.keys(chartInfo.colors).forEach((segment) => {
-      chartConfig[segment] = {
-        label: segment.charAt(0).toUpperCase() + segment.slice(1),
-        color: chartInfo.colors[segment],
-      };
-    });
-  }
+  // if (chartInfo?.colors) {
+  //   Object.keys(chartInfo.colors).forEach((segment) => {
+  //     chartConfig[segment] = {
+  //       label: segment.charAt(0).toUpperCase() + segment.slice(1),
+  //       color: chartInfo.colors[segment],
+  //     };
+  //   });
+  // }
 
   return (
     <div className="w-full h-full">
       <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
-        {" "}
-        Chart Details{" "}
+        Chart Details
       </h2>
       <ChartProvider config={chartConfig}>
         <ChartStyle id="external-legend" config={chartConfig} />
@@ -114,7 +104,7 @@ function RouteComponent() {
           <CardHeader className="flex flex-wrap items-center justify-between gap-2 space-y-0 border-b sm:flex-row">
             <DateRangePresets
               onChange={(newRange) => {
-                const result = chartData
+                const result = data.data
                   .filter((item) => {
                     const itemDate = new Date(item.date);
                     return itemDate >= newRange.from && itemDate <= newRange.to;
@@ -123,7 +113,6 @@ function RouteComponent() {
                     (a, b) =>
                       new Date(a.date).getTime() - new Date(b.date).getTime()
                   );
-                setFilteredData(result);
               }}
             />
             <div className="flex gap-2">
@@ -142,14 +131,7 @@ function RouteComponent() {
             </div>
           </CardHeader>
           <CardContent>
-            {chartEntry?.Component && (
-              <chartEntry.Component
-                data={filteredData.length > 0 ? filteredData : adaptedData}
-                config={chartConfig}
-                title={chartInfo?.title || "Chart"}
-                description={chartInfo?.description}
-              />
-            )}
+            {createChartComponent(data)}
           </CardContent>
         </Card>
       </ChartProvider>
