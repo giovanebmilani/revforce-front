@@ -102,17 +102,14 @@ const DashboardError = () => (
 );
 
 function DashboardPage() {
-  const { data, isLoading, isSuccess, isError } = useListCharts();
-  const chartsDraggable = useMemo(
-    () =>
-      data?.map((response: ChartResponse) => ({
-        id: response.chart.id,
-        content: (
-          <DashboardChartCard key={response.chart.id} response={response} />
-        ),
-      })) || [],
-    [data]
-  );
+  const { data, isLoading, isSuccess, isError, isFetching } = useListCharts();
+  const chartsDraggable =
+    data?.map((response: ChartResponse) => ({
+      id: response.chart.id,
+      content: (
+        <DashboardChartCard key={response.chart.id} response={response} />
+      ),
+    })) || [];
 
   if (isLoading) return <DashboardLoading />;
   if (isError) return <DashboardError />;
@@ -122,15 +119,18 @@ function DashboardPage() {
       <DashboardHeader />
 
       {isSuccess && (
-        <DraggableList
-          initialItems={chartsDraggable}
-          direction="auto"
-          className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          itemClassName="w-full"
-          onOrderChange={() => {
-            // TODO: Implement order save logic
-          }}
-        />
+        <div className="flex flex-col gap-4">
+          <DraggableList
+            initialItems={chartsDraggable}
+            direction="auto"
+            className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            itemClassName="w-full"
+            onOrderChange={() => {
+              // TODO: Implement order save logic
+            }}
+          />
+          {isFetching && <Spinner className="text-gray-700" />}
+        </div>
       )}
     </div>
   );
