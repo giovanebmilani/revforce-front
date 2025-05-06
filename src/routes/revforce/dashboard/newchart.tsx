@@ -9,8 +9,6 @@ import ChartSelect, {
 } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
-import { useGetNextRefresh } from "@/hooks/refresh/useGetNextRefresh";
-import { usePostRefresh } from "@/hooks/refresh/usePostRefresh";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
@@ -142,10 +140,12 @@ function RouteComponent() {
         <div className="flex-1 px-4 py-4">
           <CarouselSize children={charts}></CarouselSize>
         </div>
-        <div className="flex px-4 pb-4 gap-2">
-          <h3 className="font-semibold">Selected:</h3>
-          <p>{ChartTypeData[selectedChart as ChartType]?.label}</p>
-        </div>
+        {selectedChart && (
+          <div className="flex px-4 pb-4 gap-2">
+            <h3 className="font-semibold">Selected:</h3>
+            <p>{ChartTypeData[selectedChart as ChartType]?.label}</p>
+          </div>
+        )}
       </section>
 
       <div className="w-[360px]">
@@ -244,7 +244,7 @@ function RouteComponent() {
         ></SelectBox>
       </div>
 
-      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
+      {/* <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
       <div className="w-[360px]">
         <h3 className="font-medium">Chart Segment:</h3>
@@ -258,11 +258,11 @@ function RouteComponent() {
           onChange={setSelectedSegment}
           className="w-full"
         ></SelectBox>
-      </div>
+      </div> */}
 
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
-      <div className="flex gap-3 lg:gap-5 justify-between lg:mr-0 lg:justify-end">
+      <div className="flex w-[360px] lg:w-full lg:gap-5 justify-between lg:mr-0 lg:justify-end">
         <Button
           variant="secondaryPointer"
           className="w-40"

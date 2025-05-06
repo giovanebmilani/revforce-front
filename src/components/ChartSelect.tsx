@@ -39,7 +39,7 @@ export const ChartTypeData: Record<
   [ChartType.barNegative]: {
     label: "Bar Chart - Negative",
     image: "/src/assets/charts/bar-negative.png",
-    description: "Displays positives and negatives values with bars.",
+    description: "Displays positives and negatives values.",
   },
   [ChartType.line]: {
     label: "Line Chart",
@@ -55,7 +55,7 @@ export const ChartTypeData: Record<
   [ChartType.radar]: {
     label: "Radar Chart - Multiple",
     image: "/src/assets/charts/radar.png",
-    description: "Compares multiple variables in a circular layout.",
+    description: "Compares multiple variables in a radar.",
   },
   [ChartType.area]: {
     label: "Area Chart",
@@ -74,13 +74,13 @@ function ChartSelect({ type, onClick }: ChartTypeProps) {
 
   return (
     <div
-      className="rounded-xl flex flex-col items-center bg-white hover:cursor-pointer hover:scale-105 transition duration-200 ease-in-out"
+      className="max-w-full rounded-xl flex flex-col items-center bg-white hover:cursor-pointer hover:scale-105 transition duration-200 ease-in-out"
       onClick={onClick}
     >
       <img
         src={image}
         alt={label}
-        className="w-full h-30 md:h-40 object-cover rounded-t-xl"
+        className="w-full min-h-30 object-content overflow-hidden rounded-t-xl"
       />
       <div className="p-2 text-center">
         <h2 className="text-sm font-semibold whitespace-nowrap">{label}</h2>
