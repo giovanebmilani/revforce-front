@@ -242,23 +242,8 @@ function RouteComponent() {
           onChange={setSelectedSource}
           className="w-full"
         ></SelectBox>
+        
       </div>
-
-      {/* <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
-
-      <div className="w-[360px]">
-        <h3 className="font-medium">Chart Segment:</h3>
-        <SelectBox
-          items={[
-            { value: "device", label: "Device" },
-            { value: "date", label: "Date" },
-          ]}
-          selectLabel="Chart Segment:"
-          placeholderText="Select the segment to display in the chart..."
-          onChange={setSelectedSegment}
-          className="w-full"
-        ></SelectBox>
-      </div> */}
 
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
