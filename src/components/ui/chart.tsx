@@ -348,4 +348,5 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  ChartContext
 }

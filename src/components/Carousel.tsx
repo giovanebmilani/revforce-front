@@ -13,14 +13,14 @@ export function CarouselSize({ children, cardsShownAmount }: { children: React.R
       opts={{
         align: "start",
       }}
-      className="w-full max-w-sm"
+      className="max-w-[350px] lg:max-w-[600px]"
     >
-      <CarouselContent>
+      <CarouselContent className="max-h-full">
         {children.map((child, index) => (
-          <CarouselItem key={index} className={`md:basis-1/2 lg:basis-1/${cardsShownAmount || 3}`}>
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
+          <CarouselItem key={index} className={`basis-1/2 md:basis-1/2 lg:basis-1/${cardsShownAmount || 3} w-full h-full`}>
+            <div>
+              <Card className="min-h-full p-1">
+                <CardContent className="flex aspect-square items-center justify-center p-0">
                   {child}
                 </CardContent>
               </Card>

@@ -7,7 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ChartResponse } from "@/api/listCharts";
+import { ChartResponse } from "@/api/charts";
 
 interface PieChartDataItem {
   identifier: string;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -20,7 +20,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 interface Item {
-  id: string; //Cada componente deve possuir um id unico
+  id: string;
   content: React.ReactNode;
 }
 
@@ -61,7 +61,6 @@ const SortableItem: React.FC<{
       {...attributes}
       {...listeners}
     >
-      {" "}
       {children}
     </div>
   );
@@ -76,7 +75,7 @@ export const DraggableList: React.FC<DraggableListProps> = ({
 }) => {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [containerWidth, setContainerWidth] = useState(0);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null); 
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -85,7 +84,11 @@ export const DraggableList: React.FC<DraggableListProps> = ({
     })
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
+  useEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.offsetWidth);
@@ -101,10 +104,18 @@ export const DraggableList: React.FC<DraggableListProps> = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        const newItems = arrayMove(items, oldIndex, newIndex);
+      setItems((currentItems) => {
+        const oldIndex = currentItems.findIndex(
+          (item) => item.id === active.id
+        );
+        const newIndex = currentItems.findIndex((item) => item.id === over.id);
+
+        if (oldIndex === -1 || newIndex === -1) {
+          console.warn("Could not find dragged items during reorder.");
+          return currentItems; 
+        }
+
+        const newItems = arrayMove(currentItems, oldIndex, newIndex);
 
         if (onOrderChange) {
           onOrderChange(newItems.map((item) => item.id));
@@ -126,6 +137,8 @@ export const DraggableList: React.FC<DraggableListProps> = ({
       ? horizontalListSortingStrategy
       : verticalListSortingStrategy;
 
+  const itemIds = items.map((item) => item.id);
+
   return (
     <div
       ref={containerRef}
@@ -140,7 +153,7 @@ export const DraggableList: React.FC<DraggableListProps> = ({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={items} strategy={sortingStrategy}>
+        <SortableContext items={itemIds} strategy={sortingStrategy}>
           {items.map((item) => (
             <SortableItem
               key={item.id}

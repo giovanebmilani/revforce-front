@@ -21,6 +21,7 @@ function RouteComponent() {
   const { isSuccess, mutate, isError, error } = useMutation({
     mutationFn: async (settings: Settings) => {
       const { account_id, api_secret, type } = settings;
+      localStorage.setItem("account_id", account_id);
       return await saveIntegrationSettings(account_id, api_secret, type);
     },
     onSuccess: (data) => {

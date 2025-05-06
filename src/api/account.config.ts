@@ -23,9 +23,6 @@ export const saveIntegrationSettings = async (
 
   try {
     const response = await axios.post<any>(SETTINGS_ENDPOINT, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
       timeout: 15000,
     });
     return response.data;
