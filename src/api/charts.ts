@@ -1,13 +1,15 @@
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getErrorMessage } from "./utils";
+import { ChartType } from "@/components/ChartSelect";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const ACCOUNT_ID = localStorage.getItem("account_id");
 const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/chart/${ACCOUNT_ID}/all`;
-const makeGetChartEndpoint = (chartId: string) => `${API_BASE_URL}/chart/${chartId}`;
+const CREAT_CHART_ENDPOINT = `${API_BASE_URL}/chart/`;
+const makeGetChartEndpoint = (chartId: string) =>
+  `${API_BASE_URL}/chart/${chartId}`;
 
-export type ChartType = "pizza" | "bar" | "line" | "area";
 export type ChartMetric = "ctr" | "click" | "impression" | "spend";
 export type ChartSegment = "device" | "date" | "source_table" | "source_id";
 
@@ -26,6 +28,11 @@ interface SourceResponse {
   source_id: string;
 }
 
+interface SourceRequest {
+  source_table: SourceTable;
+  source_id: string;
+}
+
 export interface Chart {
   id: string;
   account_id: string;
@@ -35,6 +42,17 @@ export interface Chart {
   period: PeriodResponse;
   granularity: PeriodResponse;
   sources: SourceResponse[];
+  segment: ChartSegment | null | undefined;
+}
+
+export interface CreateChartRequest {
+  account_id: string
+  name: string;
+  type: ChartType;
+  metric: ChartMetric;
+  period: PeriodResponse;
+  granularity: PeriodResponse;
+  sources: SourceRequest[];
   segment: ChartSegment | null | undefined;
 }
 
@@ -81,6 +99,28 @@ export const useListCharts = () => {
       }
     },
     refetchOnWindowFocus: true,
+  });
+};
+
+export const usePostNewChart = () => {
+  return useMutation<string, Error, CreateChartRequest>({
+    mutationFn: async (chart: CreateChartRequest) => {
+      try {
+        const response = await axios.post<string>(CREAT_CHART_ENDPOINT,chart, {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+    },
   });
 };
 

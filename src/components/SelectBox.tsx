@@ -13,10 +13,19 @@ interface Items {
   label: string;
 }
 
-export function SelectBox({ items, selectLabel, placeholderText }: { items: Items[], selectLabel? : string, placeholderText : string }) {
+interface SelectBoxProps{
+  items: Items[];
+  selectLabel?: string;
+  placeholderText: string;
+  onChange?: (value: any) => void;
+  className?: string;
+}
+
+export function SelectBox({ items, selectLabel, placeholderText, onChange, className}: SelectBoxProps) {
   return (
-    <Select>
-      <SelectTrigger className="w-[180px] hover:cursor-pointer" >
+    <div className={className}>
+    <Select onValueChange={onChange}>
+      <SelectTrigger className="w-full hover:cursor-pointer" >
         <SelectValue placeholder={placeholderText}/>
       </SelectTrigger>
       <SelectContent>
@@ -24,10 +33,11 @@ export function SelectBox({ items, selectLabel, placeholderText }: { items: Item
           <SelectLabel>{selectLabel}</SelectLabel>
 
           {items.map((item) => (
-            <SelectItem value={item.value} className="hover:cursor-pointer">{item.label}</SelectItem>
+            <SelectItem key={item.value} value={item.value} className="hover:cursor-pointer">{item.label}</SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
     </Select>
+    </div>
   )
 }
