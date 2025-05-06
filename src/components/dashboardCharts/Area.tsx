@@ -1,4 +1,4 @@
-import { ChartResponse } from "@/api/listCharts";
+import { ChartResponse } from "@/api/charts";
 import {
   ChartConfig,
   ChartContainer,

@@ -1,4 +1,4 @@
-import { ChartResponse, PeriodType } from "@/api/listCharts";
+import { ChartResponse, PeriodType } from "@/api/charts";
 
 interface ChartDataItem {
   identifier: string;
@@ -101,7 +101,7 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
   // Agrupar dados por identificador e segmento
   const aggregated = new Map<string, Record<string, number>>();
   response.data.forEach((item) => {
-    const truncatedDate = truncateDate(item.date, granularity);
+    const truncatedDate = truncateDate(new Date(item.date), granularity);
     const identifier = formatDate(truncatedDate, granularity);
     const segmentValue = segmentField
       ? String(item[segmentField] || "All")
@@ -125,9 +125,9 @@ export function treatChartData(response: ChartResponse): ChartDataItem[] {
   });
 
   // Gerar intervalo de datas completo baseado nos dados
-  const dates = response.data.map((item) => item.date);
+  const dates = response.data.map((item) => new Date(item.date));
   const minDate = truncateDate(
-    new Date(Math.min(...dates.map((d) => d.getTime()))),
+    new Date(Math.min(...dates.map((d) => new Date(d).getTime()))),
     granularity
   );
   const maxDate = truncateDate(
