@@ -8,10 +8,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartConfig, ChartContext, ChartStyle } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
 import { DateRangePresets } from "@/components/ui/dateRangePresets";
-import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area"
-import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar"
-import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line"
-import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie"
+import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area";
+import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
+import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";
+import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 
 import { ChartResponse, useGetChart } from "@/api/charts";
 
@@ -28,16 +28,14 @@ function handleEdit() {
   window.location.href = "/revforce/dashboard/newchart";
 }
 
-type ChartProviderProps = { 
-  config: ChartConfig; 
+type ChartProviderProps = {
+  config: ChartConfig;
   children: React.ReactNode;
-}
+};
 
 function ChartProvider({ config, children }: ChartProviderProps) {
   return (
-    <ChartContext.Provider value={{ config }}>
-      {children}
-    </ChartContext.Provider>
+    <ChartContext.Provider value={{ config }}>{children}</ChartContext.Provider>
   );
 }
 
@@ -46,7 +44,7 @@ function ErrorScreen() {
     <div>
       <h1>Something went wrong :(</h1>
     </div>
-  )
+  );
 }
 
 const chartConfig = {
@@ -74,13 +72,12 @@ const createChartComponent = (response: ChartResponse) => {
 };
 
 function RouteComponent() {
-  const { chartId } = Route.useParams()
-  const { data, isError } = useGetChart(chartId)
+  const { chartId } = Route.useParams();
+  const { data, isError } = useGetChart(chartId);
 
   if (isError || !data) {
-    return <ErrorScreen />
+    return <ErrorScreen />;
   }
-
 
   const chartConfig: ChartConfig = {};
 
@@ -104,7 +101,7 @@ function RouteComponent() {
           <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
             <DateRangePresets
               onChange={(newRange) => {
-                const result = data.data
+                data.data
                   .filter((item) => {
                     const itemDate = new Date(item.date);
                     return itemDate >= newRange.from && itemDate <= newRange.to;
@@ -130,15 +127,12 @@ function RouteComponent() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            {createChartComponent(data)}
-          </CardContent>
+          <CardContent>{createChartComponent(data)}</CardContent>
         </Card>
       </ChartProvider>
     </div>
   );
 }
-
 
 // A área lateral sumiu de onde vão ficar o chat e eventos! Precisa só deixar o espaço.
 
