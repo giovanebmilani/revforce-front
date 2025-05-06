@@ -58,7 +58,7 @@ const DashboardHeader = () => {
           }}
         />
         <Link to="/revforce/dashboard/newchart">
-          <Button className="text-white h-11 flex gap-2">
+          <Button className="text-black h-11 flex gap-2 cursor-pointer">
             <Plus className="h-5 w-5" /> New Chart
           </Button>
         </Link>
