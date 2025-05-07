@@ -7,6 +7,9 @@ import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
 import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
 import { Plus } from "lucide-react";
+import { useGetAllCampaignsByUserId } from "@/hooks/campaign/getAllCamapignsByUserId";
+import { useGetAllAdsByUserId } from "@/hooks/ad/getAllAdsByUserId";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
@@ -115,6 +118,18 @@ function RouteComponent() {
       },
     });
 
+  const {
+    data: getAllCampaigns,
+    isLoading: isLoadingAllCampaigns,
+    isError: isErrorAllCapaigns,
+  } = useGetAllCampaignsByUserId("userId");
+
+  const {
+    data: getAllAds,
+    isLoading: isLoadingAllAds,
+    isError: isErrorAllAds,
+  } = useGetAllAdsByUserId("userId");
+
   const handleCreateChart = () => {
     postNewChart({
       name: name,
@@ -140,9 +155,16 @@ function RouteComponent() {
     }));
   };
 
-  //console.log("selectedSources", selectedSources);
-  //console.log("selectedSourcesTable", selectedSourcesTable);
-  //console.log("source", createSource());
+  const formattedCampaigns = getAllCampaigns?.map((campaign: any) => ({
+    value: campaign.id,
+    label: campaign.name,
+  }));
+
+  const formattedAds = getAllAds?.map((ad: any) => ({
+    value: ad.id,
+    label: ad.name,
+  }));
+
   return (
     <div className="flex flex-col w-full gap-3">
       <h2 className="text-gray-300">Dashboard /</h2>
@@ -254,7 +276,7 @@ function RouteComponent() {
       <div className="w-[360px]">
         <div className="flex items-center gap-2">
           <h3 className="font-medium">Add chart source</h3>
-          <Button onClick={() => setSourceClick(sourceClick + 1)}>
+          <Button onClick={() => setSourceClick(sourceClick + 1)} className="hover: cursor-pointer">
             <Plus className="w-4 h-4" />
           </Button>
         </div>
@@ -268,7 +290,7 @@ function RouteComponent() {
                   { value: "campaign", label: "Campaign" },
                   { value: "ad", label: "Ad" },
                 ]}
-                selectLabel={`Chart Source ${index}:`}
+                selectLabel={`Chart Source ${index + 1}:`}
                 placeholderText="Select the source to display in the chart..."
                 onChange={(value) => {
                   setSelectedSources((prev) => {
@@ -283,37 +305,50 @@ function RouteComponent() {
               {selectedSources[index] === "ad" && (
                 <div className="mb-2">
                   <h3 className="font-medium">Source Table {index + 1}</h3>
-                  <SelectBox
-                    items={[{ value: "id", label: "111" }]}
-                    selectLabel={`Source Table ${index}:`}
-                    placeholderText="Select the source to display in the chart..."
-                    onChange={(value) => {
-                      setSelectedSourcesTable((prev) => {
-                        const updatedSources = [...prev];
-                        updatedSources[index] = value;
-                        return updatedSources;
-                      });
-                    }}
-                    className="w-full mb-2"
-                  ></SelectBox>
+                  {isLoadingAllAds ? (
+                    <Input placeholder="Loading..." readOnly />
+                  ) : isErrorAllAds || !getAllAds ? (
+                    <Input placeholder="Error loading ads" readOnly />
+                  ) : (
+                    <SelectBox
+                      items={formattedAds}
+                      selectLabel={`Source Table ${index}:`}
+                      placeholderText="Select the source to display in the chart..."
+                      onChange={(value) => {
+                        setSelectedSourcesTable((prev) => {
+                          const updatedSources = [...prev];
+                          updatedSources[index] = value;
+                          return updatedSources;
+                        });
+                      }}
+                      className="w-full mb-2"
+                    ></SelectBox>
+                  )}
                 </div>
               )}
+
               {selectedSources[index] === "campaign" && (
                 <div className="mb-2">
                   <h3 className="font-medium">Source Table {index + 1}</h3>
-                  <SelectBox
-                    items={[{ value: "id", label: "222" }]}
-                    selectLabel={`Source Table ${index}:`}
-                    placeholderText="Select the source to display in the chart..."
-                    onChange={(value) => {
-                      setSelectedSourcesTable((prev) => {
-                        const updatedSources = [...prev];
-                        updatedSources[index] = value;
-                        return updatedSources;
-                      });
-                    }}
-                    className="w-full mb-2"
-                  ></SelectBox>
+                  {isLoadingAllCampaigns ? (
+                    <Input placeholder="Loading..." readOnly />
+                  ) : isErrorAllCapaigns || !getAllCampaigns ? (
+                    <Input placeholder="Error loading campaigns" readOnly />
+                  ) : (
+                    <SelectBox
+                      items={formattedCampaigns}
+                      selectLabel={`Source Table ${index}:`}
+                      placeholderText="Select the source to display in the chart..."
+                      onChange={(value) => {
+                        setSelectedSourcesTable((prev) => {
+                          const updatedSources = [...prev];
+                          updatedSources[index] = value;
+                          return updatedSources;
+                        });
+                      }}
+                      className="w-full mb-2"
+                    ></SelectBox>
+                  )}
                 </div>
               )}
             </div>
