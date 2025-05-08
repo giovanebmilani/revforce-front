@@ -1,14 +1,9 @@
 export enum ChartType {
   pizza = "pizza",
   barVertical = "bar",
-  barVerticalMultiple = "grouped_bar",
   barHorizontal = "horizontal_bar",
-  barNegative = "negative_bar",
   line = "line",
-  lineMultiple = "line_multiple",
-  radar = "radar_",
   area = "area",
-  //areaStacked = "areaStacked",
 }
 
 export const ChartTypeData: Record<
@@ -25,37 +20,15 @@ export const ChartTypeData: Record<
     image: "/src/assets/charts/bar-vertical.png",
     description: "Displays data clearly with vertical bars.",
   },
-
-  [ChartType.barVerticalMultiple]: {
-    label: "Bar Chart - Multiple",
-    image: "/src/assets/charts/bar-vertical-multiple.png",
-    description: "Compares groups using multiple vertical bars.",
-  },
   [ChartType.barHorizontal]: {
     label: "Bar Chart - Horizontal",
     image: "/src/assets/charts/bar-horizontal.png",
     description: "Shows data with horizontal bars.",
   },
-  [ChartType.barNegative]: {
-    label: "Bar Chart - Negative",
-    image: "/src/assets/charts/bar-negative.png",
-    description: "Displays positives and negatives values.",
-  },
   [ChartType.line]: {
     label: "Line Chart",
     image: "/src/assets/charts/line.png",
     description: "Connects data points with lines.",
-  },
-
-  [ChartType.lineMultiple]: {
-    label: "Line Chart - Multiple",
-    image: "/src/assets/charts/line-multiple.png",
-    description: "Compares trends with multiple lines.",
-  },
-  [ChartType.radar]: {
-    label: "Radar Chart - Multiple",
-    image: "/src/assets/charts/radar.png",
-    description: "Compares multiple variables in a radar.",
   },
   [ChartType.area]: {
     label: "Area Chart",

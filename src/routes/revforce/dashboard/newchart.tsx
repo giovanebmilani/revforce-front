@@ -10,6 +10,8 @@ import { Plus } from "lucide-react";
 import { useGetAllCampaignsByUserId } from "@/hooks/campaign/getAllCamapignsByUserId";
 import { useGetAllAdsByUserId } from "@/hooks/ad/getAllAdsByUserId";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
@@ -18,7 +20,7 @@ export const Route = createFileRoute("/revforce/dashboard/newchart")({
 type MetricType = "ctr" | "click" | "impressions" | "spend";
 type PeriodType = "day" | "week" | "month" | "year";
 type SourceType = "campaign" | "ad";
-type SegmentType = "source" | "segment";
+type SegmentType = "date" | "device";
 
 function RouteComponent() {
   const [name, setName] = useState("");
@@ -33,14 +35,12 @@ function RouteComponent() {
   >("");
   const [selectedGranularityAmount, setSelectedGranularityAmount] =
     useState<string>("");
-  const [selectedSources, setSelectedSources] = useState<
+  const [selectedSourcesTable, setSelectedSourcesTable] = useState<
     SourceType[] | string[]
   >([]);
-  const [selectedSourcesTable, setSelectedSourcesTable] = useState<string[]>(
-    []
-  );
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
   const [selectedSegment, setSelectedSegment] = useState<SegmentType | string>(
-    ""
+    "device"
   );
   const [sourceClick, setSourceClick] = useState(0);
 
@@ -54,22 +54,10 @@ function RouteComponent() {
       isSelected={selectedChart === ChartType.barVertical}
     ></ChartSelect>,
     <ChartSelect
-      onClick={() => setSelectedChart(ChartType.barVerticalMultiple)}
-      key={ChartType.barVerticalMultiple}
-      type={ChartType.barVerticalMultiple}
-      isSelected={selectedChart === ChartType.barVerticalMultiple}
-    ></ChartSelect>,
-    <ChartSelect
       onClick={() => setSelectedChart(ChartType.barHorizontal)}
       key={ChartType.barHorizontal}
       type={ChartType.barHorizontal}
       isSelected={selectedChart === ChartType.barHorizontal}
-    ></ChartSelect>,
-    <ChartSelect
-      onClick={() => setSelectedChart(ChartType.barNegative)}
-      key={ChartType.barNegative}
-      type={ChartType.barNegative}
-      isSelected={selectedChart === ChartType.barNegative}
     ></ChartSelect>,
     <ChartSelect
       onClick={() => setSelectedChart(ChartType.pizza)}
@@ -82,18 +70,6 @@ function RouteComponent() {
       key={ChartType.line}
       type={ChartType.line}
       isSelected={selectedChart === ChartType.line}
-    ></ChartSelect>,
-    <ChartSelect
-      key={ChartType.lineMultiple}
-      type={ChartType.lineMultiple}
-      onClick={() => setSelectedChart(ChartType.lineMultiple)}
-      isSelected={selectedChart === ChartType.lineMultiple}
-    ></ChartSelect>,
-    <ChartSelect
-      key={ChartType.radar}
-      type={ChartType.radar}
-      onClick={() => setSelectedChart(ChartType.radar)}
-      isSelected={selectedChart === ChartType.radar}
     ></ChartSelect>,
     <ChartSelect
       key={ChartType.area}
@@ -115,6 +91,17 @@ function RouteComponent() {
         setSelectedGranularityAmount("");
         setSelectedSources([]);
         setSelectedSegment("");
+        toast.success("Chart created successfully! 🎉");
+        setTimeout(() => {
+          navigate({ to: "/revforce/dashboard" });
+        }, 2500);
+      },
+      onError: (error: any) => {
+        toast.error("Error creating chart", {
+          description: (
+            <span className="text-red-500">{error.response.data.detail}</span>
+          ),
+        });
       },
     });
 
@@ -122,16 +109,122 @@ function RouteComponent() {
     data: getAllCampaigns,
     isLoading: isLoadingAllCampaigns,
     isError: isErrorAllCapaigns,
-  } = useGetAllCampaignsByUserId("userId");
+  } = useGetAllCampaignsByUserId("44fff391-5f37-4dd8-bd28-699e5d7e1824");
 
   const {
     data: getAllAds,
     isLoading: isLoadingAllAds,
     isError: isErrorAllAds,
-  } = useGetAllAdsByUserId("userId");
+  } = useGetAllAdsByUserId("44fff391-5f37-4dd8-bd28-699e5d7e1824");
 
   const handleCreateChart = () => {
+    if (!name) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please enter a name for the chart.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedChart) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">Please select a chart type.</span>
+        ),
+      });
+      return;
+    }
+    if (!selectedMetric) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">Please select a metric.</span>
+        ),
+      });
+      return;
+    }
+    if (!selectedPeriodType) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">Please select a period type.</span>
+        ),
+      });
+      return;
+    }
+    if (!selectedPeriodAmount) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">Please enter a period amount.</span>
+        ),
+      });
+      return;
+    }
+    if (!selectedGranularityType) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please select a granularity type.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedGranularityAmount) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please enter a granularity amount.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSources.length === 0) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please select at least one source.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSourcesTable.length === 0) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please select at least one source table.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSources.length !== selectedSourcesTable.length) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please select a source table for each source.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (
+      selectedSourcesTable.filter((source) => source === undefined).length > 0
+    ) {
+      toast.error("Error creating chart", {
+        description: (
+          <span className="text-red-500">
+            Please select a source table for each source.
+          </span>
+        ),
+      });
+      return;
+    }
+
     postNewChart({
+      account_id: "44fff391-5f37-4dd8-bd28-699e5d7e1824",
       name: name,
       type: selectedChart,
       metric: selectedMetric,
@@ -150,8 +243,8 @@ function RouteComponent() {
 
   const createSource = () => {
     return selectedSources.map((source, index) => ({
-      source_table: selectedSourcesTable[index],
-      source_id: source,
+      source_id: selectedSourcesTable[index],
+      source_table: source,
     }));
   };
 
@@ -276,14 +369,17 @@ function RouteComponent() {
       <div className="w-[360px]">
         <div className="flex items-center gap-2">
           <h3 className="font-medium">Add chart source</h3>
-          <Button onClick={() => setSourceClick(sourceClick + 1)} className="hover: cursor-pointer">
+          <Button
+            onClick={() => setSourceClick(sourceClick + 1)}
+            className="hover: cursor-pointer"
+          >
             <Plus className="w-4 h-4" />
           </Button>
         </div>
 
         <div>
           {Array.from({ length: sourceClick }).map((_, index) => (
-            <div className="mb-5">
+            <div key={index} className="mb-5">
               <h3 className="font-medium">Chart Source {index + 1}</h3>
               <SelectBox
                 items={[
@@ -307,12 +403,14 @@ function RouteComponent() {
                   <h3 className="font-medium">Source Table {index + 1}</h3>
                   {isLoadingAllAds ? (
                     <Input placeholder="Loading..." readOnly />
-                  ) : isErrorAllAds || !getAllAds ? (
+                  ) : isErrorAllAds ? (
                     <Input placeholder="Error loading ads" readOnly />
+                  ) : getAllAds.length === 0 ? (
+                    <Input placeholder="No ads found" readOnly />
                   ) : (
                     <SelectBox
                       items={formattedAds}
-                      selectLabel={`Source Table ${index}:`}
+                      selectLabel={`Source Table ${index + 1}:`}
                       placeholderText="Select the source to display in the chart..."
                       onChange={(value) => {
                         setSelectedSourcesTable((prev) => {
@@ -332,12 +430,14 @@ function RouteComponent() {
                   <h3 className="font-medium">Source Table {index + 1}</h3>
                   {isLoadingAllCampaigns ? (
                     <Input placeholder="Loading..." readOnly />
-                  ) : isErrorAllCapaigns || !getAllCampaigns ? (
+                  ) : isErrorAllCapaigns ? (
                     <Input placeholder="Error loading campaigns" readOnly />
+                  ) : getAllCampaigns.length === 0 ? (
+                    <Input placeholder="No campaigns found" readOnly />
                   ) : (
                     <SelectBox
                       items={formattedCampaigns}
-                      selectLabel={`Source Table ${index}:`}
+                      selectLabel={`Source Table ${index + 1}:`}
                       placeholderText="Select the source to display in the chart..."
                       onChange={(value) => {
                         setSelectedSourcesTable((prev) => {
@@ -378,6 +478,7 @@ function RouteComponent() {
           {isPostNewChartPending ? "Creating..." : "Create"}
         </Button>
       </div>
+      <Toaster />
     </div>
   );
 }

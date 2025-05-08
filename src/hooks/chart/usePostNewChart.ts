@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -19,6 +19,7 @@ interface Sources {
 }
 
 interface ChartParams {
+  account_id: string;
   name: string;
   type: string;
   metric: string;
@@ -27,7 +28,13 @@ interface ChartParams {
   sources: Sources[];
   segment: string;
 }
-export const usePostNewChart = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const usePostNewChart = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void;
+  onError?: (error: AxiosError) => void;
+}) => {
   return useMutation({
     mutationFn: async (chart: ChartParams) => {
       console.log("Chart:", chart);
@@ -38,6 +45,12 @@ export const usePostNewChart = ({ onSuccess }: { onSuccess?: () => void }) => {
       console.log("Chart created successfully");
       if (onSuccess) {
         onSuccess();
+      }
+    },
+    onError: (error: any) => {
+      console.error("Error creating chart:", error);
+      if (onError) {
+        onError(error);
       }
     },
   });
