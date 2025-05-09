@@ -9,7 +9,7 @@ build_job:
   stage: build
   image: node:22.15
   tags:
-    - aws
+    - frontend
   script:
     - npm install
     - npm run build
