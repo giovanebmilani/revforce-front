@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "@/main";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+const queryClient = useQueryClient();
 
 export const usePostRefresh = () =>
   useMutation({

@@ -1,12 +1,29 @@
 stages:
   - build
+  - deploy
+
+variables:
+  VITE_API_URL: "http://ec2-18-191-202-58.us-east-2.compute.amazonaws.com/80"
 
 build_job:
   stage: build
-  image: node:22.14-alpine
+  image: node:22.15
+  tags:
+    - frontend
   script:
     - npm install
     - npm run build
   artifacts:
     paths:
       - dist/
+
+deploy_job:
+  stage: deploy
+  image: sleavely/node-awscli:22.x
+  tags:
+    - frontend
+  script:
+    - npm ci
+    - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY npm run prod
+  only:
+    - main

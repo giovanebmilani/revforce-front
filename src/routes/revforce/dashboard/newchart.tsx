@@ -1,31 +1,39 @@
 import LabelInput from "@/components/LabelInput";
 import { SelectBox } from "@/components/SelectBox";
-import { Button } from "@/components/ui/button";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
-import { usePostNewChart } from "@/hooks/chart/usePostNewChart";
+import { usePostNewChart } from "@/api/charts";
 import { Plus } from "lucide-react";
-import { useGetAllCampaignsByUserId } from "@/hooks/campaign/getAllCamapignsByUserId";
-import { useGetAllAdsByUserId } from "@/hooks/ad/getAllAdsByUserId";
+import { useGetCampaigns } from "@/api/campaigns";
+import { useGetAds } from "@/api/ads";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
 });
 
-type MetricType = "ctr" | "click" | "impressions" | "spend";
-type PeriodType = "day" | "week" | "month" | "year";
+type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
 type SegmentType = "date" | "device";
+type PeriodType = "hour" | "day" | "week" | "month";
+
+interface SourceResponse {
+  source_table: SourceType;
+  source_id: string;
+}
 
 function RouteComponent() {
+  localStorage.setItem("account_id", "44fff391-5f37-4dd8-bd28-699e5d7e1824");
   const [name, setName] = useState("");
-  const [selectedChart, setSelectedChart] = useState<ChartType | string>("");
-  const [selectedMetric, setSelectedMetric] = useState<MetricType | string>("");
+  const [selectedChart, setSelectedChart] = useState<ChartType | undefined>();
+  const [selectedMetric, setSelectedMetric] = useState<
+    MetricType | undefined | string
+  >();
   const [selectedPeriodType, setSelectedPeriodType] = useState<
     PeriodType | string
   >("");
@@ -43,8 +51,6 @@ function RouteComponent() {
     "device"
   );
   const [sourceClick, setSourceClick] = useState(0);
-
-  const navigate = useNavigate();
 
   const charts = [
     <ChartSelect
@@ -79,167 +85,20 @@ function RouteComponent() {
     ></ChartSelect>,
   ];
 
-  const { mutate: postNewChart, isPending: isPostNewChartPending } =
-    usePostNewChart({
-      onSuccess: () => {
-        setName("");
-        setSelectedChart("");
-        setSelectedMetric("");
-        setSelectedPeriodType("");
-        setSelectedPeriodAmount("");
-        setSelectedGranularityType("");
-        setSelectedGranularityAmount("");
-        setSelectedSources([]);
-        setSelectedSegment("");
-        toast.success("Chart created successfully! 🎉");
-        setTimeout(() => {
-          navigate({ to: "/revforce/dashboard" });
-        }, 2500);
-      },
-      onError: (error: any) => {
-        toast.error("Error creating chart", {
-          description: (
-            <span className="text-red-500">{error.response.data.detail}</span>
-          ),
-        });
-      },
-    });
+  const { mutateAsync: postNewChart, isPending: isPostNewChartPending } =
+    usePostNewChart();
 
   const {
     data: getAllCampaigns,
     isLoading: isLoadingAllCampaigns,
     isError: isErrorAllCapaigns,
-  } = useGetAllCampaignsByUserId("44fff391-5f37-4dd8-bd28-699e5d7e1824");
+  } = useGetCampaigns();
 
   const {
     data: getAllAds,
     isLoading: isLoadingAllAds,
     isError: isErrorAllAds,
-  } = useGetAllAdsByUserId("44fff391-5f37-4dd8-bd28-699e5d7e1824");
-
-  const handleCreateChart = () => {
-    if (!name) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please enter a name for the chart.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (!selectedChart) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">Please select a chart type.</span>
-        ),
-      });
-      return;
-    }
-    if (!selectedMetric) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">Please select a metric.</span>
-        ),
-      });
-      return;
-    }
-    if (!selectedPeriodType) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">Please select a period type.</span>
-        ),
-      });
-      return;
-    }
-    if (!selectedPeriodAmount) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">Please enter a period amount.</span>
-        ),
-      });
-      return;
-    }
-    if (!selectedGranularityType) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please select a granularity type.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (!selectedGranularityAmount) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please enter a granularity amount.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (selectedSources.length === 0) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please select at least one source.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (selectedSourcesTable.length === 0) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please select at least one source table.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (selectedSources.length !== selectedSourcesTable.length) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please select a source table for each source.
-          </span>
-        ),
-      });
-      return;
-    }
-    if (
-      selectedSourcesTable.filter((source) => source === undefined).length > 0
-    ) {
-      toast.error("Error creating chart", {
-        description: (
-          <span className="text-red-500">
-            Please select a source table for each source.
-          </span>
-        ),
-      });
-      return;
-    }
-
-    postNewChart({
-      account_id: "44fff391-5f37-4dd8-bd28-699e5d7e1824",
-      name: name,
-      type: selectedChart,
-      metric: selectedMetric,
-      period: {
-        type: selectedPeriodType,
-        amount: Number(selectedPeriodAmount),
-      },
-      granularity: {
-        type: selectedGranularityType,
-        amount: Number(selectedGranularityAmount),
-      },
-      sources: createSource(),
-      segment: selectedSegment,
-    });
-  };
+  } = useGetAds();
 
   const createSource = () => {
     return selectedSources.map((source, index) => ({
@@ -258,17 +117,177 @@ function RouteComponent() {
     label: ad.name,
   }));
 
+  const handleCreateChart = async () => {
+    if (!name) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, insira um nome para o gráfico.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedChart) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione um tipo de gráfico.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedMetric) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione uma métrica.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedPeriodType) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione um tipo de período.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedPeriodAmount) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, insira um valor para o período.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedGranularityType && selectedChart !== ChartType.pizza) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione um tipo de granularidade.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (!selectedGranularityAmount && selectedChart !== ChartType.pizza) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, insira um valor para a granularidade.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSources.length === 0) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione ao menos uma fonte de dados.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSourcesTable.length === 0) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione ao menos uma tabela de fonte.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (selectedSources.length !== selectedSourcesTable.length) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione uma tabela de fonte para cada fonte.
+          </span>
+        ),
+      });
+      return;
+    }
+    if (
+      selectedSourcesTable.filter((source) => source === undefined).length > 0
+    ) {
+      toast.error("Erro ao criar gráfico", {
+        description: (
+          <span className="text-red-500">
+            Por favor, selecione uma tabela de fonte para cada fonte.
+          </span>
+        ),
+      });
+      return;
+    }
+
+    const granularityTypeToSend =
+      selectedChart === ChartType.pizza
+        ? selectedPeriodType
+        : selectedGranularityType;
+    const granularityAmountToSend =
+      selectedChart === ChartType.pizza
+        ? selectedPeriodAmount
+        : selectedGranularityAmount;
+
+    try {
+      await postNewChart({
+        account_id: localStorage.getItem("account_id") || "",
+        name: name,
+        type: selectedChart,
+        metric: selectedMetric as MetricType,
+        period: {
+          type: selectedPeriodType as PeriodType,
+          amount: Number(selectedPeriodAmount),
+        },
+        granularity: {
+          type: granularityTypeToSend as PeriodType,
+          amount: Number(granularityAmountToSend),
+        },
+        sources: createSource() as SourceResponse[],
+        segment: selectedSegment as SegmentType,
+      });
+
+      setName("");
+      setSelectedChart(undefined);
+      setSelectedMetric("");
+      setSelectedPeriodType("");
+      setSelectedPeriodAmount("");
+      setSelectedGranularityType("");
+      setSelectedGranularityAmount("");
+      setSelectedSources([]);
+      setSelectedSourcesTable([]);
+      setSelectedSegment("device");
+      setSourceClick(0);
+      toast.success("Gráfico criado com sucesso!");
+    } catch (error: any) {
+      toast.error("Erro ao criar gráfico", {
+        description: <span className="text-red-500">{error.message}</span>,
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col w-full gap-3">
       <h2 className="text-gray-300">Dashboard /</h2>
-      <h1 className="text-2xl font-semibold italic mb-3">New Chart</h1>
+      <h1 className="text-2xl font-semibold italic mb-3">Novo Gráfico</h1>
       <hr className="ml-[-32px] max-w-screen border-gray-200 mb-2" />
 
       <div className="w-[360px]">
         <LabelInput
-          inputTitle="Name:"
+          inputTitle="Nome:"
           props={{
-            placeholder: "Name",
+            placeholder: "Nome",
             value: name,
             onChange: (e) => setName(e.target.value),
             required: true,
@@ -277,7 +296,7 @@ function RouteComponent() {
       </div>
 
       <section className="flex flex-col w-fit rounded-sm border-1">
-        <h2 className="font-semibold p-4">Charts</h2>
+        <h2 className="font-semibold p-4">Gráficos</h2>
         <hr className="border-1" />
         <div className="flex-1 px-2 py-2">
           <CarouselSize children={charts}></CarouselSize>
@@ -285,16 +304,17 @@ function RouteComponent() {
       </section>
 
       <div className="w-[360px]">
-        <h3 className="font-medium">Chart Metric:</h3>
+        <h3 className="font-medium">Métrica do Gráfico:</h3>
         <SelectBox
           items={[
             { value: "ctr", label: "CTR" },
-            { value: "click", label: "Click's" },
-            { value: "impression", label: "Impressions" },
-            { value: "spend", label: "Spend" },
+            { value: "click", label: "Cliques" },
+            { value: "impression", label: "Impressões" },
+            { value: "spend", label: "Investimento" },
           ]}
-          selectLabel="Chart Metric"
-          placeholderText="Select the metric to display in the chart..."
+          value={selectedMetric}
+          selectLabel="Métrica do Gráfico"
+          placeholderText="Selecione a métrica para exibir no gráfico..."
           onChange={setSelectedMetric}
           className="w-full"
         ></SelectBox>
@@ -303,28 +323,29 @@ function RouteComponent() {
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
       <div className="w-[360px]">
-        <h3 className="font-medium">Chart Period:</h3>
+        <h3 className="font-medium">Período do Gráfico:</h3>
 
-        <h3 className="font-medium mt-2">Type</h3>
+        <h3 className="font-medium mt-2">Tipo</h3>
         <SelectBox
           items={[
-            { value: "hour", label: "Hour" },
-            { value: "day", label: "Day" },
-            { value: "week", label: "Week" },
-            { value: "month", label: "Month" },
+            { value: "hour", label: "Hora" },
+            { value: "day", label: "Dia" },
+            { value: "week", label: "Semana" },
+            { value: "month", label: "Mês" },
           ]}
-          selectLabel="Chart Period"
-          placeholderText="Select the metric to display in the chart..."
+          value={selectedPeriodType}
+          selectLabel="Período do Gráfico"
+          placeholderText="Selecione o período para exibir no gráfico..."
           onChange={setSelectedPeriodType}
           className="w-full mb-2"
         ></SelectBox>
 
         <LabelInput
-          inputTitle="Amount"
+          inputTitle="Quantidade"
           props={{
             type: "number",
             min: 1,
-            placeholder: "Period Amount",
+            placeholder: "Quantidade do Período",
             value: selectedPeriodAmount,
             onChange: (e) => setSelectedPeriodAmount(e.target.value),
           }}
@@ -335,28 +356,29 @@ function RouteComponent() {
 
       {selectedChart !== ChartType.pizza && (
         <div className="w-[360px]">
-          <h3 className="font-medium">Chart Granularity:</h3>
+          <h3 className="font-medium">Granularidade do Gráfico:</h3>
 
-          <h3 className="font-medium mt-2">Type</h3>
+          <h3 className="font-medium mt-2">Tipo</h3>
           <SelectBox
             items={[
-              { value: "hour", label: "Hour" },
-              { value: "day", label: "Day" },
-              { value: "week", label: "Week" },
-              { value: "month", label: "Month" },
+              { value: "hour", label: "Hora" },
+              { value: "day", label: "Dia" },
+              { value: "week", label: "Semana" },
+              { value: "month", label: "Mês" },
             ]}
-            selectLabel="Chart Granularity"
-            placeholderText="Select the granularity to display in the chart..."
+            value={selectedGranularityType}
+            selectLabel="Granularidade do Gráfico"
+            placeholderText="Selecione a granularidade para exibir no gráfico..."
             onChange={setSelectedGranularityType}
             className="w-full mb-2"
           ></SelectBox>
 
           <LabelInput
-            inputTitle="Amount"
+            inputTitle="Quantidade"
             props={{
               type: "number",
               min: 1,
-              placeholder: "Period Amount",
+              placeholder: "Quantidade do Período",
               value: selectedGranularityAmount,
               onChange: (e) => setSelectedGranularityAmount(e.target.value),
             }}
@@ -368,7 +390,7 @@ function RouteComponent() {
 
       <div className="w-[360px]">
         <div className="flex items-center gap-2">
-          <h3 className="font-medium">Add chart source</h3>
+          <h3 className="font-medium">Adicionar dados no gráfico</h3>
           <Button
             onClick={() => setSourceClick(sourceClick + 1)}
             className="hover: cursor-pointer"
@@ -380,14 +402,14 @@ function RouteComponent() {
         <div>
           {Array.from({ length: sourceClick }).map((_, index) => (
             <div key={index} className="mb-5">
-              <h3 className="font-medium">Chart Source {index + 1}</h3>
+              <h3 className="font-medium">Fonte do gráfico {index + 1}</h3>
               <SelectBox
                 items={[
-                  { value: "campaign", label: "Campaign" },
-                  { value: "ad", label: "Ad" },
+                  { value: "campaign", label: "Campanha" },
+                  { value: "ad", label: "Anúncio" },
                 ]}
-                selectLabel={`Chart Source ${index + 1}:`}
-                placeholderText="Select the source to display in the chart..."
+                selectLabel={`Fonte ${index + 1}:`}
+                placeholderText="Selecione a fonte para exibir no gráfico..."
                 onChange={(value) => {
                   setSelectedSources((prev) => {
                     const updatedSources = [...prev];
@@ -400,18 +422,18 @@ function RouteComponent() {
 
               {selectedSources[index] === "ad" && (
                 <div className="mb-2">
-                  <h3 className="font-medium">Source Table {index + 1}</h3>
+                  <h3 className="font-medium">Tabela de fonte {index + 1}</h3>
                   {isLoadingAllAds ? (
-                    <Input placeholder="Loading..." readOnly />
+                    <Input placeholder="Carregando..." readOnly />
                   ) : isErrorAllAds ? (
-                    <Input placeholder="Error loading ads" readOnly />
-                  ) : getAllAds.length === 0 ? (
-                    <Input placeholder="No ads found" readOnly />
+                    <Input placeholder="Erro carregando anúncios" readOnly />
+                  ) : getAllAds?.length === 0 ? (
+                    <Input placeholder="Nenhum anúncio encontrado" readOnly />
                   ) : (
                     <SelectBox
-                      items={formattedAds}
-                      selectLabel={`Source Table ${index + 1}:`}
-                      placeholderText="Select the source to display in the chart..."
+                      items={formattedAds || []}
+                      selectLabel={`Tabela de fonte ${index + 1}:`}
+                      placeholderText="Selecione a fonte para exibir no gráfico..."
                       onChange={(value) => {
                         setSelectedSourcesTable((prev) => {
                           const updatedSources = [...prev];
@@ -427,18 +449,18 @@ function RouteComponent() {
 
               {selectedSources[index] === "campaign" && (
                 <div className="mb-2">
-                  <h3 className="font-medium">Source Table {index + 1}</h3>
+                  <h3 className="font-medium">Tabela de fonte {index + 1}</h3>
                   {isLoadingAllCampaigns ? (
-                    <Input placeholder="Loading..." readOnly />
+                    <Input placeholder="Carregando..." readOnly />
                   ) : isErrorAllCapaigns ? (
-                    <Input placeholder="Error loading campaigns" readOnly />
-                  ) : getAllCampaigns.length === 0 ? (
-                    <Input placeholder="No campaigns found" readOnly />
+                    <Input placeholder="Erro carregando campanhas" readOnly />
+                  ) : getAllCampaigns?.length === 0 ? (
+                    <Input placeholder="Nenhuma campanha encontrada" readOnly />
                   ) : (
                     <SelectBox
-                      items={formattedCampaigns}
-                      selectLabel={`Source Table ${index + 1}:`}
-                      placeholderText="Select the source to display in the chart..."
+                      items={formattedCampaigns || []}
+                      selectLabel={`Tabela de fonte ${index + 1}:`}
+                      placeholderText="Selecione a fonte para exibir no gráfico..."
                       onChange={(value) => {
                         setSelectedSourcesTable((prev) => {
                           const updatedSources = [...prev];
@@ -458,24 +480,14 @@ function RouteComponent() {
 
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
-      <div className="flex w-[360px] lg:w-full lg:gap-5 justify-between lg:mr-0 lg:justify-end">
+      <div className="flex w-[360px] lg:w-full lg:gap-5 justify-center lg:mr-0 lg:justify-end">
         <Button
-          variant="secondaryPointer"
+          variant={"pointer"}
+          onClick={handleCreateChart}
+          disabled={isPostNewChartPending}
           className="w-40"
-          onClick={() => {
-            navigate({ to: "/revforce/dashboard" });
-          }}
         >
-          Cancel
-        </Button>
-        <Button
-          variant="pointer"
-          className="w-40"
-          onClick={() => {
-            handleCreateChart();
-          }}
-        >
-          {isPostNewChartPending ? "Creating..." : "Create"}
+          Criar Gráfico
         </Button>
       </div>
       <Toaster />

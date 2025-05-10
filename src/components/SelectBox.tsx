@@ -19,12 +19,13 @@ interface SelectBoxProps{
   placeholderText: string;
   onChange?: (value: any) => void;
   className?: string;
+  value?: string;
 }
 
-export function SelectBox({ items, selectLabel, placeholderText, onChange, className}: SelectBoxProps) {
+export function SelectBox({ items, selectLabel, placeholderText, onChange, className, value}: SelectBoxProps) {
   return (
     <div className={className}>
-    <Select onValueChange={onChange}>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full hover:cursor-pointer" >
         <SelectValue placeholder={placeholderText}/>
       </SelectTrigger>
