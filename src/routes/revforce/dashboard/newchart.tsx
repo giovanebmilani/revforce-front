@@ -28,7 +28,6 @@ interface SourceResponse {
 }
 
 function RouteComponent() {
-  localStorage.setItem("account_id", "44fff391-5f37-4dd8-bd28-699e5d7e1824");
   const [name, setName] = useState("");
   const [selectedChart, setSelectedChart] = useState<ChartType | undefined>();
   const [selectedMetric, setSelectedMetric] = useState<
