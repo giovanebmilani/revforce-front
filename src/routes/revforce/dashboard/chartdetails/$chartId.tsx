@@ -16,6 +16,7 @@ import { createDashboardPieChartComponent } from "@/components/dashboardCharts/P
 import { ChartResponse, useGetChart } from "@/api/charts";
 import { ResponsiveTabChat } from "@/components/ResponsiveTabChat";
 import { ChatBubble } from "@/components/ChatBubble";
+import { TabsComponent } from "@/components/TabsComponent";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -84,7 +85,7 @@ function RouteComponent() {
 
   const chartConfig: ChartConfig = {};
 
-  
+
 
   return (
     <div className="w-full h-full">
@@ -128,20 +129,36 @@ function RouteComponent() {
           </Card>
         </ChartProvider>
 
-        
-        <ResponsiveTabChat
-          onSend={(text) => {
-            setBubbles((prev) => [
-              ...prev,
-              <ChatBubble
-                text={text}
-                isUser={true}
-              />
-            ]);
-            console.log("Texto enviado:", text);
-          }}
-          bubbles={bubbles}
+        <TabsComponent
+          tabs={[
+            {
+              value: "events",
+              label: "Eventos",
+              content: <div>Eventos</div>,
+            },
+            {
+              value: "chat",
+              label: "Chat",
+              content: <ResponsiveTabChat
+                onSend={(text) => {
+                  setBubbles((prev) => [
+                    ...prev,
+                    <ChatBubble
+                      text={text}
+                      isUser={true}
+                    />
+                  ]);
+                  console.log("Texto enviado:", text);
+                }}
+                bubbles={bubbles}
+              />,
+            },
+          ]}
+          defaultValue="events"
+          className="w-1/4 h-full"
+
         />
+
 
 
       </div>
