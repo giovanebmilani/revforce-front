@@ -1,13 +1,19 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
+} from "@/components/ui/carousel";
 
-export function CarouselSize({ children, cardsShownAmount }: { children: React.ReactNode[], cardsShownAmount?: number }) {
+export function CarouselSize({
+  children,
+  cardsShownAmount,
+}: {
+  children: React.ReactNode[];
+  cardsShownAmount?: number;
+}) {
   return (
     <Carousel
       opts={{
@@ -17,10 +23,13 @@ export function CarouselSize({ children, cardsShownAmount }: { children: React.R
     >
       <CarouselContent className="max-h-full">
         {children.map((child, index) => (
-          <CarouselItem key={index} className={`basis-1/2 md:basis-1/2 lg:basis-1/${cardsShownAmount || 3} w-full h-full`}>
+          <CarouselItem
+            key={index}
+            className={`basis-1/2 md:basis-1/2 lg:basis-1/${cardsShownAmount || 3} w-full h-full`}
+          >
             <div>
               <Card className="min-h-full p-1">
-                <CardContent className="flex aspect-square items-center justify-center p-0">
+                <CardContent className="flex aspect-square items-center justify-center p-0 border-0 hover:cursor-pointer hover:scale-103 transition duration-200 ease-in-out">
                   {child}
                 </CardContent>
               </Card>
@@ -31,5 +40,5 @@ export function CarouselSize({ children, cardsShownAmount }: { children: React.R
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  )
+  );
 }
