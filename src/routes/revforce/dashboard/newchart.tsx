@@ -46,9 +46,6 @@ function RouteComponent() {
     SourceType[] | string[]
   >([]);
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
-  const [selectedSegment, setSelectedSegment] = useState<SegmentType | string>(
-    "device"
-  );
   const [sourceClick, setSourceClick] = useState(0);
 
   const charts = [
@@ -254,7 +251,7 @@ function RouteComponent() {
           amount: Number(granularityAmountToSend),
         },
         sources: createSource() as SourceResponse[],
-        segment: selectedSegment as SegmentType,
+        segment: null,
       });
 
       setName("");
@@ -266,7 +263,6 @@ function RouteComponent() {
       setSelectedGranularityAmount("");
       setSelectedSources([]);
       setSelectedSourcesTable([]);
-      setSelectedSegment("device");
       setSourceClick(0);
       toast.success("Gráfico criado com sucesso!");
     } catch (error: any) {
