@@ -421,9 +421,9 @@ function RouteComponent() {
                   {isLoadingAllAds ? (
                     <Input placeholder="Carregando..." readOnly />
                   ) : isErrorAllAds ? (
-                    <Input placeholder="Erro carregando anúncios" readOnly />
+                    <Input placeholder="Erro carregando anúncios..." readOnly />
                   ) : getAllAds?.length === 0 ? (
-                    <Input placeholder="Nenhum anúncio encontrado" readOnly />
+                    <Input placeholder="Nenhum anúncio encontrado!" readOnly />
                   ) : (
                     <SelectBox
                       items={formattedAds || []}
@@ -448,9 +448,9 @@ function RouteComponent() {
                   {isLoadingAllCampaigns ? (
                     <Input placeholder="Carregando..." readOnly />
                   ) : isErrorAllCapaigns ? (
-                    <Input placeholder="Erro carregando campanhas" readOnly />
+                    <Input placeholder="Erro carregando campanhas..." readOnly />
                   ) : getAllCampaigns?.length === 0 ? (
-                    <Input placeholder="Nenhuma campanha encontrada" readOnly />
+                    <Input placeholder="Nenhuma campanha encontrada!" readOnly />
                   ) : (
                     <SelectBox
                       items={formattedCampaigns || []}
