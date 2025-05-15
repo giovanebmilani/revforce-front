@@ -14,6 +14,8 @@ import { createDashboardLineChartComponent } from "@/components/dashboardCharts/
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 
 import { ChartResponse, useGetChart } from "@/api/charts";
+import { ResponsiveTabChat } from "@/components/ResponsiveTabChat";
+import { ChatBubble } from "@/components/ChatBubble";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -74,6 +76,7 @@ const createChartComponent = (response: ChartResponse) => {
 function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError } = useGetChart(chartId);
+  const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
 
   if (isError || !data) {
     return <ErrorScreen />;
@@ -81,55 +84,67 @@ function RouteComponent() {
 
   const chartConfig: ChartConfig = {};
 
-  // if (chartInfo?.colors) {
-  //   Object.keys(chartInfo.colors).forEach((segment) => {
-  //     chartConfig[segment] = {
-  //       label: segment.charAt(0).toUpperCase() + segment.slice(1),
-  //       color: chartInfo.colors[segment],
-  //     };
-  //   });
-  // }
+  
 
   return (
     <div className="w-full h-full">
       <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
         Chart Details
       </h2>
-      <ChartProvider config={chartConfig}>
-        <ChartStyle id="external-legend" config={chartConfig} />
-        <Card>
-          <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
-            <DateRangePresets
-              onChange={(newRange) => {
-                data.data
-                  .filter((item) => {
-                    const itemDate = new Date(item.date);
-                    return itemDate >= newRange.from && itemDate <= newRange.to;
-                  })
-                  .sort(
-                    (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
-                  );
-              }}
-            />
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Filter className="h-4 w-4" />
-                Filtro
-              </Button>
-              <Button variant="outline" onClick={handleRefresh}>
-                <RefreshCw className="h-4 w-4" />
-                Atualizar
-              </Button>
-              <Button variant="outline" onClick={handleEdit}>
-                <Pencil className="h-4 w-4" />
-                Editar
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>{createChartComponent(data)}</CardContent>
-        </Card>
-      </ChartProvider>
+      <div className="flex flex-row gap-1">
+        <ChartProvider config={chartConfig}>
+          <ChartStyle id="external-legend" config={chartConfig} />
+          <Card className="w-full h-full">
+            <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
+              <DateRangePresets
+                onChange={(newRange) => {
+                  data.data
+                    .filter((item) => {
+                      const itemDate = new Date(item.date);
+                      return itemDate >= newRange.from && itemDate <= newRange.to;
+                    })
+                    .sort(
+                      (a, b) =>
+                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                    );
+                }}
+              />
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Filter className="h-4 w-4" />
+                  Filtro
+                </Button>
+                <Button variant="outline" onClick={handleRefresh}>
+                  <RefreshCw className="h-4 w-4" />
+                  Atualizar
+                </Button>
+                <Button variant="outline" onClick={handleEdit}>
+                  <Pencil className="h-4 w-4" />
+                  Editar
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>{createChartComponent(data)}</CardContent>
+          </Card>
+        </ChartProvider>
+
+        
+        <ResponsiveTabChat
+          onSend={(text) => {
+            setBubbles((prev) => [
+              ...prev,
+              <ChatBubble
+                text={text}
+                isUser={true}
+              />
+            ]);
+            console.log("Texto enviado:", text);
+          }}
+          bubbles={bubbles}
+        />
+
+
+      </div>
     </div>
   );
 }
