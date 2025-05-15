@@ -94,6 +94,7 @@ export const useListCharts = () => {
           const friendlyMessage = getErrorMessage(error);
           throw new Error(friendlyMessage);
         } else {
+          console.error("Unexpected error:", error);
           throw new Error("Ocorreu um erro inesperado na aplicação.");
         }
       }
