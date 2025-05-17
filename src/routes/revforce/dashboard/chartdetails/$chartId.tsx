@@ -155,12 +155,8 @@ function RouteComponent() {
             },
           ]}
           defaultValue="events"
-          className="w-1/4 h-full"
-
+          className="w-full h-full"
         />
-
-
-
       </div>
     </div>
   );
