@@ -79,14 +79,13 @@ function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError } = useGetChart(chartId);
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
+  const [count, setCount] = React.useState(0);
 
   if (isError || !data) {
     return <ErrorScreen />;
   }
 
   const chartConfig: ChartConfig = {};
-
-
 
   return (
     <div className="w-full h-full">
@@ -147,24 +146,23 @@ function RouteComponent() {
                     <ChatBubble
                       text={text}
                       isUser={true}
+                      key={count}
                     />
-                  ]);
-                  console.log("Texto enviado:", text);
+                  ])
+                  setCount(count + 1)
+                  console.log("Texto enviado:", text)
 
                   const response = usePostChat(text, []).data
 
-                  if (response) {
-                    console.log("Resposta recebida:", response);
-                  } else {
-                    console.error("Erro ao receber resposta.");
-                  }
                   setBubbles((prev) => [
                     ...prev,
                     <ChatBubble
                       text={response?.response}
                       isUser={false}
+                      key={count}
                     />
-                  ]);
+                  ])
+                  setCount(count + 1)
                 }}
                 bubbles={bubbles}
               />,
