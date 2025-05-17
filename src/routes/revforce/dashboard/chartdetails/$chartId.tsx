@@ -17,6 +17,7 @@ import { ChartResponse, useGetChart } from "@/api/charts";
 import { ResponsiveTabChat } from "@/components/ResponsiveTabChat";
 import { ChatBubble } from "@/components/ChatBubble";
 import { TabsComponent } from "@/components/TabsComponent";
+import { ChatResponse, usePostChat } from "@/api/chat";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -92,7 +93,7 @@ function RouteComponent() {
       <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
         Chart Details
       </h2>
-      <div className="flex flex-row gap-1">
+      <div className="flex flex-row gap-5">
         <ChartProvider config={chartConfig}>
           <ChartStyle id="external-legend" config={chartConfig} />
           <Card className="w-full h-full">
@@ -149,6 +150,21 @@ function RouteComponent() {
                     />
                   ]);
                   console.log("Texto enviado:", text);
+
+                  const response = usePostChat(text, []).data
+
+                  if (response) {
+                    console.log("Resposta recebida:", response);
+                  } else {
+                    console.error("Erro ao receber resposta.");
+                  }
+                  setBubbles((prev) => [
+                    ...prev,
+                    <ChatBubble
+                      text={response?.response}
+                      isUser={false}
+                    />
+                  ]);
                 }}
                 bubbles={bubbles}
               />,
@@ -156,6 +172,7 @@ function RouteComponent() {
           ]}
           defaultValue="events"
           className="w-full h-full"
+          containerClassName="w-1/2"
         />
       </div>
     </div>
