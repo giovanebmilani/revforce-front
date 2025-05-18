@@ -51,7 +51,7 @@ const sendChatMessage = async (message : string, history : ChatHistoryMessage[])
 };
 
 export const usePostChat = (message : string, history : ChatHistoryMessage[]) => {
-  return useQuery<ChatResponse[], Error>({
+  return useQuery<ChatResponse[], Error>({ //this probably doesnt make sense
     queryKey: [`post-${message}`],
     queryFn: () => sendChatMessage(message, history),
   });

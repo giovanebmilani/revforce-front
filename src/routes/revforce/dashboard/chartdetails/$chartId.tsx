@@ -152,7 +152,7 @@ function RouteComponent() {
                   setCount(count + 1)
                   console.log("Texto enviado:", text)
 
-                  const response = usePostChat(text, []).data
+                  const response = usePostChat(text, []).data // TODO: this breaks the rule of hooks
 
                   setBubbles((prev) => [
                     ...prev,
