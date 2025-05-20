@@ -81,6 +81,20 @@ function RouteComponent() {
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [count, setCount] = React.useState(0);
 
+  const { data: postChatData, mutate } = usePostChat()
+
+  React.useEffect(() => {
+    setBubbles((prev) => [
+      ...prev,
+      <ChatBubble
+        text={postChatData?.response || ""}
+        isUser={false}
+        key={count}
+      />
+    ])
+    setCount(count + 1)
+  }, [postChatData])
+
   if (isError || !data) {
     return <ErrorScreen />;
   }
@@ -150,19 +164,8 @@ function RouteComponent() {
                     />
                   ])
                   setCount(count + 1)
-                  console.log("Texto enviado:", text)
 
-                  const response = usePostChat(text, []).data // TODO: this breaks the rule of hooks
-
-                  setBubbles((prev) => [
-                    ...prev,
-                    <ChatBubble
-                      text={response?.response}
-                      isUser={false}
-                      key={count}
-                    />
-                  ])
-                  setCount(count + 1)
+                  mutate({ question: text, history: [], chart_id: chartId })
                 }}
                 bubbles={bubbles}
               />,

@@ -1,15 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getErrorMessage } from "./utils";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
-const ACCOUNT_ID = localStorage.getItem("account_id");
-const SEND_CHAT_MESSAGE_ENDPOINT = `${API_BASE_URL}/chart/${ACCOUNT_ID}/all`;
+const SEND_CHAT_MESSAGE_ENDPOINT = `${API_BASE_URL}/chat`;
 
 type ChatHistoryMessage = {
-      role: "user" | "assistant" | "system";
-      content: string;
-    }
+  role: "user" | "assistant" | "system";
+  content: string;
+}
 
 export type ChatRequest = {
   history: ChatHistoryMessage[],
@@ -22,19 +21,10 @@ export type ChatResponse = {
   response: string;
 };
 
-const sendChatMessage = async (message : string, history : ChatHistoryMessage[]) => {
+const sendChatMessage = async (payload: ChatRequest) => {
   try {
-    if (!ACCOUNT_ID) {
-      throw new Error("Account ID not found in local storage.");
-    }
 
-    const payload: ChatRequest = {
-      history: history,
-      question: message,
-      chart_id: ACCOUNT_ID,
-    };
-
-    const response = await axios.post<ChatResponse[]>(SEND_CHAT_MESSAGE_ENDPOINT, payload, {
+    const response = await axios.post<ChatResponse>(SEND_CHAT_MESSAGE_ENDPOINT, payload, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -50,9 +40,8 @@ const sendChatMessage = async (message : string, history : ChatHistoryMessage[])
   }
 };
 
-export const usePostChat = (message : string, history : ChatHistoryMessage[]) => {
-  return useQuery<ChatResponse[], Error>({ //this probably doesnt make sense
-    queryKey: [`post-${message}`],
-    queryFn: () => sendChatMessage(message, history),
+export const usePostChat = () => {
+  return useMutation({ //this probably doesnt make sense
+    mutationFn: (payload: ChatRequest) => sendChatMessage(payload),
   });
 };
