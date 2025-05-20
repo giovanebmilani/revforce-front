@@ -13,7 +13,7 @@ interface TabChatProps {
 function TabChat({ onClick, onChange, children, value, classname }: TabChatProps) {
     return (
         <div className={cn("flex flex-col w-full h-full p-3 border-1 rounded-lg", classname)}>
-            <div className="flex flex-col gap-2 h-full overflow-y-scroll">
+            <div className="flex flex-col gap-2 max-h-[1vh] sm:max-h-[1vh] md:max-h-[40vh] h-full overflow-y-scroll">
                 {children}
             </div>
             <div className="flex mt-auto gap-3">
