@@ -17,7 +17,7 @@ import { ChartResponse, useGetChart } from "@/api/charts";
 import { ResponsiveTabChat } from "@/components/ResponsiveTabChat";
 import { ChatBubble } from "@/components/ChatBubble";
 import { TabsComponent } from "@/components/TabsComponent";
-import { ChatResponse, usePostChat } from "@/api/chat";
+import { ChatHistoryMessage, ChatResponse, usePostChat } from "@/api/chat";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -81,9 +81,12 @@ function RouteComponent() {
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [count, setCount] = React.useState(0);
 
-  const { data: postChatData, mutate } = usePostChat()
+  const { data: postChatData, mutate } = usePostChat();
+  var chatHistory: ChatHistoryMessage[] = [];
 
   React.useEffect(() => {
+    if (!postChatData?.response) return;
+
     setBubbles((prev) => [
       ...prev,
       <ChatBubble
@@ -93,6 +96,11 @@ function RouteComponent() {
       />
     ])
     setCount(count + 1)
+
+    chatHistory.push({
+      role: "assistant",
+      content: postChatData?.response || "",
+    });
   }, [postChatData])
 
   if (isError || !data) {
@@ -165,7 +173,12 @@ function RouteComponent() {
                   ])
                   setCount(count + 1)
 
-                  mutate({ question: text, history: [], chart_id: chartId })
+                  chatHistory.push({
+                    role: "user",
+                    content: postChatData?.response || "",
+                  });
+
+                  mutate({ question: text, history: chatHistory, chart_id: chartId })
                 }}
                 bubbles={bubbles}
               />,

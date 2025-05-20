@@ -5,7 +5,7 @@ import { getErrorMessage } from "./utils";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const SEND_CHAT_MESSAGE_ENDPOINT = `${API_BASE_URL}/chat`;
 
-type ChatHistoryMessage = {
+export type ChatHistoryMessage = {
   role: "user" | "assistant" | "system";
   content: string;
 }
