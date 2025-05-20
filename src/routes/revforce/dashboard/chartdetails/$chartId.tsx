@@ -181,12 +181,14 @@ function RouteComponent() {
                   mutate({ question: text, history: chatHistory, chart_id: chartId })
                 }}
                 bubbles={bubbles}
+                classname="w-full h-full"
               />,
             },
           ]}
           defaultValue="events"
           className="w-full h-full"
-          containerClassName="w-1/2"
+          containerClassName="w-1/2 max-h-full"
+          
         />
       </div>
     </div>

@@ -1,16 +1,18 @@
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import {cn} from "@/lib/utils";
 
 interface TabChatProps {
   onClick: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children: React.ReactNode;
   value : string;
+  classname?: string;
 }
 
-function TabChat({ onClick, onChange, children, value }: TabChatProps) {
+function TabChat({ onClick, onChange, children, value, classname }: TabChatProps) {
     return (
-        <div className="flex flex-col w-full h-full p-3 border-1 rounded-lg">
+        <div className={cn("flex flex-col w-full h-full p-3 border-1 rounded-lg", classname)}>
             <div className="flex flex-col gap-2 h-full overflow-y-scroll">
                 {children}
             </div>

@@ -4,9 +4,10 @@ import TabChat from "./TabChat";
 interface ResponsiveTabChatProps {
     onSend: (text: string) => void;
     bubbles?: JSX.Element[];
+    classname?: string;
 }
 
-export function ResponsiveTabChat({ onSend, bubbles }: ResponsiveTabChatProps) {
+export function ResponsiveTabChat({ onSend, bubbles, classname }: ResponsiveTabChatProps) {
     const [currentText, setCurrentText] = React.useState("");
 
     return (
@@ -25,6 +26,7 @@ export function ResponsiveTabChat({ onSend, bubbles }: ResponsiveTabChatProps) {
             )}
             children={bubbles}
             value={currentText}
+            classname={classname}
         />
     )
 }
