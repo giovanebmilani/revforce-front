@@ -12,21 +12,26 @@ export function ResponsiveTabChat({ onSend, bubbles, classname }: ResponsiveTabC
 
     return (
         <TabChat
-            onClick={() => {
-                if (currentText === "") return;
-
-                onSend(currentText)
+    onClick={() => {
+        if (currentText === "") return;
+        onSend(currentText);
+        setCurrentText("");
+    }}
+    onChange={(e) => {
+        console.log(e.target.value);
+        setCurrentText(e.target.value.trimStart());
+    }}
+    onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            if (currentText.trim() !== "") {
+                onSend(currentText.trim());
                 setCurrentText("");
-
-                // TODO: o texto do input precisa se apagado aqui
-            }}
-            onChange={(e) => (
-                console.log(e.target.value),
-                setCurrentText(e.target.value.trimStart())
-            )}
-            children={bubbles}
-            value={currentText}
-            classname={classname}
-        />
+            }
+        }
+    }}
+    children={bubbles}
+    value={currentText}
+    classname={classname}
+/>
     )
 }
