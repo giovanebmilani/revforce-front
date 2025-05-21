@@ -194,7 +194,3 @@ function RouteComponent() {
     </div>
   );
 }
-
-// A área lateral sumiu de onde vão ficar o chat e eventos! Precisa só deixar o espaço.
-
-// Falta integrar!

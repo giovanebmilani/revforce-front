@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {cn} from "@/lib/utils";
+import "../index.css"
 
 interface TabChatProps {
   onClick: () => void;
@@ -18,8 +19,8 @@ function TabChat({ onClick, onChange, children, value, onKeyDown, classname }: T
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [children]);
     return (
-        <div className={cn("flex flex-col w-full h-full p-3 border-1 rounded-lg", classname)}>
-            <div className="flex flex-col gap-0 max-h-[1vh] sm:max-h-[1vh] md:max-h-[40vh] h-full overflow-y-scroll">
+        <div className={cn("tab-chat-container", classname)}>
+            <div className="tab-chat-messages">
                 {children}
                 <div ref={scrollRef} />
             </div>
