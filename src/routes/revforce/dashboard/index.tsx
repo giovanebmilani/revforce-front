@@ -102,6 +102,7 @@ const DashboardError = () => (
 
 function DashboardPage() {
   const { data, isLoading, isSuccess, isError, error, isFetching } = useListCharts();
+
   const chartsDraggable =
     data?.map((response: ChartResponse) => ({
       id: response.chart.id,

@@ -14,8 +14,6 @@ export function createDashboardBarChartComponent(
 ) {
   const entries = treatChartData(response);
 
-  console.log("entries", entries);
-
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
       <BarChart accessibilityLayer data={entries}>
@@ -33,7 +31,7 @@ export function createDashboardBarChartComponent(
         {Object.keys(entries[0] || {}).map(
           (key) =>
             key !== "identifier" && (
-              <Bar dataKey={key} fill={`var(--color-${key})`} radius={4} />
+              <Bar dataKey={key} fill="blue" radius={4} />
             )
         )}
       </BarChart>
