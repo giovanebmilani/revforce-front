@@ -19,7 +19,6 @@ export const Route = createFileRoute("/revforce/dashboard/newchart")({
 
 type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
-type SegmentType = "date" | "device";
 type PeriodType = "hour" | "day" | "week" | "month";
 
 interface SourceResponse {
