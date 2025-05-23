@@ -272,7 +272,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-3 px-4">
       <h2 className="text-gray-300">Dashboard /</h2>
       <h1 className="text-2xl font-semibold italic mb-3">Novo Gráfico</h1>
       <hr className="ml-[-32px] max-w-screen border-gray-200 mb-2" />

@@ -124,6 +124,28 @@ export const usePostNewChart = () => {
   });
 };
 
+export const useDeleteChart = () => {
+  return useMutation<string, Error, string>({
+    mutationFn: async (chartId: string) => {
+      try {
+        const response = await axios.delete<string>(makeGetChartEndpoint(chartId), {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+    },
+  });
+};
+
 export const useGetChart = (chartId: string) => {
   return useQuery<ChartResponse, Error>({
     queryKey: [`get-${chartId}`],

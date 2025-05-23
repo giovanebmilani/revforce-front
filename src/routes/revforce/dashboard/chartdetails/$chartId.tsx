@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import * as React from "react";
 
-import { Filter, RefreshCw, Pencil } from "lucide-react";
+import { Filter, RefreshCw, Pencil, Trash } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartConfig, ChartContext, ChartStyle } from "@/components/ui/chart";
@@ -13,7 +13,8 @@ import { createDashboardBarChartComponent } from "@/components/dashboardCharts/B
 import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 
-import { ChartResponse, useGetChart } from "@/api/charts";
+import { ChartResponse, useDeleteChart, useGetChart } from "@/api/charts";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -22,10 +23,6 @@ export const Route = createFileRoute(
 function handleRefresh() {
   // Espaço para atualizar dados
   console.log("Atualizar gráfico");
-}
-
-function handleEdit() {
-  window.location.href = "/revforce/dashboard/newchart";
 }
 
 type ChartProviderProps = {
@@ -73,65 +70,98 @@ const createChartComponent = (response: ChartResponse) => {
 
 function RouteComponent() {
   const { chartId } = Route.useParams();
-  const { data, isError } = useGetChart(chartId);
+  const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
+  const { mutate, isPending, isError: isDeletedError } = useDeleteChart();
+  const chartConfig: ChartConfig = {};
+  const navigate = useNavigate();
 
-  if (isError || !data) {
+  function handleEdit() {
+    navigate({
+      to: `/revforce/dashboard/newchart`,
+    });
+  }
+
+  function handleDelete() {
+    mutate(chartId, {
+      onSuccess: () => {
+        navigate({
+          to: `/revforce/dashboard`,
+        });
+      },
+    });
+  }
+
+  if (isError) {
     return <ErrorScreen />;
   }
 
-  const chartConfig: ChartConfig = {};
+  if (isLoading) {
+    return (
+      <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
+        <Spinner></Spinner>
+      </div>
+    );
+  }
 
-  // if (chartInfo?.colors) {
-  //   Object.keys(chartInfo.colors).forEach((segment) => {
-  //     chartConfig[segment] = {
-  //       label: segment.charAt(0).toUpperCase() + segment.slice(1),
-  //       color: chartInfo.colors[segment],
-  //     };
-  //   });
-  // }
-
-  return (
-    <div className="w-full h-full">
-      <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
-        Chart Details
-      </h2>
-      <ChartProvider config={chartConfig}>
-        <ChartStyle id="external-legend" config={chartConfig} />
-        <Card>
-          <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
-            <DateRangePresets
-              onChange={(newRange) => {
-                data.data
-                  .filter((item) => {
-                    const itemDate = new Date(item.date);
-                    return itemDate >= newRange.from && itemDate <= newRange.to;
-                  })
-                  .sort(
-                    (a, b) =>
-                      new Date(a.date).getTime() - new Date(b.date).getTime()
-                  );
-              }}
-            />
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Filter className="h-4 w-4" />
-                Filtro
-              </Button>
-              <Button variant="outline" onClick={handleRefresh}>
-                <RefreshCw className="h-4 w-4" />
-                Atualizar
-              </Button>
-              <Button variant="outline" onClick={handleEdit}>
-                <Pencil className="h-4 w-4" />
-                Editar
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>{createChartComponent(data)}</CardContent>
-        </Card>
-      </ChartProvider>
-    </div>
-  );
+  if (isSuccess) {
+    return (
+      <div className="h-full w-full">
+        <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
+          Chart Details
+        </h2>
+        {isDeletedError && (
+          <h3 className="text-red-500">Ocorreu um erro ao apagar o gráfico.</h3>
+        )}
+        <ChartProvider config={chartConfig}>
+          <ChartStyle id="external-legend" config={chartConfig} />
+          <Card>
+            <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
+              <DateRangePresets
+                onChange={(newRange) => {
+                  data.data
+                    .filter((item) => {
+                      const itemDate = new Date(item.date);
+                      return (
+                        itemDate >= newRange.from && itemDate <= newRange.to
+                      );
+                    })
+                    .sort(
+                      (a, b) =>
+                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                    );
+                }}
+              />
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Filter className="h-4 w-4" />
+                  Filtro
+                </Button>
+                <Button variant="outline" onClick={handleRefresh}>
+                  <RefreshCw className="h-4 w-4" />
+                  Atualizar
+                </Button>
+                <Button variant="outline" onClick={handleEdit}>
+                  <Pencil className="h-4 w-4" />
+                  Editar
+                </Button>
+                <Button variant="outline" onClick={handleDelete}>
+                  <Trash className="h-4 w-4" />
+                  Apagar
+                </Button>
+              </div>
+            </CardHeader>
+            {isPending ? (
+              <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
+                <Spinner></Spinner>
+              </div>
+            ) : (
+              <CardContent>{createChartComponent(data)}</CardContent>
+            )}
+          </Card>
+        </ChartProvider>
+      </div>
+    );
+  }
 }
 
 // A área lateral sumiu de onde vão ficar o chat e eventos! Precisa só deixar o espaço.
