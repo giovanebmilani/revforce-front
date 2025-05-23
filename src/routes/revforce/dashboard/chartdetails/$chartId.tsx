@@ -5,7 +5,6 @@ import { Filter, RefreshCw, Pencil, Trash } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartConfig, ChartContext, ChartStyle } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
-import { DateRangePresets } from "@/components/ui/dateRangePresets";
 import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area";
 import { createDashboardBarChartComponent } from "@/components/dashboardCharts/Bar";
 import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";

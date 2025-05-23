@@ -8,16 +8,7 @@ interface ChartDataItem {
 function truncateDate(date: Date, granularity: PeriodType): Date {
   const newDate = new Date(date);
   switch (granularity) {
-    case "hour":
-      newDate.setMinutes(0, 0, 0);
-      break;
     case "day":
-      newDate.setHours(0, 0, 0, 0);
-      break;
-    case "week":
-      const day = newDate.getDay();
-      const diff = newDate.getDate() - day + (day === 0 ? -6 : 1);
-      newDate.setDate(diff);
       newDate.setHours(0, 0, 0, 0);
       break;
     case "month":
@@ -32,19 +23,7 @@ function truncateDate(date: Date, granularity: PeriodType): Date {
 
 function formatDate(date: Date, granularity: PeriodType): string {
   switch (granularity) {
-    case "hour":
-      return date.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
     case "day":
-      return date.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-      });
-
-    case "week":
       return date.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "2-digit",
@@ -75,14 +54,8 @@ function generateDateRange(
   while (current <= end) {
     dates.push(new Date(current));
     switch (granularity) {
-      case "hour":
-        current.setHours(current.getHours() + 1);
-        break;
       case "day":
         current.setDate(current.getDate() + 1);
-        break;
-      case "week":
-        current.setDate(current.getDate() + 7);
         break;
       case "month":
         current.setMonth(current.getMonth() + 1);
