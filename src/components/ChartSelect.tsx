@@ -12,27 +12,27 @@ export const ChartTypeData: Record<
 > = {
   [ChartType.pizza]: {
     label: "Gráfico de Pizza",
-    image: "/src/assets/charts/pizza.png",
+    image: "/charts/pizza.png",
     description: "Exibe proporções como fatias de um círculo.",
   },
   [ChartType.barVertical]: {
     label: "Gráfico de Barras - Vertical",
-    image: "/src/assets/charts/bar-vertical.png",
+    image: "/charts/bar-vertical.png",
     description: "Mostra dados com barras verticais claras.",
   },
   [ChartType.barHorizontal]: {
     label: "Gráfico de Barras - Horizontal",
-    image: "/src/assets/charts/bar-horizontal.png",
+    image: "/charts/bar-horizontal.png",
     description: "Exibe dados por meio de barras horizontais.",
   },
   [ChartType.line]: {
     label: "Gráfico de Linha",
-    image: "/src/assets/charts/line.png",
+    image: "/charts/line.png",
     description: "Conecta pontos de dados usando linhas.",
   },
   [ChartType.area]: {
     label: "Gráfico de Área",
-    image: "/src/assets/charts/area.png",
+    image: "/charts/area.png",
     description: "Preenche a área sob a linha para mostrar volume.",
   },
 };
