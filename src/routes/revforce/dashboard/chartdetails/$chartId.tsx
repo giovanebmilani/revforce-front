@@ -1,7 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-
 import * as React from "react";
-
 import { Filter, RefreshCw, Pencil, Trash } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -25,7 +23,6 @@ export const Route = createFileRoute(
 )({ component: RouteComponent });
 
 function handleRefresh() {
-  // Espaço para atualizar dados
   console.log("Atualizar gráfico");
 }
 
@@ -48,25 +45,25 @@ function ErrorScreen() {
   );
 }
 
-const chartConfig = {
+const exampleChartConfig = {
   desktop: { label: "Desktop", color: "#916860" },
   mobile: { label: "Mobile", color: "#E1AD00" },
   tablet: { label: "Tablet", color: "#008080" },
   other: { label: "Other", color: "#BE7405" },
-  ad: { label: "Desktop", color: "#916860" },
-  campaign: { label: "Mobile", color: "#E1AD00" },
+  ad: { label: "Ad", color: "#916860" },
+  campaign: { label: "Campaign", color: "#E1AD00" },
 } satisfies ChartConfig;
 
 const createChartComponent = (response: ChartResponse) => {
   switch (response.chart.type) {
     case "bar":
-      return createDashboardBarChartComponent(response, chartConfig);
+      return createDashboardBarChartComponent(response, exampleChartConfig);
     case "pizza":
-      return createDashboardPieChartComponent(response, chartConfig);
+      return createDashboardPieChartComponent(response, exampleChartConfig);
     case "line":
-      return createDashboardLineChartComponent(response, chartConfig);
+      return createDashboardLineChartComponent(response, exampleChartConfig);
     case "area":
-      return createDashboardAreaChartComponent(response, chartConfig);
+      return createDashboardAreaChartComponent(response, exampleChartConfig);
     default:
       return null;
   }
@@ -75,36 +72,43 @@ const createChartComponent = (response: ChartResponse) => {
 function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
+
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
-  const [count, setCount] = React.useState(0);
+  const [chatHistory, setChatHistory] = React.useState<ChatHistoryMessage[]>(
+    []
+  );
+  const bubbleKeyCounter = React.useRef(0);
 
   const { data: postChatData, mutate } = usePostChat();
-  var chatHistory: ChatHistoryMessage[] = [];
 
   React.useEffect(() => {
     if (!postChatData?.response) return;
 
-    setBubbles((prev) => [
-      ...prev,
+    const assistantMessageContent = postChatData.response;
+    setBubbles((prevBubbles) => [
+      ...prevBubbles,
       <ChatBubble
-        text={postChatData?.response || ""}
+        text={assistantMessageContent}
         isUser={false}
-        key={count}
+        key={`assistant-${bubbleKeyCounter.current++}`}
       />,
     ]);
-    setCount(count + 1);
 
-    chatHistory.push({
-      role: "assistant",
-      content: postChatData?.response || "",
-    });
+    setChatHistory((prevHistory) => [
+      ...prevHistory,
+      {
+        role: "assistant",
+        content: assistantMessageContent,
+      },
+    ]);
   }, [postChatData]);
+
   const {
     mutate: deleteChart,
-    isPending,
+    isPending: isDeletingChart,
     isError: isDeletedError,
   } = useDeleteChart();
-  const chartConfig: ChartConfig = {};
+  const currentChartConfig: ChartConfig = exampleChartConfig;
   const navigate = useNavigate();
 
   function handleEdit() {
@@ -129,108 +133,120 @@ function RouteComponent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
-        <Spinner></Spinner>
+      <div className="flex min-h-screen justify-center items-center h-full w-full">
+        <Spinner />
       </div>
     );
   }
 
-  if (isSuccess) {
+  if (isSuccess && data) {
     return (
-      <div className="h-full w-full">
-        <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
+      <div className="flex flex-col h-full w-full p-4 space-y-4">
+        <h2 className="text-2xl font-bold italic tracking-tight">
           Chart Details
         </h2>
         {isDeletedError && (
           <h3 className="text-red-500">Ocorreu um erro ao apagar o gráfico.</h3>
         )}
-        <ChartProvider config={chartConfig}>
-          <ChartStyle id="external-legend" config={chartConfig} />
-          <Card>
-            <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
-              <DateRangePresets
-                onChange={(newRange) => {
-                  data.data
-                    .filter((item) => {
-                      const itemDate = new Date(item.date);
-                      return (
-                        itemDate >= newRange.from && itemDate <= newRange.to
-                      );
-                    })
-                    .sort(
-                      (a, b) =>
-                        new Date(a.date).getTime() - new Date(b.date).getTime()
-                    );
-                }}
-              />
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Filter className="h-4 w-4" />
-                  Filtro
-                </Button>
-                <Button variant="outline" onClick={handleRefresh}>
-                  <RefreshCw className="h-4 w-4" />
-                  Atualizar
-                </Button>
-                <Button variant="outline" onClick={handleEdit}>
-                  <Pencil className="h-4 w-4" />
-                  Editar
-                </Button>
-                <Button variant="outline" onClick={handleDelete}>
-                  <Trash className="h-4 w-4" />
-                  Apagar
-                </Button>
-              </div>
-            </CardHeader>
-            {isPending ? (
-              <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
-                <Spinner></Spinner>
-              </div>
-            ) : (
-              <CardContent>{createChartComponent(data)}</CardContent>
-            )}
-          </Card>
-        </ChartProvider>
-        <TabsComponent
-          tabs={[
-            {
-              value: "events",
-              label: "Eventos",
-              content: <div>Eventos</div>,
-            },
-            {
-              value: "chat",
-              label: "Chat",
-              content: (
-                <ResponsiveTabChat
-                  onSend={(text) => {
-                    setBubbles((prev) => [
-                      ...prev,
-                      <ChatBubble text={text} isUser={true} key={count} />,
-                    ]);
-                    setCount(count + 1);
 
-                    chatHistory.push({
-                      role: "user",
-                      content: postChatData?.response || "",
-                    });
+        <div className="flex flex-row flex-1 gap-4 overflow-hidden">
+          <div className="w-[70%] flex flex-col overflow-hidden">
+            <ChartProvider config={currentChartConfig}>
+              <ChartStyle id="external-legend" config={currentChartConfig} />
+              <Card className="flex-1 flex flex-col">
+                {" "}
+                <CardHeader className="flex flex-wrap gap-2 border-b sm:flex-row">
+                  <div className="flex gap-2 flex-wrap">
+                    {" "}
+                    <Button variant="outline" size="sm">
+                      {" "}
+                      <Filter className="h-4 w-4 mr-2" />
+                      Filtro
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleRefresh}>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Atualizar
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleEdit}>
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Editar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDelete}
+                      disabled={isDeletingChart}
+                    >
+                      <Trash className="h-4 w-4 mr-2" />
+                      {isDeletingChart ? "Apagando..." : "Apagar"}
+                    </Button>
+                  </div>
+                </CardHeader>
+                {isDeletingChart ? (
+                  <div className="flex-1 flex justify-center items-center">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <CardContent className="flex-1 overflow-y-auto pt-10">
+                    {" "}
+                    {createChartComponent(data)}
+                  </CardContent>
+                )}
+              </Card>
+            </ChartProvider>
+          </div>
 
-                    mutate({
-                      question: text,
-                      history: chatHistory,
-                      chart_id: chartId,
-                    });
-                  }}
-                  bubbles={bubbles}
-                  classname="w-full h-full"
-                />
-              ),
-            },
-          ]}
-          defaultValue="events"
-          className="w-full h-full"
-          containerClassName="w-1/2 max-h-full"
-        />
+          <div className="w-[30%] flex flex-col overflow-hidden">
+            <TabsComponent
+              tabs={[
+                {
+                  value: "events",
+                  label: "Eventos",
+                  content: (
+                    <div className="p-4 h-full">Conteúdo dos Eventos</div>
+                  ),
+                },
+                {
+                  value: "chat",
+                  label: "Chat",
+                  content: (
+                    <ResponsiveTabChat
+                      onSend={(text) => {
+                        const userMessage: ChatHistoryMessage = {
+                          role: "user",
+                          content: text,
+                        };
+                        setBubbles((prevBubbles) => [
+                          ...prevBubbles,
+                          <ChatBubble
+                            text={text}
+                            isUser={true}
+                            key={`user-${bubbleKeyCounter.current++}`}
+                          />,
+                        ]);
+
+                        const historyForApi = [...chatHistory];
+                        mutate({
+                          question: text,
+                          history: historyForApi,
+                          chart_id: chartId,
+                        });
+                        setChatHistory((prevHistory) => [
+                          ...prevHistory,
+                          userMessage,
+                        ]);
+                      }}
+                      bubbles={bubbles}
+                      classname="flex flex-col h-full p-0"
+                    />
+                  ),
+                },
+              ]}
+              defaultValue="chat"
+              className="flex-1 flex flex-col"
+            />
+          </div>
+        </div>
       </div>
     );
   }
