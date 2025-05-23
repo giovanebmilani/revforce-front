@@ -15,7 +15,7 @@ export type ChartSegment = "device" | "date" | "source_table" | "source_id";
 
 export type DeviceType = "mobile" | "desktop" | "tablet" | "other";
 export type SourceTable = "campaign" | "ad";
-export type PeriodType = "month" | "week" | "day" | "hour";
+export type PeriodType = "month" | "day" ;
 
 interface PeriodResponse {
   type: PeriodType;
@@ -94,6 +94,7 @@ export const useListCharts = () => {
           const friendlyMessage = getErrorMessage(error);
           throw new Error(friendlyMessage);
         } else {
+          console.error("Unexpected error:", error);
           throw new Error("Ocorreu um erro inesperado na aplicação.");
         }
       }
@@ -107,6 +108,28 @@ export const usePostNewChart = () => {
     mutationFn: async (chart: CreateChartRequest) => {
       try {
         const response = await axios.post<string>(CREAT_CHART_ENDPOINT,chart, {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+    },
+  });
+};
+
+export const useDeleteChart = () => {
+  return useMutation<string, Error, string>({
+    mutationFn: async (chartId: string) => {
+      try {
+        const response = await axios.delete<string>(makeGetChartEndpoint(chartId), {
           headers: {
             "Content-Type": "application/json",
           }

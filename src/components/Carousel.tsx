@@ -21,7 +21,7 @@ export function CarouselSize({
       }}
       className="max-w-[350px] lg:max-w-[600px]"
     >
-      <CarouselContent className="max-h-full">
+      <CarouselContent className="h-fit">
         {children.map((child, index) => (
           <CarouselItem
             key={index}
@@ -29,7 +29,7 @@ export function CarouselSize({
           >
             <div>
               <Card className="min-h-full p-1">
-                <CardContent className="flex aspect-square items-center justify-center p-0 border-0 hover:cursor-pointer hover:scale-103 transition duration-200 ease-in-out">
+                <CardContent className="flex aspect-square items-center justify-center p-0 hover:px-1 border-0 hover:cursor-pointer hover:scale-103 transition duration-200 ease-in-out">
                   {child}
                 </CardContent>
               </Card>

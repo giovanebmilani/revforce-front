@@ -68,9 +68,9 @@ const DashboardHeader = () => {
 };
 
 const DashboardChartCard = ({ response }: { response: ChartResponse }) => (
-  <Card className="w-full h-full pt-2 pb-0 overflow-hidden">
+  <Card className="w-full h-full pt-2 pb-0 overflow-hidden rounded-lg border">
     <CardHeader className="border-b">
-      <CardTitle className="flex items-center justify-between">
+      <CardTitle className="flex items-center justify-between p-1">
         {response.chart.name}
         <Link
           to="/revforce/dashboard/chartdetails/$chartId"
@@ -101,8 +101,8 @@ const DashboardError = () => (
 );
 
 function DashboardPage() {
-  const { data, isLoading, isSuccess, isError, isFetching } = useListCharts();
-  console.log("DashboardPage", data);
+  const { data, isLoading, isSuccess, isError, error, isFetching } = useListCharts();
+
   const chartsDraggable =
     data?.map((response: ChartResponse) => ({
       id: response.chart.id,
@@ -112,7 +112,10 @@ function DashboardPage() {
     })) || [];
 
   if (isLoading) return <DashboardLoading />;
-  if (isError) return <DashboardError />;
+  if (isError) {
+    console.error(error)
+    return <DashboardError />;
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-4 p-4">
