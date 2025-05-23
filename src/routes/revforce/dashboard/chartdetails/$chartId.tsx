@@ -156,12 +156,6 @@ function RouteComponent() {
                 {" "}
                 <CardHeader className="flex flex-wrap gap-2 border-b sm:flex-row">
                   <div className="flex gap-2 flex-wrap">
-                    {" "}
-                    <Button variant="outline" size="sm">
-                      {" "}
-                      <Filter className="h-4 w-4 mr-2" />
-                      Filtro
-                    </Button>
                     <Button variant="outline" size="sm" onClick={handleRefresh}>
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Atualizar
