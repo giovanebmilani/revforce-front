@@ -60,7 +60,7 @@ export function TabsComponent({
                     <TabsContent
                         key={tab.value}
                         value={tab.value}
-                        className="flex-1 p-4 outline-none"
+                        className="flex-1 pt-0 pr-4 pb-4 pl-4 outline-none"
                     >
                         {tab.content}
                     </TabsContent>

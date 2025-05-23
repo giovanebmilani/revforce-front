@@ -446,7 +446,7 @@ function RouteComponent() {
 
       <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
 
-      <div className="flex w-[360px] lg:w-full lg:gap-5 justify-center lg:mr-0 lg:justify-end">
+      <div className="flex w-[360px] lg:w-full lg:gap-5 justify-between lg:mr-0 lg:justify-end">
         <Button
           variant={"pointer"}
           onClick={handleCreateChart}

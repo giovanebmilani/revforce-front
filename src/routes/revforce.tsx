@@ -15,7 +15,7 @@ function RouteComponent() {
   }, []);
   return (
     <div
-      className={`flex min-h-screen flex-col items-center justify-center p-8 transition-opacity duration-500 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`flex min-h-screen flex-col p-8 transition-opacity duration-500 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       <SidebarProvider>
         <AsideBar />

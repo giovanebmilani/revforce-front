@@ -101,8 +101,8 @@ const DashboardError = () => (
 );
 
 function DashboardPage() {
-  const { data, isLoading, isSuccess, isError, isFetching } = useListCharts();
-  console.log("DashboardPage", data);
+  const { data, isLoading, isSuccess, isError, error, isFetching } = useListCharts();
+
   const chartsDraggable =
     data?.map((response: ChartResponse) => ({
       id: response.chart.id,
@@ -112,7 +112,10 @@ function DashboardPage() {
     })) || [];
 
   if (isLoading) return <DashboardLoading />;
-  if (isError) return <DashboardError />;
+  if (isError) {
+    console.error(error)
+    return <DashboardError />;
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-4 p-4">
