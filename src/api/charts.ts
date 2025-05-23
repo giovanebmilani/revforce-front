@@ -15,7 +15,7 @@ export type ChartSegment = "device" | "date" | "source_table" | "source_id";
 
 export type DeviceType = "mobile" | "desktop" | "tablet" | "other";
 export type SourceTable = "campaign" | "ad";
-export type PeriodType = "month" | "week" | "day" | "hour";
+export type PeriodType = "month" | "day" ;
 
 interface PeriodResponse {
   type: PeriodType;
