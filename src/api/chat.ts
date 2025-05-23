@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { getErrorMessage } from "./utils";
 
@@ -8,27 +8,30 @@ const SEND_CHAT_MESSAGE_ENDPOINT = `${API_BASE_URL}/chat`;
 export type ChatHistoryMessage = {
   role: "user" | "assistant" | "system";
   content: string;
-}
+};
 
 export type ChatRequest = {
-  history: ChatHistoryMessage[],
+  history: ChatHistoryMessage[];
   question: string;
   chart_id: string;
 };
 
 export type ChatResponse = {
-  history: ChatHistoryMessage[],
+  history: ChatHistoryMessage[];
   response: string;
 };
 
 const sendChatMessage = async (payload: ChatRequest) => {
   try {
-
-    const response = await axios.post<ChatResponse>(SEND_CHAT_MESSAGE_ENDPOINT, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post<ChatResponse>(
+      SEND_CHAT_MESSAGE_ENDPOINT,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -41,7 +44,8 @@ const sendChatMessage = async (payload: ChatRequest) => {
 };
 
 export const usePostChat = () => {
-  return useMutation({ //this probably doesnt make sense
+  return useMutation({
+    //this probably doesnt make sense
     mutationFn: (payload: ChatRequest) => sendChatMessage(payload),
   });
 };
