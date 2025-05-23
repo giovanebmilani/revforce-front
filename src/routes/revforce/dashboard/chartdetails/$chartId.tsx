@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import * as React from "react";
 
-import { Filter, RefreshCw, Pencil } from "lucide-react";
+import { Filter, RefreshCw, Pencil, Trash } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartConfig, ChartContext, ChartStyle } from "@/components/ui/chart";
@@ -13,11 +13,12 @@ import { createDashboardBarChartComponent } from "@/components/dashboardCharts/B
 import { createDashboardLineChartComponent } from "@/components/dashboardCharts/Line";
 import { createDashboardPieChartComponent } from "@/components/dashboardCharts/Pie";
 
-import { ChartResponse, useGetChart } from "@/api/charts";
+import { ChartResponse, useDeleteChart, useGetChart } from "@/api/charts";
 import { ResponsiveTabChat } from "@/components/ResponsiveTabChat";
 import { ChatBubble } from "@/components/ChatBubble";
 import { TabsComponent } from "@/components/TabsComponent";
-import { ChatHistoryMessage, ChatResponse, usePostChat } from "@/api/chat";
+import { ChatHistoryMessage, usePostChat } from "@/api/chat";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -26,10 +27,6 @@ export const Route = createFileRoute(
 function handleRefresh() {
   // Espaço para atualizar dados
   console.log("Atualizar gráfico");
-}
-
-function handleEdit() {
-  window.location.href = "/revforce/dashboard/newchart";
 }
 
 type ChartProviderProps = {
@@ -46,7 +43,7 @@ function ChartProvider({ config, children }: ChartProviderProps) {
 function ErrorScreen() {
   return (
     <div>
-      <h1>Something went wrong :(</h1>
+      <h1>Something went wrong</h1>
     </div>
   );
 }
@@ -77,7 +74,7 @@ const createChartComponent = (response: ChartResponse) => {
 
 function RouteComponent() {
   const { chartId } = Route.useParams();
-  const { data, isError } = useGetChart(chartId);
+  const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [count, setCount] = React.useState(0);
 
@@ -93,38 +90,72 @@ function RouteComponent() {
         text={postChatData?.response || ""}
         isUser={false}
         key={count}
-      />
-    ])
-    setCount(count + 1)
+      />,
+    ]);
+    setCount(count + 1);
 
     chatHistory.push({
       role: "assistant",
       content: postChatData?.response || "",
     });
-  }, [postChatData])
+  }, [postChatData]);
+  const {
+    mutate: deleteChart,
+    isPending,
+    isError: isDeletedError,
+  } = useDeleteChart();
+  const chartConfig: ChartConfig = {};
+  const navigate = useNavigate();
 
-  if (isError || !data) {
+  function handleEdit() {
+    navigate({
+      to: `/revforce/dashboard/newchart`,
+    });
+  }
+
+  function handleDelete() {
+    deleteChart(chartId, {
+      onSuccess: () => {
+        navigate({
+          to: `/revforce/dashboard`,
+        });
+      },
+    });
+  }
+
+  if (isError) {
     return <ErrorScreen />;
   }
 
-  const chartConfig: ChartConfig = {};
+  if (isLoading) {
+    return (
+      <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
+        <Spinner></Spinner>
+      </div>
+    );
+  }
 
-  return (
-    <div className="w-full h-full">
-      <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
-        Chart Details
-      </h2>
-      <div className="flex flex-row gap-5">
+  if (isSuccess) {
+    return (
+      <div className="h-full w-full">
+        <h2 className="text-2xl font-bold italic mb-4 tracking-tight">
+          Chart Details
+        </h2>
+        {isDeletedError && (
+          <h3 className="text-red-500">Ocorreu um erro ao apagar o gráfico.</h3>
+        )}
         <ChartProvider config={chartConfig}>
           <ChartStyle id="external-legend" config={chartConfig} />
-          <Card className="w-full h-full">
+          <Card>
             <CardHeader className="flex flex-wrap items-center justify-between gap-2 border-b sm:flex-row">
               <DateRangePresets
                 onChange={(newRange) => {
                   data.data
                     .filter((item) => {
                       const itemDate = new Date(item.date);
-                      return itemDate >= newRange.from && itemDate <= newRange.to;
+                      return (
+                        itemDate >= newRange.from && itemDate <= newRange.to
+                      );
                     })
                     .sort(
                       (a, b) =>
@@ -145,12 +176,21 @@ function RouteComponent() {
                   <Pencil className="h-4 w-4" />
                   Editar
                 </Button>
+                <Button variant="outline" onClick={handleDelete}>
+                  <Trash className="h-4 w-4" />
+                  Apagar
+                </Button>
               </div>
             </CardHeader>
-            <CardContent>{createChartComponent(data)}</CardContent>
+            {isPending ? (
+              <div className="flex flex-row min-h-screen justify-center items-center h-full w-full">
+                <Spinner></Spinner>
+              </div>
+            ) : (
+              <CardContent>{createChartComponent(data)}</CardContent>
+            )}
           </Card>
         </ChartProvider>
-
         <TabsComponent
           tabs={[
             {
@@ -161,36 +201,37 @@ function RouteComponent() {
             {
               value: "chat",
               label: "Chat",
-              content: <ResponsiveTabChat
-                onSend={(text) => {
-                  setBubbles((prev) => [
-                    ...prev,
-                    <ChatBubble
-                      text={text}
-                      isUser={true}
-                      key={count}
-                    />
-                  ])
-                  setCount(count + 1)
+              content: (
+                <ResponsiveTabChat
+                  onSend={(text) => {
+                    setBubbles((prev) => [
+                      ...prev,
+                      <ChatBubble text={text} isUser={true} key={count} />,
+                    ]);
+                    setCount(count + 1);
 
-                  chatHistory.push({
-                    role: "user",
-                    content: postChatData?.response || "",
-                  });
+                    chatHistory.push({
+                      role: "user",
+                      content: postChatData?.response || "",
+                    });
 
-                  mutate({ question: text, history: chatHistory, chart_id: chartId })
-                }}
-                bubbles={bubbles}
-                classname="w-full h-full"
-              />,
+                    mutate({
+                      question: text,
+                      history: chatHistory,
+                      chart_id: chartId,
+                    });
+                  }}
+                  bubbles={bubbles}
+                  classname="w-full h-full"
+                />
+              ),
             },
           ]}
           defaultValue="events"
           className="w-full h-full"
           containerClassName="w-1/2 max-h-full"
-          
         />
       </div>
-    </div>
-  );
+    );
+  }
 }

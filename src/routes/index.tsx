@@ -7,14 +7,20 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-    const router = useRouter();
-    const [isTransitioning, setIsTransitioning] = useState(false);
+  const router = useRouter();
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-    const handleEnter = () => {
-      setIsTransitioning(true);
-      setTimeout(() => router.navigate({ to: "/revforce/dashboard" }), 700);
-    };
-    
+  const handleEnter = () => {
+    if (localStorage.getItem("account_id") === null) {
+      localStorage.setItem(
+        "account_id",
+        "60887c35-7056-48d7-8fd3-889d33a25124" // Mocked account_id
+      );
+    }
+    setIsTransitioning(true);
+    setTimeout(() => router.navigate({ to: "/revforce/dashboard" }), 700);
+  };
+
   return (
     <main
       className={`flex h-screen w-full transition-opacity duration-500 ease-in-out ${isTransitioning ? "opacity-0" : "opacity-100"}`}
@@ -26,9 +32,14 @@ function Index() {
       </div>
 
       <div className="hidden md:flex items-center justify-center w-[30%] bg-white">
-          <Button disabled={isTransitioning} variant={"pointer"} className="w-28 h-16" onClick={handleEnter}>
-            Entrar
-          </Button>
+        <Button
+          disabled={isTransitioning}
+          variant={"pointer"}
+          className="w-28 h-16"
+          onClick={handleEnter}
+        >
+          Entrar
+        </Button>
       </div>
     </main>
   );

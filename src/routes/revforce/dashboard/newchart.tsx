@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
-import { usePostNewChart } from "@/api/charts";
+import { PeriodType, usePostNewChart } from "@/api/charts";
 import { Plus } from "lucide-react";
 import { useGetCampaigns } from "@/api/campaigns";
 import { useGetAds } from "@/api/ads";
@@ -19,9 +19,6 @@ export const Route = createFileRoute("/revforce/dashboard/newchart")({
 
 type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
-type SegmentType = "date" | "device";
-type PeriodType = "hour" | "day" | "week" | "month";
-
 interface SourceResponse {
   source_table: SourceType;
   source_id: string;
@@ -40,8 +37,6 @@ function RouteComponent() {
   const [selectedGranularityType, setSelectedGranularityType] = useState<
     PeriodType | string
   >("");
-  const [selectedGranularityAmount, setSelectedGranularityAmount] =
-    useState<string>("");
   const [selectedSourcesTable, setSelectedSourcesTable] = useState<
     SourceType[] | string[]
   >([]);
@@ -107,7 +102,7 @@ function RouteComponent() {
     value: campaign.id,
     label: campaign.name,
   }));
-  
+
   const formattedAds = getAllAds?.map((ad: any) => ({
     value: ad.id,
     label: ad.name,
@@ -174,16 +169,6 @@ function RouteComponent() {
       });
       return;
     }
-    if (!selectedGranularityAmount && selectedChart !== ChartType.pizza) {
-      toast.error("Erro ao criar gráfico", {
-        description: (
-          <span className="text-red-500">
-            Por favor, insira um valor para a granularidade.
-          </span>
-        ),
-      });
-      return;
-    }
     if (selectedSources.length === 0) {
       toast.error("Erro ao criar gráfico", {
         description: (
@@ -231,10 +216,6 @@ function RouteComponent() {
       selectedChart === ChartType.pizza
         ? selectedPeriodType
         : selectedGranularityType;
-    const granularityAmountToSend =
-      selectedChart === ChartType.pizza
-        ? selectedPeriodAmount
-        : selectedGranularityAmount;
 
     try {
       await postNewChart({
@@ -248,7 +229,7 @@ function RouteComponent() {
         },
         granularity: {
           type: granularityTypeToSend as PeriodType,
-          amount: Number(granularityAmountToSend),
+          amount: ChartType.pizza ? Number(selectedPeriodAmount) : 1,
         },
         sources: createSource() as SourceResponse[],
         segment: null,
@@ -260,7 +241,6 @@ function RouteComponent() {
       setSelectedPeriodType("");
       setSelectedPeriodAmount("");
       setSelectedGranularityType("");
-      setSelectedGranularityAmount("");
       setSelectedSources([]);
       setSelectedSourcesTable([]);
       setSourceClick(0);
@@ -273,7 +253,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-3 px-4">
       <h2 className="text-gray-300">Dashboard /</h2>
       <h1 className="text-2xl font-semibold italic mb-3">Novo Gráfico</h1>
       <hr className="ml-[-32px] max-w-screen border-gray-200 mb-2" />
@@ -323,9 +303,7 @@ function RouteComponent() {
         <h3 className="font-medium mt-2">Tipo</h3>
         <SelectBox
           items={[
-            { value: "hour", label: "Hora" },
             { value: "day", label: "Dia" },
-            { value: "week", label: "Semana" },
             { value: "month", label: "Mês" },
           ]}
           value={selectedPeriodType}
@@ -356,9 +334,7 @@ function RouteComponent() {
           <h3 className="font-medium mt-2">Tipo</h3>
           <SelectBox
             items={[
-              { value: "hour", label: "Hora" },
               { value: "day", label: "Dia" },
-              { value: "week", label: "Semana" },
               { value: "month", label: "Mês" },
             ]}
             value={selectedGranularityType}
@@ -367,17 +343,6 @@ function RouteComponent() {
             onChange={setSelectedGranularityType}
             className="w-full mb-2"
           ></SelectBox>
-
-          <LabelInput
-            inputTitle="Quantidade"
-            props={{
-              type: "number",
-              min: 1,
-              placeholder: "Quantidade do Período",
-              value: selectedGranularityAmount,
-              onChange: (e) => setSelectedGranularityAmount(e.target.value),
-            }}
-          ></LabelInput>
 
           <hr className="ml-[-32px] w-[392px] border-gray-200 mt-5" />
         </div>
@@ -448,9 +413,15 @@ function RouteComponent() {
                   {isLoadingAllCampaigns ? (
                     <Input placeholder="Carregando..." readOnly />
                   ) : isErrorAllCapaigns ? (
-                    <Input placeholder="Erro carregando campanhas..." readOnly />
+                    <Input
+                      placeholder="Erro carregando campanhas..."
+                      readOnly
+                    />
                   ) : getAllCampaigns?.length === 0 ? (
-                    <Input placeholder="Nenhuma campanha encontrada!" readOnly />
+                    <Input
+                      placeholder="Nenhuma campanha encontrada!"
+                      readOnly
+                    />
                   ) : (
                     <SelectBox
                       items={formattedCampaigns || []}

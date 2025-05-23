@@ -68,9 +68,9 @@ const DashboardHeader = () => {
 };
 
 const DashboardChartCard = ({ response }: { response: ChartResponse }) => (
-  <Card className="w-full h-full pt-2 pb-0 overflow-hidden">
+  <Card className="w-full h-full pt-2 pb-0 overflow-hidden rounded-lg border">
     <CardHeader className="border-b">
-      <CardTitle className="flex items-center justify-between">
+      <CardTitle className="flex items-center justify-between p-1">
         {response.chart.name}
         <Link
           to="/revforce/dashboard/chartdetails/$chartId"
