@@ -191,12 +191,12 @@
   ajustar conforme necessario*/
 @media(max-width: 1920px){
   .tab-chat-messages{
-    max-height: 40vh;
+    height: 40vh;
   }
 }
 
 @media(max-width: 1366px){
   .tab-chat-messages{
-    max-height: 38vh;
+    height: 38vh;
   }
 }
