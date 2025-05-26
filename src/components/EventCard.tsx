@@ -17,9 +17,9 @@ const EventCard: React.FC<EventCardProps> = ({
   addedDate,
 }) => {
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-4">
-      <div className="p-6">
-        <div className="flex gap-4">
+    <div className="min-w-[300px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-4">
+      <div className="p-3">
+        <div className="flex gap-2">
           <div className="flex-shrink-0 flex items-start justify-center h-10 w-10 rounded-lg bg-amber-50 text-gray-700">
             <Bell className="h-5 w-5 mt-2.5" />
           </div>
