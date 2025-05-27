@@ -52,12 +52,14 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
         setSelectedPeriodType(data.chart.period.type);
         setSelectedPeriodAmount(String(data.chart.period.amount));
         setSelectedGranularityType(data.chart.granularity.type);
+        setSourceClick(data.chart.sources.length);
         setSelectedSources(
             data.chart.sources.map((source) => source.source_table)
         );
         setSelectedSourcesTable(
             data.chart.sources.map((source) => source.source_id)
         );
+        
     }, [isSuccess, data]);
 
     const charts = [
