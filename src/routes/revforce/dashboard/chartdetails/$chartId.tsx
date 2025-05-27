@@ -112,7 +112,7 @@ function RouteComponent() {
 
   function handleEdit() {
     navigate({
-      to: `/revforce/dashboard/newchart`,
+      to: `/revforce/dashboard/editchart/${chartId}`,
     });
   }
 

@@ -16,6 +16,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as RevforceSettingsIndexImport } from './routes/revforce/settings/index'
 import { Route as RevforceDashboardIndexImport } from './routes/revforce/dashboard/index'
 import { Route as RevforceDashboardNewchartImport } from './routes/revforce/dashboard/newchart'
+import { Route as RevforceDashboardEditchartChartIdImport } from './routes/revforce/dashboard/editchart/$chartId'
 import { Route as RevforceDashboardChartdetailsChartIdImport } from './routes/revforce/dashboard/chartdetails/$chartId'
 
 // Create/Update Routes
@@ -49,6 +50,13 @@ const RevforceDashboardNewchartRoute = RevforceDashboardNewchartImport.update({
   path: '/dashboard/newchart',
   getParentRoute: () => RevforceRoute,
 } as any)
+
+const RevforceDashboardEditchartChartIdRoute =
+  RevforceDashboardEditchartChartIdImport.update({
+    id: '/dashboard/editchart/$chartId',
+    path: '/dashboard/editchart/$chartId',
+    getParentRoute: () => RevforceRoute,
+  } as any)
 
 const RevforceDashboardChartdetailsChartIdRoute =
   RevforceDashboardChartdetailsChartIdImport.update({
@@ -103,6 +111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevforceDashboardChartdetailsChartIdImport
       parentRoute: typeof RevforceImport
     }
+    '/revforce/dashboard/editchart/$chartId': {
+      id: '/revforce/dashboard/editchart/$chartId'
+      path: '/dashboard/editchart/$chartId'
+      fullPath: '/revforce/dashboard/editchart/$chartId'
+      preLoaderRoute: typeof RevforceDashboardEditchartChartIdImport
+      parentRoute: typeof RevforceImport
+    }
   }
 }
 
@@ -113,6 +128,7 @@ interface RevforceRouteChildren {
   RevforceDashboardIndexRoute: typeof RevforceDashboardIndexRoute
   RevforceSettingsIndexRoute: typeof RevforceSettingsIndexRoute
   RevforceDashboardChartdetailsChartIdRoute: typeof RevforceDashboardChartdetailsChartIdRoute
+  RevforceDashboardEditchartChartIdRoute: typeof RevforceDashboardEditchartChartIdRoute
 }
 
 const RevforceRouteChildren: RevforceRouteChildren = {
@@ -121,6 +137,8 @@ const RevforceRouteChildren: RevforceRouteChildren = {
   RevforceSettingsIndexRoute: RevforceSettingsIndexRoute,
   RevforceDashboardChartdetailsChartIdRoute:
     RevforceDashboardChartdetailsChartIdRoute,
+  RevforceDashboardEditchartChartIdRoute:
+    RevforceDashboardEditchartChartIdRoute,
 }
 
 const RevforceRouteWithChildren = RevforceRoute._addFileChildren(
@@ -134,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/revforce/dashboard': typeof RevforceDashboardIndexRoute
   '/revforce/settings': typeof RevforceSettingsIndexRoute
   '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
+  '/revforce/dashboard/editchart/$chartId': typeof RevforceDashboardEditchartChartIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -143,6 +162,7 @@ export interface FileRoutesByTo {
   '/revforce/dashboard': typeof RevforceDashboardIndexRoute
   '/revforce/settings': typeof RevforceSettingsIndexRoute
   '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
+  '/revforce/dashboard/editchart/$chartId': typeof RevforceDashboardEditchartChartIdRoute
 }
 
 export interface FileRoutesById {
@@ -153,6 +173,7 @@ export interface FileRoutesById {
   '/revforce/dashboard/': typeof RevforceDashboardIndexRoute
   '/revforce/settings/': typeof RevforceSettingsIndexRoute
   '/revforce/dashboard/chartdetails/$chartId': typeof RevforceDashboardChartdetailsChartIdRoute
+  '/revforce/dashboard/editchart/$chartId': typeof RevforceDashboardEditchartChartIdRoute
 }
 
 export interface FileRouteTypes {
@@ -164,6 +185,7 @@ export interface FileRouteTypes {
     | '/revforce/dashboard'
     | '/revforce/settings'
     | '/revforce/dashboard/chartdetails/$chartId'
+    | '/revforce/dashboard/editchart/$chartId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,6 +194,7 @@ export interface FileRouteTypes {
     | '/revforce/dashboard'
     | '/revforce/settings'
     | '/revforce/dashboard/chartdetails/$chartId'
+    | '/revforce/dashboard/editchart/$chartId'
   id:
     | '__root__'
     | '/'
@@ -180,6 +203,7 @@ export interface FileRouteTypes {
     | '/revforce/dashboard/'
     | '/revforce/settings/'
     | '/revforce/dashboard/chartdetails/$chartId'
+    | '/revforce/dashboard/editchart/$chartId'
   fileRoutesById: FileRoutesById
 }
 
@@ -216,7 +240,8 @@ export const routeTree = rootRoute
         "/revforce/dashboard/newchart",
         "/revforce/dashboard/",
         "/revforce/settings/",
-        "/revforce/dashboard/chartdetails/$chartId"
+        "/revforce/dashboard/chartdetails/$chartId",
+        "/revforce/dashboard/editchart/$chartId"
       ]
     },
     "/revforce/dashboard/newchart": {
@@ -233,6 +258,10 @@ export const routeTree = rootRoute
     },
     "/revforce/dashboard/chartdetails/$chartId": {
       "filePath": "revforce/dashboard/chartdetails/$chartId.tsx",
+      "parent": "/revforce"
+    },
+    "/revforce/dashboard/editchart/$chartId": {
+      "filePath": "revforce/dashboard/editchart/$chartId.tsx",
       "parent": "/revforce"
     }
   }

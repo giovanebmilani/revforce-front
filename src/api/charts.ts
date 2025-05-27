@@ -7,6 +7,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 const ACCOUNT_ID = localStorage.getItem("account_id");
 const LIST_CHARTS_ENDPOINT = `${API_BASE_URL}/chart/${ACCOUNT_ID}/all`;
 const CREAT_CHART_ENDPOINT = `${API_BASE_URL}/chart/`;
+const EDIT_CHART_ENDPOINT = `${API_BASE_URL}/chart/`;
+
 const makeGetChartEndpoint = (chartId: string) =>
   `${API_BASE_URL}/chart/${chartId}`;
 
@@ -35,6 +37,7 @@ interface SourceRequest {
 
 export interface Chart {
   id: string;
+  position: number;
   account_id: string;
   name: string;
   type: ChartType;
@@ -48,6 +51,17 @@ export interface Chart {
 export interface CreateChartRequest {
   account_id: string
   name: string;
+  type: ChartType;
+  metric: ChartMetric;
+  period: PeriodResponse;
+  granularity: PeriodResponse;
+  sources: SourceRequest[];
+  segment: ChartSegment | null | undefined;
+}
+
+export interface EditChartRequest {
+  name: string;
+  position: number;
   type: ChartType;
   metric: ChartMetric;
   period: PeriodResponse;
@@ -125,6 +139,30 @@ export const usePostNewChart = () => {
   });
 };
 
+export const usePutChart = (chartId?: string) => {
+  return useMutation<string, Error, { chart: EditChartRequest }>({
+    mutationFn: async ({ chart }) => {
+      try {
+        const response = await axios.put<string>(EDIT_CHART_ENDPOINT + chartId, chart, {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+
+    },
+    
+  });
+};
+
 export const useDeleteChart = () => {
   return useMutation<string, Error, string>({
     mutationFn: async (chartId: string) => {
@@ -147,13 +185,13 @@ export const useDeleteChart = () => {
   });
 };
 
-export const useGetChart = (chartId: string) => {
+export const useGetChart = (chartId: string | undefined) => {
   return useQuery<ChartResponse, Error>({
     queryKey: [`get-${chartId}`],
     queryFn: async () => {
       try {
         const response = await axios.get<ChartResponse>(
-          makeGetChartEndpoint(chartId),
+          makeGetChartEndpoint(chartId || ""),
           {
             headers: {
               "Content-Type": "application/json",
@@ -171,6 +209,7 @@ export const useGetChart = (chartId: string) => {
         }
       }
     },
+    enabled: !!chartId,
     refetchOnWindowFocus: true,
   });
 };
