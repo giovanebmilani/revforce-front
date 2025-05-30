@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
+import { DateRange } from "react-day-picker";
 
 interface EventCreationModalProps {
   isOpen: boolean;
@@ -27,7 +28,7 @@ export function EventCreationModal({
 }: EventCreationModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState<{ from: Date; to: Date } | undefined>({
+  const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2024, 6, 1),
     to: new Date(2024, 6, 31),
   });
