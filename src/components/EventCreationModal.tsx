@@ -124,7 +124,7 @@ export function EventCreationModal({
                     nav_button: "h-6 w-6 bg-transparent hover:bg-transparent",
                   }}
                 />
-                <div className="flex justify-end gap-2 p-3 border-t">
+                <div className="flex justify-center gap-2 p-3 border-t">
                   <Button
                     variant="outline"
                     size="sm"
@@ -146,7 +146,7 @@ export function EventCreationModal({
             </Popover>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-center gap-2">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
