@@ -96,7 +96,7 @@ export function EventCreationModal({
                   ) : (
                     <div className="flex items-center">
                       <span>Pick a date</span>
-                      <ChevronDown className="ml-6 h-4 w-4" />
+                      <ChevronDown className="ml-16 h-4 w-4" />
                     </div>
                   )}
                 </Button>
