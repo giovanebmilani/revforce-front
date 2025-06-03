@@ -18,6 +18,7 @@ import { ChatHistoryMessage, usePostChat } from "@/api/chat";
 import { Spinner } from "@/components/ui/spinner";
 import TabEvents from "@/components/TabEvents";
 import EventCard from "@/components/EventCard";
+import { ListEventsResponse } from "@/api/events";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -72,41 +73,41 @@ const createChartComponent = (response: ChartResponse) => {
 
 //Para fins de teste da estetica do componente
 //TODO: Remover ao integrar
-const events = [
+const events : ListEventsResponse = [
   {
-    title: "Marketing Sync",
+    event_id: "1",
+    name: "Marketing Sync",
     date: "2025-05-20",
     description: "Weekly sync with the marketing team to review campaign performance.",
-    addedBy: "Julia Martins",
-    addedDate: "2025-05-18",
+    color: "",
   },
   {
-    title: "Product Launch Meeting",
+    event_id: "2",
+    name: "Product Launch Meeting",
     date: "2025-05-22",
     description: "Finalize details for the upcoming product launch and coordinate timelines.",
-    addedBy: "Carlos Souza",
-    addedDate: "2025-05-19",
+    color: "",
   },
   {
-    title: "Customer Feedback Review",
+    event_id: "3",
+    name: "Customer Feedback Review",
     date: "2025-05-23",
     description: "Discuss feedback from recent user surveys and prioritize action items.",
-    addedBy: "Amanda Ribeiro",
-    addedDate: "2025-05-20",
+    color: "",
   },
   {
-    title: "Tech Standup",
+    event_id: "4",
+    name: "Tech Standup",
     date: "2025-05-24",
     description: "Daily standup for the development team to share updates and blockers.",
-    addedBy: "Felipe Lima",
-    addedDate: "2025-05-21",
+    color: "",
   },
   {
-    title: "Design Sprint Retrospective",
+    event_id: "5",
+    name: "Design Sprint Retrospective",
     date: "2025-05-25",
     description: "Reflect on what worked well and what could be improved in the last sprint.",
-    addedBy: "Renata Alves",
-    addedDate: "2025-05-22",
+    color: "",
   },
 ];
 

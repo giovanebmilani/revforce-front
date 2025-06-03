@@ -17,9 +17,7 @@ export type EventType = {
   color: string
 }
 
-export type ListEventsResponse = {
-  events: EventType[];
-}
+export type ListEventsResponse = EventType[];
 
 export const useListEvents = () => {
   return useQuery<ListEventsResponse, Error>({
