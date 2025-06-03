@@ -16,8 +16,6 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
 });
-
-type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
 
 function RouteComponent() {

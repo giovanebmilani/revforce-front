@@ -1,4 +1,4 @@
-import { ChartMetric, ChartResponse, PeriodType } from "@/api/charts";
+import { ChartResponse, PeriodType } from "@/api/charts";
 
 interface ChartDataItem {
   identifier: string;
@@ -222,7 +222,7 @@ export function treatChartData(response: ChartResponse): {
 
   const metadata: Record<string, SeriesMetadata> = {};
   allKeys.forEach((key) => {
-    const [sourceId, sourceTable, metric, segment] = key.split("_");
+    const [sourceId, sourceTable, metric] = key.split("_");
     metadata[key] = {
       friendlyName: `${getSourceName(sourceTable, sourceId)} - ${getMetricName(metric)}`,
       color: generateConsistentColor(key),
