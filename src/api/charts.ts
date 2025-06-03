@@ -62,6 +62,7 @@ export interface DataPoint {
   value: number;
   date: string;
   device: DeviceType | null | undefined;
+  metric: ChartMetric;
 }
 
 export interface ChartResponse {

@@ -90,9 +90,7 @@ function RouteComponent() {
     return selectedSources.map((source, index) => ({
       source_id: selectedSourcesTable[index],
       source_table: source,
-      metrics: selectedMetrics[index]
-        ? [selectedMetrics[index] as MetricType]
-        : [],
+      metrics: selectedMetrics
     }));
   };
 

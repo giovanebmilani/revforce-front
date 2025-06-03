@@ -12,7 +12,7 @@ export function createDashboardAreaChartComponent(
   response: ChartResponse,
   chartConfig: ChartConfig
 ) {
-  const entries = treatChartData(response);
+  const {data: entries, metadata} = treatChartData(response);
 
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
@@ -80,6 +80,7 @@ export function createDashboardAreaChartComponent(
             <Area
               key={key}
               dataKey={key}
+              name={metadata[key].friendlyName}
               type="natural"
               fill={`url(#fillGradient-${key})`}
               fillOpacity={0.4}

@@ -12,7 +12,7 @@ export function createDashboardLineChartComponent(
   response: ChartResponse,
   chartConfig: ChartConfig
 ) {
-  const entries = treatChartData(response);
+  const { data: entries, metadata } = treatChartData(response);
 
   return (
     <ChartContainer config={chartConfig} className="h-3/4 w-full">
@@ -32,17 +32,16 @@ export function createDashboardLineChartComponent(
           tickMargin={8}
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        {Object.keys(entries[0] || {})
-          .filter((key) => typeof entries[0][key] !== "string")
-          .map((key) => (
-            <Line
-              dataKey={key}
-              type="monotone"
-              stroke={chartConfig[key]?.color || chartConfig.other.color}
-              strokeWidth={2}
-              dot={false}
-            />
-          ))}
+        {Object.keys(metadata).map((key) => (
+          <Line
+            key={key}
+            dataKey={key}
+            name={metadata[key].friendlyName}
+            stroke={metadata[key].color}
+            strokeWidth={2}
+            dot={false}
+          />
+        ))}
       </LineChart>
     </ChartContainer>
   );
