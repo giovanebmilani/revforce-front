@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { DateRange } from "react-day-picker";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface EventCreationModalProps {
   isOpen: boolean;
@@ -110,7 +111,6 @@ export function EventCreationModal({
                   </div>
                 </div>
                 <Calendar
-                  initialFocus
                   mode="range"
                   defaultMonth={date?.from}
                   selected={date}
@@ -121,14 +121,21 @@ export function EventCreationModal({
                     head_cell: "text-xs font-normal text-gray-500 w-8 h-8",
                     cell: "text-sm w-8 h-8",
                     day: "w-8 h-8",
-                    nav_button: "h-6 w-6 bg-transparent hover:bg-transparent",
+                    nav: "hidden",
+                  
+                  }}
+                  components={{
+                                  
                   }}
                 />
-                <div className="flex justify-center gap-2 p-3 border-t">
+                <div className="flex justify-center gap-2 p-3">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setDate(undefined)}
+                    onClick={() => {
+                      setDate(undefined)
+                      setIsPopoverOpen(false)
+                    }}
                     className="h-8 px-3"
                   >
                     Cancel
