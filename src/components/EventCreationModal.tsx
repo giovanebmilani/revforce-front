@@ -8,7 +8,6 @@ import { Button } from "./ui/button";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { DateRange } from "react-day-picker";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface EventCreationModalProps {
   isOpen: boolean;
@@ -103,29 +102,41 @@ export function EventCreationModal({
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <div className="p-3">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-medium">
-                      {format(date?.from || new Date(), "MMMM, yyyy")}
-                    </span>
-                  </div>
-                </div>
+                <div className="p-1"></div>
                 <Calendar
                   mode="range"
                   defaultMonth={date?.from}
                   selected={date}
                   onSelect={setDate}
                   numberOfMonths={1}
-                  className="border-0"
+                  className="border-0 "
                   classNames={{
                     head_cell: "text-xs font-normal text-gray-500 w-8 h-8",
-                    cell: "text-sm w-8 h-8",
-                    day: "w-8 h-8",
-                    nav: "hidden",
-                  
+                    cell: "text-sm w-8 h-8 py-1",
+                    day: "w-8 h-8  p-2 rounded-none",
+                    caption_label: "ml-8 text-xl font-medium",
+                    nav: "h-1",
+                    day_range_middle: "bg-yellow-200  ",
+                    day_range_start:
+                      "bg-yellow-400 border-2 border-black rounded-full  ",
+                    day_range_end:
+                      "bg-yellow-400 border-2 border-black rounded-full ",
                   }}
-                  components={{
-                                  
+                  modifiersClassNames={{
+                    range_start:
+                      "bg-yellow-400 outline outline-black rounded-l-full ",
+                    range_end:
+                      "bg-yellow-400 outline outline-black rounded-r-full ",
+                    selected: "bg-yellow-400 hover:bg-yellow-400 font-medium",
+                    range_middle: "bg-yellow-200 hover:bg-yellow-200 z-0",
+                  }}
+                  styles={{
+                    day: {
+                      margin: "2px 0",
+                    },
+                    cell: {
+                      padding: "2px 0",
+                    },
                   }}
                 />
                 <div className="flex justify-center gap-2 p-3">
@@ -133,8 +144,8 @@ export function EventCreationModal({
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setDate(undefined)
-                      setIsPopoverOpen(false)
+                      setDate(undefined);
+                      setIsPopoverOpen(false);
                     }}
                     className="h-8 px-3"
                   >
