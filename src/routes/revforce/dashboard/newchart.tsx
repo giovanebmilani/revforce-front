@@ -16,8 +16,6 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
 });
-
-type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
 
 function RouteComponent() {
@@ -90,9 +88,7 @@ function RouteComponent() {
     return selectedSources.map((source, index) => ({
       source_id: selectedSourcesTable[index],
       source_table: source,
-      metrics: selectedMetrics[index]
-        ? [selectedMetrics[index] as MetricType]
-        : [],
+      metrics: selectedMetrics
     }));
   };
 
