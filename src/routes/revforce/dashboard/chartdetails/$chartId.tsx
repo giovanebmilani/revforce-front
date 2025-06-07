@@ -18,7 +18,7 @@ import { ChatHistoryMessage, usePostChat } from "@/api/chat";
 import { Spinner } from "@/components/ui/spinner";
 import TabEvents from "@/components/TabEvents";
 import EventCard from "@/components/EventCard";
-import { ListEventsResponse } from "@/api/events";
+import { ListEventsResponse, useListEvents } from "@/api/events";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -71,50 +71,11 @@ const createChartComponent = (response: ChartResponse) => {
   }
 };
 
-//Para fins de teste da estetica do componente
-//TODO: Remover ao integrar
-const events : ListEventsResponse = [
-  {
-    event_id: "1",
-    name: "Marketing Sync",
-    date: "2025-05-20",
-    description: "Weekly sync with the marketing team to review campaign performance.",
-    color: "",
-  },
-  {
-    event_id: "2",
-    name: "Product Launch Meeting",
-    date: "2025-05-22",
-    description: "Finalize details for the upcoming product launch and coordinate timelines.",
-    color: "",
-  },
-  {
-    event_id: "3",
-    name: "Customer Feedback Review",
-    date: "2025-05-23",
-    description: "Discuss feedback from recent user surveys and prioritize action items.",
-    color: "",
-  },
-  {
-    event_id: "4",
-    name: "Tech Standup",
-    date: "2025-05-24",
-    description: "Daily standup for the development team to share updates and blockers.",
-    color: "",
-  },
-  {
-    event_id: "5",
-    name: "Design Sprint Retrospective",
-    date: "2025-05-25",
-    description: "Reflect on what worked well and what could be improved in the last sprint.",
-    color: "",
-  },
-];
-
 function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
-
+  const { data: events, isError: isEventsError, isLoading: isEventsLoading, isSuccess: isEventsSuccess } = useListEvents(chartId);
+  
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [chatHistory, setChatHistory] = React.useState<ChatHistoryMessage[]>(
     []
@@ -240,7 +201,7 @@ function RouteComponent() {
                   label: "Eventos",
                   content: (
                     <TabEvents>{
-                      events
+                      isEventsSuccess && events
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                         .map((event, index) => (
                           <EventCard key={index} {...event} />
