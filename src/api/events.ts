@@ -4,10 +4,12 @@ import { getErrorMessage } from "./utils";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const ACCOUNT_ID = localStorage.getItem("account_id");
-const LIST_EVENTS_ENDPOINT = `${API_BASE_URL}/event/${ACCOUNT_ID}/all`;
+//const LIST_EVENTS_ENDPOINT = `${API_BASE_URL}/event/${ACCOUNT_ID}/all`;
 const CREATE_EVENT_ENDPOINT = `${API_BASE_URL}/event/`;
 const makeGetEventEndpoint = (eventId: string) =>
   `${API_BASE_URL}/event/${eventId}`;
+const makeListEventsEndpoint = (chartId: string) =>
+  `${API_BASE_URL}/event/${chartId}`;
 
 export type EventType = {
   event_id: string,
@@ -19,16 +21,16 @@ export type EventType = {
 
 export type ListEventsResponse = EventType[];
 
-export const useListEvents = () => {
+export const useListEvents = (chartId : string) => {
   return useQuery<ListEventsResponse, Error>({
-    queryKey: ["listEvents"],
+    queryKey: [`listEvents-${chartId}`],
     queryFn: async () => {
       try {
         if (!ACCOUNT_ID) {
           throw new Error("Account ID not found in local storage.");
         }
         const response = await axios.get<ListEventsResponse>(
-          LIST_EVENTS_ENDPOINT,
+          makeListEventsEndpoint(chartId),
           {
             headers: {
               "Content-Type": "application/json",
