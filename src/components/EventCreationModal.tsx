@@ -7,17 +7,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { Calendar } from "./ui/calendar";
-import { DateRange } from "react-day-picker";
 
 interface EventCreationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (event: {
-    name: string;
-    description: string;
-    startDate: Date;
-    endDate: Date;
-  }) => void;
+  onCreate: (event: { name: string; description: string; date: Date }) => void;
 }
 
 export function EventCreationModal({
@@ -27,26 +21,23 @@ export function EventCreationModal({
 }: EventCreationModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2024, 6, 1),
-    to: new Date(2024, 6, 31),
-  });
-
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date(2024, 6, 1)
+  );
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleCreate = () => {
-    if (!name || !date?.from || !date?.to) return;
+    if (!name || !selectedDate) return;
 
     onCreate({
       name,
       description,
-      startDate: date.from,
-      endDate: date.to,
+      date: selectedDate,
     });
 
     setName("");
     setDescription("");
-    setDate(undefined);
+    setSelectedDate(undefined);
     onClose();
   };
 
@@ -85,14 +76,8 @@ export function EventCreationModal({
                   className="w-[200px] justify-start font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date?.from ? (
-                    date.to ? (
-                      format(date.from, "MMM d") +
-                      " - " +
-                      format(date.to, "MMM d, y")
-                    ) : (
-                      format(date.from, "MMM d, y")
-                    )
+                  {selectedDate ? (
+                    format(selectedDate, "MMM d, y")
                   ) : (
                     <div className="flex items-center">
                       <span>Pick a date</span>
@@ -104,10 +89,10 @@ export function EventCreationModal({
               <PopoverContent className="w-auto p-0" align="start">
                 <div className="p-1"></div>
                 <Calendar
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
+                  mode="single"
+                  defaultMonth={selectedDate}
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
                   numberOfMonths={1}
                   className="border-0 "
                   classNames={{
@@ -116,27 +101,6 @@ export function EventCreationModal({
                     day: "w-8 h-8  p-2 rounded-none",
                     caption_label: "ml-8 text-xl font-medium",
                     nav: "h-1",
-                    day_range_middle: "bg-yellow-200  ",
-                    day_range_start:
-                      "bg-yellow-400 border-2 border-black rounded-full  ",
-                    day_range_end:
-                      "bg-yellow-400 border-2 border-black rounded-full ",
-                  }}
-                  modifiersClassNames={{
-                    range_start:
-                      "bg-yellow-400 outline outline-black rounded-l-full ",
-                    range_end:
-                      "bg-yellow-400 outline outline-black rounded-r-full ",
-                    selected: "bg-yellow-400 hover:bg-yellow-400 font-medium",
-                    range_middle: "bg-yellow-200 hover:bg-yellow-200 z-0",
-                  }}
-                  styles={{
-                    day: {
-                      margin: "2px 0",
-                    },
-                    cell: {
-                      padding: "2px 0",
-                    },
                   }}
                 />
                 <div className="flex justify-center gap-2 p-3">
@@ -144,7 +108,7 @@ export function EventCreationModal({
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setDate(undefined);
+                      setSelectedDate(undefined);
                       setIsPopoverOpen(false);
                     }}
                     className="h-8 px-3"
@@ -154,7 +118,7 @@ export function EventCreationModal({
                   <Button
                     size="sm"
                     className="h-8 px-3"
-                    disabled={!date?.from || !date?.to}
+                    disabled={!selectedDate}
                     onClick={() => setIsPopoverOpen(false)}
                   >
                     Apply
