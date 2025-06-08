@@ -1,14 +1,39 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { EventCreationModal } from "./EventCreationModal";
+import { usePostNewEvent } from "@/api/events";
+import { Variable } from "lucide-react";
 
 interface TabEventsProps {
   children: React.ReactNode;
   className?: string;
+  chartId: string;
+  onEventCreation?: (event: { name: string; description: string; date: Date }) => void;
 }
 
-const TabEvents: React.FC<TabEventsProps> = ({ children, className }) => {
+const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onEventCreation }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+
+  const { mutateAsync: postNewEvent, isError, error } = usePostNewEvent();
+
+  const handleCreateEvent = (event: { name: string; description: string; date: Date }) => {
+    console.log("Evento criado:", event);
+
+    postNewEvent({
+      chart_id: chartId,
+      name: event.name,
+      description: event.description,
+      date: event.date.toISOString(),
+      color: "#FFFFFF",
+    }).catch((err) => {
+      console.error("Erro ao criar evento:", err);
+    });
+
+    onEventCreation?.(event);
+  }
 
   return (
     <div
@@ -19,8 +44,19 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className }) => {
         className
       )}
     >
+      <EventCreationModal
+        isOpen={isEventModalOpen}
+        onClose={() => setIsEventModalOpen(false)}
+        onCreate={handleCreateEvent}
+      />
+
       <div className="flex justify-center mb -4">
-        <Button variant="pointer">Novo Evento</Button>
+        <Button variant="pointer" onClick={
+          () => {
+            setIsEventModalOpen(true);
+            console.log("opening create event");
+          }
+        }>Novo Evento</Button>
       </div>
       <div className="flex-1 overflow-x-auto overflow-y-auto pr-2">
         {children}

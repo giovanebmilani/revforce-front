@@ -200,7 +200,9 @@ function RouteComponent() {
                   value: "events",
                   label: "Eventos",
                   content: (
-                    <TabEvents>{
+                    <TabEvents chartId={chartId} onEventCreation={(event) => {
+                      //TODO update events list after creation
+                    }}>{
                       isEventsSuccess && events
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                         .map((event, index) => (

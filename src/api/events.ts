@@ -11,6 +11,14 @@ const makeGetEventEndpoint = (eventId: string) =>
 const makeListEventsEndpoint = (chartId: string) =>
   `${API_BASE_URL}/event/${chartId}`;
 
+export type CreateEventRequest = {
+  chart_id: string,
+  name: string,
+  description: string,
+  date: string,
+  color: string
+}
+
 export type EventType = {
   event_id: string,
   name: string,
@@ -54,8 +62,8 @@ export const useListEvents = (chartId : string) => {
 };
 
 export const usePostNewEvent = () => {
-  return useMutation<string, Error, EventType>({
-    mutationFn: async (event: EventType) => {
+  return useMutation<string, Error, CreateEventRequest>({
+    mutationFn: async (event: CreateEventRequest) => {
       try {
         const response = await axios.post<string>(CREATE_EVENT_ENDPOINT, event, {
           headers: {
