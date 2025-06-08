@@ -1,0 +1,141 @@
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { format } from "date-fns";
+import { Textarea } from "./ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import { CalendarIcon, ChevronDown } from "lucide-react";
+import { Calendar } from "./ui/calendar";
+
+interface EventCreationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (event: { name: string; description: string; date: Date }) => void;
+}
+
+export function EventCreationModal({
+  isOpen,
+  onClose,
+  onCreate,
+}: EventCreationModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date(2024, 6, 1)
+  );
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const handleCreate = () => {
+    if (!name || !selectedDate) return;
+
+    onCreate({
+      name,
+      description,
+      date: selectedDate,
+    });
+
+    setName("");
+    setDescription("");
+    setSelectedDate(undefined);
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl">Create new event</DialogTitle>
+        </DialogHeader>
+        <div className="pl-2 space-y-6 py-4">
+          <div className="space-y-1">
+            <h2 className="font-semibold">Name</h2>
+            <Input
+              placeholder="Name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            <h2 className="font-semibold">Description</h2>
+            <Textarea
+              id="description"
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="flex flex-col items-center space-y-2">
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className="w-[200px] justify-start font-normal"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {selectedDate ? (
+                    format(selectedDate, "MMM d, y")
+                  ) : (
+                    <div className="flex items-center">
+                      <span>Pick a date</span>
+                      <ChevronDown className="ml-16 h-4 w-4" />
+                    </div>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <div className="p-1"></div>
+                <Calendar
+                  mode="single"
+                  defaultMonth={selectedDate}
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  numberOfMonths={1}
+                  className="border-0 "
+                  classNames={{
+                    head_cell: "text-xs font-normal text-gray-500 w-8 h-8",
+                    cell: "text-sm w-8 h-8 py-1",
+                    day: "w-8 h-8  p-2 rounded-none",
+                    caption_label: "ml-8 text-xl font-medium",
+                    nav: "h-1",
+                  }}
+                />
+                <div className="flex justify-center gap-2 p-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedDate(undefined);
+                      setIsPopoverOpen(false);
+                    }}
+                    className="h-8 px-3"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="h-8 px-3"
+                    disabled={!selectedDate}
+                    onClick={() => setIsPopoverOpen(false)}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="flex justify-center gap-2">
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreate}>Create</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
