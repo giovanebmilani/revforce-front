@@ -20,7 +20,7 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
 
   const { mutateAsync: postNewEvent, isError, error } = usePostNewEvent();
 
-  const handleCreateEvent = (event: { name: string; description: string; date: Date }) => {
+  const handleCreateEvent = (event: { name: string; description: string; date: Date; color: string }) => {
     console.log("Evento criado:", event);
 
     postNewEvent({
@@ -28,14 +28,14 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
       name: event.name,
       description: event.description,
       date: event.date.toISOString(),
-      color: "#FFFFFF",
+      color: event.color,
     }).catch((err) => {
       console.error("Erro ao criar evento:", err);
-      toast.error("Erro ao criar o evento!")
+      toast.error("Erro ao criar o evento!");
     });
-    toast.success("Evento criado com sucesso!")
+    toast.success("Evento criado com sucesso!");
     onEventCreation?.(event);
-  }
+  };
 
   return (
     <div
