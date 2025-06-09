@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { EventCreationModal } from "./EventCreationModal";
 import { usePostNewEvent } from "@/api/events";
-import { Variable } from "lucide-react";
+import { toast } from "sonner";
+import { Toaster } from "./ui/sonner";
 
 interface TabEventsProps {
   children: React.ReactNode;
@@ -30,8 +31,9 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
       color: "#FFFFFF",
     }).catch((err) => {
       console.error("Erro ao criar evento:", err);
+      toast.error("Erro ao criar o evento!")
     });
-
+    toast.success("Evento criado com sucesso!")
     onEventCreation?.(event);
   }
 
@@ -62,6 +64,7 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
         {children}
         <div ref={scrollRef} />
       </div>
+      <Toaster />
     </div>
   );
 };
