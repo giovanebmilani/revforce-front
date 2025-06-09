@@ -69,7 +69,7 @@ export function EventCreationModal({
           <div className="space-y-1">
             <h2 className="font-semibold">Nome</h2>
             <Input
-              placeholder="Name"
+              placeholder="Nome"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -79,7 +79,7 @@ export function EventCreationModal({
             <h2 className="font-semibold">Descrição</h2>
             <Textarea
               id="description"
-              placeholder="Description"
+              placeholder="Descrição"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="col-span-3"
