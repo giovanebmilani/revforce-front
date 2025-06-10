@@ -73,6 +73,7 @@ export interface EditChartRequest {
 export interface DataPoint {
   source_id: string;
   source_table: SourceTable;
+  metric: ChartMetric;
   value: number;
   date: string;
   device: DeviceType | null | undefined;

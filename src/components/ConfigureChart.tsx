@@ -48,18 +48,20 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
         if (!isSuccess || !data) return;
         setName(data.chart.name);
         setSelectedChart(data.chart.type);
-        setSelectedMetric(data.chart.metric);
+        console.log("Selected Chart metric:", data);
+        setSelectedMetric(data.data[0].metric);
         setSelectedPeriodType(data.chart.period.type);
         setSelectedPeriodAmount(String(data.chart.period.amount));
         setSelectedGranularityType(data.chart.granularity.type);
         setSourceClick(data.chart.sources.length);
+        console.log(data.chart.sources.map((source) => source.source_table))
         setSelectedSources(
             data.chart.sources.map((source) => source.source_table)
         );
         setSelectedSourcesTable(
             data.chart.sources.map((source) => source.source_id)
         );
-        
+
     }, [isSuccess, data]);
 
     const charts = [
@@ -127,7 +129,7 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
         label: ad.name,
     }));
 
-    function validateInputs() : boolean {
+    function validateInputs(): boolean {
         if (!name) {
             toast.error("Erro ao criar gráfico", {
                 description: (
@@ -430,14 +432,17 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
                         <div key={index} className="mb-5">
                             <h3 className="font-medium">Fonte do gráfico {index + 1}</h3>
                             <SelectBox
+
                                 items={[
                                     { value: "campaign", label: "Campanha" },
                                     { value: "ad", label: "Anúncio" },
                                 ]}
+                                value={selectedSources[index]}
                                 selectLabel={`Fonte ${index + 1}:`}
                                 placeholderText="Selecione a fonte para exibir no gráfico..."
                                 onChange={(value) => {
                                     setSelectedSources((prev) => {
+                                        console.log("Selected Sources:", prev, value);
                                         const updatedSources = [...prev];
                                         updatedSources[index] = value;
                                         return updatedSources;
@@ -460,6 +465,7 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
                                             items={formattedAds || []}
                                             selectLabel={`Tabela de fonte ${index + 1}:`}
                                             placeholderText="Selecione a fonte para exibir no gráfico..."
+                                            value={selectedSourcesTable[index]}
                                             onChange={(value) => {
                                                 setSelectedSourcesTable((prev) => {
                                                     const updatedSources = [...prev];
@@ -493,6 +499,7 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
                                             items={formattedCampaigns || []}
                                             selectLabel={`Tabela de fonte ${index + 1}:`}
                                             placeholderText="Selecione a fonte para exibir no gráfico..."
+                                            value={selectedSourcesTable[index]}
                                             onChange={(value) => {
                                                 setSelectedSourcesTable((prev) => {
                                                     const updatedSources = [...prev];
