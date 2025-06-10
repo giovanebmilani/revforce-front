@@ -10,15 +10,14 @@ interface TabEventsProps {
   children: React.ReactNode;
   className?: string;
   chartId: string;
-  onEventCreation?: (event: { name: string; description: string; date: Date }) => void;
 }
 
-const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onEventCreation }) => {
+const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
-  const { mutateAsync: postNewEvent, isError, error } = usePostNewEvent(chartId);
+  const { mutateAsync: postNewEvent } = usePostNewEvent(chartId);
 
   const handleCreateEvent = (event: { name: string; description: string; date: Date; color: string }) => {
     console.log("Evento criado:", event);
@@ -34,7 +33,6 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
       toast.error("Erro ao criar o evento!");
     });
     toast.success("Evento criado com sucesso!");
-    onEventCreation?.(event);
   };
 
   return (
