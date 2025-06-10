@@ -74,7 +74,7 @@ const createChartComponent = (response: ChartResponse) => {
 function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
-  const { data: events, isSuccess: isEventsSuccess } = useListEvents(chartId);
+  const { data: events, isSuccess: isEventsSuccess, refetch } = useListEvents(chartId);
   
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [chatHistory, setChatHistory] = React.useState<ChatHistoryMessage[]>(
@@ -201,7 +201,7 @@ function RouteComponent() {
                   label: "Eventos",
                   content: (
                     <TabEvents chartId={chartId} onEventCreation={(event) => {
-                      //TODO update events list after creation
+                      //refetch();
                     }}>{
                       isEventsSuccess && events
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

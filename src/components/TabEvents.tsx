@@ -18,7 +18,7 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId, onE
 
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
-  const { mutateAsync: postNewEvent, isError, error } = usePostNewEvent();
+  const { mutateAsync: postNewEvent, isError, error } = usePostNewEvent(chartId);
 
   const handleCreateEvent = (event: { name: string; description: string; date: Date; color: string }) => {
     console.log("Evento criado:", event);
