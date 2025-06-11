@@ -9,7 +9,7 @@ const EventCard: React.FC<EventType> = ({
   color,
 }) => {
   return (
-    <div className="min-w-[300px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-4">
+    <div className="min-w-[250px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-4">
       <div className="p-3">
         <div className="flex gap-2">
           <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-lg text-gray-700"
