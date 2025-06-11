@@ -20,16 +20,13 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId }) =
   const { mutateAsync: postNewEvent } = usePostNewEvent(chartId);
 
   const handleCreateEvent = (event: { name: string; description: string; date: Date; color: string }) => {
-    console.log("Evento criado:", event);
-
     postNewEvent({
       chart_id: chartId,
       name: event.name,
       description: event.description,
       date: event.date.toISOString(),
       color: event.color,
-    }).catch((err) => {
-      console.error("Erro ao criar evento:", err);
+    }).catch(() => {
       toast.error("Erro ao criar o evento!");
     });
     toast.success("Evento criado com sucesso!");
@@ -54,7 +51,6 @@ const TabEvents: React.FC<TabEventsProps> = ({ children, className, chartId }) =
         <Button variant="pointer" onClick={
           () => {
             setIsEventModalOpen(true);
-            console.log("opening create event");
           }
         }>Novo Evento</Button>
       </div>
