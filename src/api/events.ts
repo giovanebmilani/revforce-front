@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getErrorMessage } from "./utils";
+import { queryClient } from "@/main";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const ACCOUNT_ID = localStorage.getItem("account_id");
@@ -10,6 +11,14 @@ const makeGetEventEndpoint = (eventId: string) =>
   `${API_BASE_URL}/event/${eventId}`;
 const makeListEventsEndpoint = (chartId: string) =>
   `${API_BASE_URL}/event/${chartId}`;
+
+export type CreateEventRequest = {
+  chart_id: string,
+  name: string,
+  description: string,
+  date: string,
+  color: string
+}
 
 export type EventType = {
   event_id: string,
@@ -53,9 +62,9 @@ export const useListEvents = (chartId : string) => {
   });
 };
 
-export const usePostNewEvent = () => {
-  return useMutation<string, Error, EventType>({
-    mutationFn: async (event: EventType) => {
+export const usePostNewEvent = (chart_id : string) => {
+  return useMutation<string, Error, CreateEventRequest>({
+    mutationFn: async (event: CreateEventRequest) => {
       try {
         const response = await axios.post<string>(CREATE_EVENT_ENDPOINT, event, {
           headers: {
@@ -71,6 +80,11 @@ export const usePostNewEvent = () => {
           throw new Error("Ocorreu um erro inesperado na aplicação.");
         }
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`listEvents-${chart_id}`],
+      })
     },
   });
 };
