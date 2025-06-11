@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import ChartSelect, { ChartType } from "@/components/ChartSelect";
 import { CarouselSize } from "@/components/Carousel";
-import { PeriodType, usePostNewChart } from "@/api/charts";
+import { PeriodType, SourceRequest, usePostNewChart } from "@/api/charts";
 import { Plus } from "lucide-react";
 import { useGetCampaigns } from "@/api/campaigns";
 import { useGetAds } from "@/api/ads";
@@ -16,20 +16,11 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/revforce/dashboard/newchart")({
   component: RouteComponent,
 });
-
-type MetricType = "ctr" | "click" | "impression" | "spend";
 type SourceType = "campaign" | "ad";
-interface SourceResponse {
-  source_table: SourceType;
-  source_id: string;
-}
 
 function RouteComponent() {
   const [name, setName] = useState("");
   const [selectedChart, setSelectedChart] = useState<ChartType | undefined>();
-  const [selectedMetric, setSelectedMetric] = useState<
-    MetricType | undefined | string
-  >();
   const [selectedPeriodType, setSelectedPeriodType] = useState<
     PeriodType | string
   >("");
@@ -41,7 +32,9 @@ function RouteComponent() {
     SourceType[] | string[]
   >([]);
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
   const [sourceClick, setSourceClick] = useState(0);
+  const [metricClick, setMetricClick] = useState(0);
 
   const charts = [
     <ChartSelect
@@ -95,6 +88,7 @@ function RouteComponent() {
     return selectedSources.map((source, index) => ({
       source_id: selectedSourcesTable[index],
       source_table: source,
+      metrics: selectedMetrics
     }));
   };
 
@@ -129,7 +123,7 @@ function RouteComponent() {
       });
       return;
     }
-    if (!selectedMetric) {
+    if (selectedMetrics.length === 0) {
       toast.error("Erro ao criar gráfico", {
         description: (
           <span className="text-red-500">
@@ -222,7 +216,6 @@ function RouteComponent() {
         account_id: localStorage.getItem("account_id") || "",
         name: name,
         type: selectedChart,
-        metric: selectedMetric as MetricType,
         period: {
           type: selectedPeriodType as PeriodType,
           amount: Number(selectedPeriodAmount),
@@ -231,13 +224,13 @@ function RouteComponent() {
           type: granularityTypeToSend as PeriodType,
           amount: ChartType.pizza ? Number(selectedPeriodAmount) : 1,
         },
-        sources: createSource() as SourceResponse[],
+        sources: createSource() as SourceRequest[],
         segment: null,
       });
 
       setName("");
       setSelectedChart(undefined);
-      setSelectedMetric("");
+      setSelectedMetrics([]);
       setSelectedPeriodType("");
       setSelectedPeriodAmount("");
       setSelectedGranularityType("");
@@ -278,24 +271,53 @@ function RouteComponent() {
         </div>
       </section>
 
+      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2 mb-1" />
+      
       <div className="w-[360px]">
-        <h3 className="font-medium">Métrica do Gráfico:</h3>
-        <SelectBox
-          items={[
-            { value: "ctr", label: "CTR" },
-            { value: "click", label: "Cliques" },
-            { value: "impression", label: "Impressões" },
-            { value: "spend", label: "Investimento" },
-          ]}
-          value={selectedMetric}
-          selectLabel="Métrica do Gráfico"
-          placeholderText="Selecione a métrica para exibir no gráfico..."
-          onChange={setSelectedMetric}
-          className="w-full"
-        ></SelectBox>
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium">Adicionar métricas no gráfico</h3>
+          <Button
+            onClick={() => setMetricClick(metricClick + 1)}
+            className="hover: cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
-      <hr className="ml-[-32px] w-[392px] border-gray-200 mt-2" />
+      <div>
+        {Array.from({ length: metricClick })
+          .slice(0, 3)
+          .map((_, index) => (
+            <div key={index} className="mb-5">
+              <div className="w-[360px]">
+                <h3 className="font-medium pb-1">
+                  Fonte do gráfico {index + 1}
+                </h3>
+                <SelectBox
+                  items={[
+                    { value: "ctr", label: "CTR" },
+                    { value: "click", label: "Cliques" },
+                    { value: "impression", label: "Impressões" },
+                    { value: "spend", label: "Investimento" },
+                  ]}
+                  selectLabel={`Fonte ${index + 1}:`}
+                  placeholderText="Selecione a métrica para exibir no gráfico..."
+                  onChange={(value) => {
+                    setSelectedMetrics((prev) => {
+                      const updatedMetrics = [...prev];
+                      updatedMetrics[index] = value;
+                      return updatedMetrics;
+                    });
+                  }}
+                  className="mb-2"
+                />
+              </div>
+            </div>
+          ))}
+      </div>
+
+      <hr className="ml-[-32px] w-[392px] border-gray-200" />
 
       <div className="w-[360px]">
         <h3 className="font-medium">Período do Gráfico:</h3>

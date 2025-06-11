@@ -11,8 +11,23 @@ import { Calendar } from "./ui/calendar";
 interface EventCreationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (event: { name: string; description: string; date: Date }) => void;
+  onCreate: (event: {
+    name: string;
+    description: string;
+    date: Date;
+    color: string;
+  }) => void;
 }
+
+const cores = [
+  "#FFFFFF",
+  "#EF4444",
+  "#F59E0B",
+  "#FFFF00",
+  "#10B981",
+  "#3B82F6",
+  "#8B5CF6",
+];
 
 export function EventCreationModal({
   isOpen,
@@ -24,6 +39,7 @@ export function EventCreationModal({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(2024, 6, 1)
   );
+  const [selectedColor, setSelectedColor] = useState(cores[0]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleCreate = () => {
@@ -33,11 +49,13 @@ export function EventCreationModal({
       name,
       description,
       date: selectedDate,
+      color: selectedColor,
     });
 
     setName("");
     setDescription("");
     setSelectedDate(undefined);
+    setSelectedColor(cores[0]);
     onClose();
   };
 
@@ -45,23 +63,23 @@ export function EventCreationModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-xl">Create new event</DialogTitle>
+          <DialogTitle className="text-xl">Criar um evento</DialogTitle>
         </DialogHeader>
         <div className="pl-2 space-y-6 py-4">
           <div className="space-y-1">
-            <h2 className="font-semibold">Name</h2>
+            <h2 className="font-semibold">Nome</h2>
             <Input
-              placeholder="Name"
+              placeholder="Nome"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="space-y-1">
-            <h2 className="font-semibold">Description</h2>
+            <h2 className="font-semibold">Descrição</h2>
             <Textarea
               id="description"
-              placeholder="Description"
+              placeholder="Descrição"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="col-span-3"
@@ -80,7 +98,7 @@ export function EventCreationModal({
                     format(selectedDate, "MMM d, y")
                   ) : (
                     <div className="flex items-center">
-                      <span>Pick a date</span>
+                      <span>Data</span>
                       <ChevronDown className="ml-16 h-4 w-4" />
                     </div>
                   )}
@@ -113,7 +131,7 @@ export function EventCreationModal({
                     }}
                     className="h-8 px-3"
                   >
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button
                     size="sm"
@@ -121,18 +139,36 @@ export function EventCreationModal({
                     disabled={!selectedDate}
                     onClick={() => setIsPopoverOpen(false)}
                   >
-                    Apply
+                    Confirmar
                   </Button>
                 </div>
               </PopoverContent>
             </Popover>
           </div>
 
-          <div className="flex justify-center gap-2">
+          <div className="space-y-1">
+            <h2 className="font-semibold text-center">Cor</h2>
+            <div className="flex justify-center gap-2">
+              {cores.map((color) => {
+                const isSelected = selectedColor === color;
+                return (
+                  <button
+                    key={color}
+                    className={`w-6 h-6 rounded-full border-2 transition-all ${isSelected ? "ring-2 ring-offset-2 ring-black" : "border-gray-300"
+                      }`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setSelectedColor(color)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex justify-center gap-2 pt-2">
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              Cancelar
             </Button>
-            <Button onClick={handleCreate}>Create</Button>
+            <Button onClick={handleCreate}>Criar</Button>
           </div>
         </div>
       </DialogContent>

@@ -16,6 +16,9 @@ import { ChatBubble } from "@/components/ChatBubble";
 import { TabsComponent } from "@/components/TabsComponent";
 import { ChatHistoryMessage, usePostChat } from "@/api/chat";
 import { Spinner } from "@/components/ui/spinner";
+import TabEvents from "@/components/TabEvents";
+import EventCard from "@/components/EventCard";
+import { useListEvents } from "@/api/events";
 
 export const Route = createFileRoute(
   "/revforce/dashboard/chartdetails/$chartId"
@@ -71,7 +74,8 @@ const createChartComponent = (response: ChartResponse) => {
 function RouteComponent() {
   const { chartId } = Route.useParams();
   const { data, isError, isLoading, isSuccess } = useGetChart(chartId);
-
+  const { data: events, isSuccess: isEventsSuccess } = useListEvents(chartId);
+  
   const [bubbles, setBubbles] = React.useState<React.JSX.Element[]>([]);
   const [chatHistory, setChatHistory] = React.useState<ChatHistoryMessage[]>(
     []
@@ -196,7 +200,13 @@ function RouteComponent() {
                   value: "events",
                   label: "Eventos",
                   content: (
-                    <div className="p-4 h-full">Conteúdo dos Eventos</div>
+                    <TabEvents chartId={chartId}>{
+                      isEventsSuccess && events
+                        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                        .map((event, index) => (
+                          <EventCard key={index} {...event} />
+                        ))
+                    }</TabEvents>
                   ),
                 },
                 {

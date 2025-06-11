@@ -22,15 +22,17 @@ interface PeriodResponse {
   amount: number;
 }
 
-interface SourceResponse {
+export interface SourceResponse {
   chart_id: string;
   source_table: SourceTable;
   source_id: string;
+  metrics: ChartMetric[];
 }
 
-interface SourceRequest {
+export interface SourceRequest {
   source_table: SourceTable;
   source_id: string;
+  metrics: ChartMetric[];
 }
 
 export interface Chart {
@@ -38,7 +40,6 @@ export interface Chart {
   account_id: string;
   name: string;
   type: ChartType;
-  metric: ChartMetric;
   period: PeriodResponse;
   granularity: PeriodResponse;
   sources: SourceResponse[];
@@ -49,7 +50,6 @@ export interface CreateChartRequest {
   account_id: string
   name: string;
   type: ChartType;
-  metric: ChartMetric;
   period: PeriodResponse;
   granularity: PeriodResponse;
   sources: SourceRequest[];
@@ -62,6 +62,7 @@ export interface DataPoint {
   value: number;
   date: string;
   device: DeviceType | null | undefined;
+  metric: ChartMetric;
 }
 
 export interface ChartResponse {

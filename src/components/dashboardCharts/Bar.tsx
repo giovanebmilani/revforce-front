@@ -12,7 +12,8 @@ export function createDashboardBarChartComponent(
   response: ChartResponse,
   chartConfig: ChartConfig
 ) {
-  const entries = treatChartData(response);
+  // Extrai dados E metadados da função de tratamento
+  const { data: entries, metadata } = treatChartData(response);
 
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
@@ -28,12 +29,15 @@ export function createDashboardBarChartComponent(
           cursor={false}
           content={<ChartTooltipContent indicator="dashed" />}
         />
-        {Object.keys(entries[0] || {}).map(
-          (key) =>
-            key !== "identifier" && (
-              <Bar dataKey={key} fill="blue" radius={4} />
-            )
-        )}
+        {Object.keys(metadata).map((key) => (
+          <Bar
+            key={key}
+            dataKey={key}
+            name={metadata[key].friendlyName} // Nome amigável para tooltip
+            fill={metadata[key].color} // Cor consistente
+            radius={4}
+          />
+        ))}
       </BarChart>
     </ChartContainer>
   );
