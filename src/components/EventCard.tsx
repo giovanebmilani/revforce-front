@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell } from "lucide-react";
+import { Bell, Pencil } from "lucide-react";
 import { EventType } from "@/api/events";
 
 const EventCard: React.FC<EventType> = ({
@@ -24,7 +24,18 @@ const EventCard: React.FC<EventType> = ({
           <div className="flex-1">
             <div className="flex justify-between items-baseline">
               <h2 className="text-xl font-bold text-gray-900">{name}</h2>
-              <p className="text-s text-gray-900">{new Date(date).toLocaleDateString("pt-BR")}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-s text-gray-900">
+                  {new Date(date).toLocaleDateString("pt-BR")}
+                </p>
+                <button
+                  onClick={() => { }}
+                  className="p-1 text-gray-600 hover:text-black"
+                  title="Editar"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
             <div className="ml-4 pt-2">
