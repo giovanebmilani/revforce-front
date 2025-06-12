@@ -14,7 +14,7 @@ function Index() {
     if (localStorage.getItem("account_id") === null) {
       localStorage.setItem(
         "account_id",
-        "60887c35-7056-48d7-8fd3-889d33a25124" // Mocked account_id
+        "act_256092648387233" // Mocked account_id
       );
     }
     setIsTransitioning(true);
