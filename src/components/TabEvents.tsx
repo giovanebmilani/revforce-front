@@ -5,7 +5,7 @@ import { EventCreationModal } from "./EventCreationModal";
 import { useDeleteEvent, useListEvents, usePostNewEvent } from "@/api/events";
 import { toast } from "sonner";
 import { Toaster } from "./ui/sonner";
-import EventCard from "./EventCard"; // Importante
+import EventCard from "./EventCard";
 import { EventType } from "@/api/events";
 
 interface TabEventsProps {
@@ -42,6 +42,9 @@ const TabEvents: React.FC<TabEventsProps> = ({ className, chartId }) => {
       onError: () => toast.error("Erro ao deletar o evento!"),
     });
   };
+
+  const sortedEvents = events?.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   return (
     <div
       className={cn(
@@ -69,11 +72,11 @@ const TabEvents: React.FC<TabEventsProps> = ({ className, chartId }) => {
       <div className="flex-1 overflow-x-auto overflow-y-auto pr-2">
         {isLoading && <p className="text-center text-gray-500">Carregando eventos...</p>}
 
-        {!isLoading && events?.length === 0 && (
+        {!isLoading && sortedEvents?.length === 0 && (
           <p className="text-center text-gray-500">Nenhum evento cadastrado.</p>
         )}
-        
-        {events?.map((event: EventType) => (
+
+        {sortedEvents?.map((event: EventType) => (
           <EventCard key={event.id} {...event} onDelete={handleDeleteEvent} />
         ))}
 
