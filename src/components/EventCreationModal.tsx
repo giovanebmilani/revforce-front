@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { format } from "date-fns";
@@ -11,12 +11,15 @@ import { Calendar } from "./ui/calendar";
 interface EventCreationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (event: {
+  onCreate: (event: { name: string; description: string; date: Date; color: string }) => void;
+  onUpdate?: (event: { id: string; name: string; description: string; date: Date; color: string }) => void;
+  initialData?: {
+    id: string;
     name: string;
     description: string;
     date: Date;
     color: string;
-  }) => void;
+  };
 }
 
 const cores = [
@@ -33,29 +36,53 @@ export function EventCreationModal({
   isOpen,
   onClose,
   onCreate,
+  onUpdate,
+  initialData,
 }: EventCreationModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(2024, 6, 1)
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date(2024, 6, 1));
   const [selectedColor, setSelectedColor] = useState(cores[0]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  const handleCreate = () => {
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setName("");
+      setDescription("");
+      setSelectedDate(undefined);
+      setSelectedColor(cores[0]);
+    }
+  }, [isOpen, initialData]);
+
+  useEffect(() => {
+    if (initialData) {
+      setName(initialData.name);
+      setDescription(initialData.description);
+      setSelectedDate(new Date(initialData.date));
+      setSelectedColor(initialData.color);
+    }
+  }, [initialData]);
+
+  const handleSubmit = () => {
     if (!name || !selectedDate) return;
 
-    onCreate({
-      name,
-      description,
-      date: selectedDate,
-      color: selectedColor,
-    });
+    if (initialData && onUpdate) {
+      onUpdate({
+        id: initialData.id,
+        name,
+        description,
+        date: selectedDate,
+        color: selectedColor,
+      });
+    } else {
+      onCreate({
+        name,
+        description,
+        date: selectedDate,
+        color: selectedColor,
+      });
+    }
 
-    setName("");
-    setDescription("");
-    setSelectedDate(undefined);
-    setSelectedColor(cores[0]);
     onClose();
   };
 
@@ -63,7 +90,9 @@ export function EventCreationModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-xl">Criar um evento</DialogTitle>
+          <DialogTitle className="text-xl">
+            {initialData ? "Editar evento" : "Criar um evento"}
+          </DialogTitle>
         </DialogHeader>
         <div className="pl-2 space-y-6 py-4">
           <div className="space-y-1">
@@ -90,29 +119,28 @@ export function EventCreationModal({
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button
-                  variant={"outline"}
+                  variant={"outlinePointer"}
                   className="w-[200px] justify-start font-normal"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mr-3 h-4 w-4" />
                   {selectedDate ? (
                     format(selectedDate, "MMM d, y")
                   ) : (
                     <div className="flex items-center">
                       <span>Data</span>
-                      <ChevronDown className="ml-16 h-4 w-4" />
+                      <ChevronDown className="ml-20 h-4 w-4" />
                     </div>
                   )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <div className="p-1"></div>
                 <Calendar
                   mode="single"
                   defaultMonth={selectedDate}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   numberOfMonths={1}
-                  className="border-0 "
+                  className="border-0"
                   classNames={{
                     head_cell: "text-xs font-normal text-gray-500 w-8 h-8",
                     cell: "text-sm w-8 h-8 py-1",
@@ -123,7 +151,7 @@ export function EventCreationModal({
                 />
                 <div className="flex justify-center gap-2 p-3">
                   <Button
-                    variant="outline"
+                    variant="outlinePointer"
                     size="sm"
                     onClick={() => {
                       setSelectedDate(undefined);
@@ -134,6 +162,7 @@ export function EventCreationModal({
                     Cancelar
                   </Button>
                   <Button
+                    variant="pointer"
                     size="sm"
                     className="h-8 px-3"
                     disabled={!selectedDate}
@@ -154,7 +183,7 @@ export function EventCreationModal({
                 return (
                   <button
                     key={color}
-                    className={`w-6 h-6 rounded-full border-2 transition-all ${isSelected ? "ring-2 ring-offset-2 ring-black" : "border-gray-300"
+                    className={`w-6 h-6 rounded-full border-2 transition-all cursor-pointer ${isSelected ? "ring-2 ring-offset-2 ring-black" : "border-gray-300" 
                       }`}
                     style={{ backgroundColor: color }}
                     onClick={() => setSelectedColor(color)}
@@ -165,10 +194,12 @@ export function EventCreationModal({
           </div>
 
           <div className="flex justify-center gap-2 pt-2">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outlinePointer" onClick={onClose}>
               Cancelar
             </Button>
-            <Button onClick={handleCreate}>Criar</Button>
+            <Button variant="pointer" onClick={handleSubmit}>
+              {initialData ? "Salvar" : "Criar"}
+            </Button>
           </div>
         </div>
       </DialogContent>

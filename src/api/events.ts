@@ -20,8 +20,16 @@ export type CreateEventRequest = {
   color: string
 }
 
+export type UpdateEventRequest = {
+  event_id: string;
+  name: string;
+  description: string;
+  date: string;
+  color: string;
+};
+
 export type EventType = {
-  event_id: string,
+  id: string,
   name: string,
   description: string,
   date: string,
@@ -46,7 +54,6 @@ export const useListEvents = (chartId : string) => {
             },
           }
         );
-        console.log("Response from API:", response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -89,7 +96,7 @@ export const usePostNewEvent = (chart_id : string) => {
   });
 };
 
-export const useDeleteEvent = () => {
+export const useDeleteEvent = (chart_id: string) => {
   return useMutation<string, Error, string>({
     mutationFn: async (eventId: string) => {
       try {
@@ -108,8 +115,14 @@ export const useDeleteEvent = () => {
         }
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`listEvents-${chart_id}`],
+      });
+    },
   });
 };
+
 
 export const useGetEvent = (eventId: string) => {
   return useQuery<EventType, Error>({
@@ -136,5 +149,41 @@ export const useGetEvent = (eventId: string) => {
       }
     },
     refetchOnWindowFocus: true,
+  });
+};
+
+export const useUpdateEvent = (chart_id: string) => {
+  return useMutation<string, Error, UpdateEventRequest>({
+    mutationFn: async (event: UpdateEventRequest) => {
+      try {
+        const response = await axios.put<string>(
+          makeGetEventEndpoint(event.event_id),
+          {
+            name: event.name,
+            description: event.description,
+            date: event.date,
+            color: event.color,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const friendlyMessage = getErrorMessage(error);
+          throw new Error(friendlyMessage);
+        } else {
+          throw new Error("Ocorreu um erro inesperado na aplicação.");
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`listEvents-${chart_id}`],
+      });
+    },
   });
 };
