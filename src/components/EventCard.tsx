@@ -5,6 +5,7 @@ import { EventType } from "@/api/events";
 
 type EventCardProps = EventType & {
   onDelete: (eventId: string) => void;
+  onEdit: (event: EventType) => void;
 };
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -14,6 +15,7 @@ const EventCard: React.FC<EventCardProps> = ({
   description,
   color,
   onDelete,
+  onEdit,
 }) => {
   return (
     <div className="min-w-[300px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-1">
@@ -40,18 +42,18 @@ const EventCard: React.FC<EventCardProps> = ({
                   })}
                 </p>
                 <button
-                  onClick={() => { }}
+                  onClick={() => onEdit({ id, name, date, description, color })}
                   className="p-1 text-gray-600 hover:text-black"
                   title="Editar"
                 >
-                  <Pencil className="h-4 w-4" />
+                  <Pencil className="h-4 w-4 cursor-pointer" />
                 </button>
                 <button
                   onClick={() => onDelete(id)}
                   className="p-1 text-gray-600 hover:text-black"
                   title="Excluir"
                 >
-                  <Trash className="h-4 w-4" />
+                  <Trash className="h-4 w-4 cursor-pointer" />
                 </button>
               </div>
             </div>
