@@ -2,14 +2,21 @@ import React from "react";
 import { Bell, Pencil, Trash } from "lucide-react";
 import { EventType } from "@/api/events";
 
-const EventCard: React.FC<EventType> = ({
+
+type EventCardProps = EventType & {
+  onDelete: (eventId: string) => void;
+};
+
+const EventCard: React.FC<EventCardProps> = ({
+  id,
   name,
   date,
   description,
   color,
+  onDelete,
 }) => {
   return (
-    <div className="min-w-[250px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-4">
+    <div className="min-w-[300px] max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-h-2xl m-1">
       <div className="p-3">
         <div className="flex gap-2">
           <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-lg text-gray-700"
@@ -26,7 +33,11 @@ const EventCard: React.FC<EventType> = ({
               <h2 className="text-xl font-bold text-gray-900">{name}</h2>
               <div className="flex items-center gap-2">
                 <p className="text-s text-gray-900">
-                  {new Date(date).toLocaleDateString("pt-BR")}
+                  {new Date(date).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
+                  })}
                 </p>
                 <button
                   onClick={() => { }}
@@ -36,7 +47,7 @@ const EventCard: React.FC<EventType> = ({
                   <Pencil className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => { }}
+                  onClick={() => onDelete(id)}
                   className="p-1 text-gray-600 hover:text-black"
                   title="Excluir"
                 >

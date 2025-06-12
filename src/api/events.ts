@@ -29,7 +29,7 @@ export type UpdateEventRequest = {
 };
 
 export type EventType = {
-  event_id: string,
+  id: string,
   name: string,
   description: string,
   date: string,
@@ -54,7 +54,6 @@ export const useListEvents = (chartId : string) => {
             },
           }
         );
-        console.log("Response from API:", response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -97,7 +96,7 @@ export const usePostNewEvent = (chart_id : string) => {
   });
 };
 
-export const useDeleteEvent = () => {
+export const useDeleteEvent = (chart_id: string) => {
   return useMutation<string, Error, string>({
     mutationFn: async (eventId: string) => {
       try {
@@ -116,8 +115,14 @@ export const useDeleteEvent = () => {
         }
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`listEvents-${chart_id}`],
+      });
+    },
   });
 };
+
 
 export const useGetEvent = (eventId: string) => {
   return useQuery<EventType, Error>({
