@@ -13,6 +13,7 @@ import { createDashboardLineChartComponent } from "@/components/dashboardCharts/
 import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/Area";
 import { ChartResponse, useListCharts } from "@/api/charts";
 import { useQueryClient } from "@tanstack/react-query";
+import { useGetRefresh, usePostRefresh } from "@/api/refresh";
 
 export const Route = createFileRoute("/revforce/dashboard/")({
   component: DashboardPage,
@@ -44,6 +45,15 @@ const createChartComponent = (response: ChartResponse) => {
 
 const DashboardHeader = () => {
   const queryClient = useQueryClient();
+  const { mutate: getRefresh, data: getRefreshData } = useGetRefresh();
+  const { mutate: postRefresh } = usePostRefresh();
+
+  if (getRefreshData) {
+    const nextRefresh = new Date(getRefreshData.next_refresh_time).getTime();
+    if (Date.now() > nextRefresh) {
+      postRefresh();
+    }
+  }
 
   return (
     <header className="flex flex-row border-b pb-3 justify-between">
@@ -55,6 +65,7 @@ const DashboardHeader = () => {
             queryClient.invalidateQueries({
               queryKey: ["listCharts"],
             });
+            getRefresh();
           }}
         />
         <Link to="/revforce/dashboard/newchart">
