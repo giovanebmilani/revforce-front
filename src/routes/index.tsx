@@ -11,12 +11,10 @@ function Index() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleEnter = () => {
-    if (localStorage.getItem("account_id") === null) {
       localStorage.setItem(
         "account_id",
         "act_256092648387233" // Mocked account_id
       );
-    }
     setIsTransitioning(true);
     setTimeout(() => router.navigate({ to: "/revforce/dashboard" }), 700);
   };
