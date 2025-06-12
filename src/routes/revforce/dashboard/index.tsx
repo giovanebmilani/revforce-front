@@ -14,7 +14,6 @@ import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/
 import { ChartResponse, useListCharts } from "@/api/charts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetRefresh, usePostRefresh } from "@/api/refresh";
-import { get } from "http";
 
 export const Route = createFileRoute("/revforce/dashboard/")({
   component: DashboardPage,
