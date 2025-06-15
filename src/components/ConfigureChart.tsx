@@ -43,6 +43,7 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
     const [sourceClick, setSourceClick] = useState(0);
 
     const { data, isSuccess } = useGetChart(chartId);
+    const { mutate : putChartMutate, isError : putChartError } = usePutChart(chartId);
 
     useEffect(() => {
         if (!isSuccess || !data) return;
@@ -63,6 +64,14 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
         );
 
     }, [isSuccess, data]);
+
+    if (putChartError) {
+        toast.error("Erro ao editar gráfico", {
+            description: <span className="text-red-500">
+                Ocorreu um erro ao editar o gráfico.
+            </span>,
+        });
+    }
 
     const charts = [
         <ChartSelect
@@ -292,8 +301,7 @@ export function ConfigureChart({ chartId }: ConfigureChartProps) {
                 : selectedGranularityType;
 
         try {
-            const a = usePutChart(chartId);
-            a.mutate({
+            putChartMutate({
                 chart: {
                     name: name,
                     type: selectedChart as ChartType,
