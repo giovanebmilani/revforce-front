@@ -14,6 +14,7 @@ import { createDashboardAreaChartComponent } from "@/components/dashboardCharts/
 import { ChartResponse, useListCharts } from "@/api/charts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetRefresh, usePostRefresh } from "@/api/refresh";
+import { useState } from "react";
 
 export const Route = createFileRoute("/revforce/dashboard/")({
   component: DashboardPage,
@@ -47,12 +48,14 @@ const DashboardHeader = () => {
   const queryClient = useQueryClient();
   const { mutate: getRefresh, data: getRefreshData } = useGetRefresh();
   const { mutate: postRefresh } = usePostRefresh();
+  const [refreshed, setRefreshed] = useState(false);
 
-  if (getRefreshData) {
+  if (getRefreshData && !refreshed) {
     const nextRefresh = new Date(getRefreshData.next_refresh_time).getTime();
     if (Date.now() > nextRefresh) {
       postRefresh();
     }
+    setRefreshed(true);
   }
 
   return (

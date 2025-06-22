@@ -221,7 +221,10 @@ function RouteComponent() {
         },
         granularity: {
           type: granularityTypeToSend as PeriodType,
-          amount: selectedChart === 'pizza' ? Number(selectedPeriodAmount) : 1,
+          amount:
+            selectedChart === ChartType.pizza
+              ? Number(selectedPeriodAmount)
+              : 1,
         },
         sources: createSource() as SourceRequest[],
         segment: null,
