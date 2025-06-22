@@ -5,7 +5,7 @@ export default defineConfig({
     baseUrl: "http://localhost:5173",
     chromeWebSecurity: false,
     experimentalModifyObstructiveThirdPartyCode: true,
-    setupNodeEvents(on, config) {
+    setupNodeEvents() {
       // implement node event listeners here
     },
   },
