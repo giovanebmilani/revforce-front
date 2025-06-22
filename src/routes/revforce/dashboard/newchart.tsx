@@ -211,6 +211,7 @@ function RouteComponent() {
         : selectedGranularityType;
 
     try {
+      console.log("Selected Chart:", selectedChart === ChartType.pizza);
       await postNewChart({
         account_id: localStorage.getItem("account_id") || "",
         name: name,
@@ -221,7 +222,10 @@ function RouteComponent() {
         },
         granularity: {
           type: granularityTypeToSend as PeriodType,
-          amount: selectedChart === 'pizza' ? Number(selectedPeriodAmount) : 1,
+          amount:
+            selectedChart === ChartType.pizza
+              ? Number(selectedPeriodAmount)
+              : 1,
         },
         sources: createSource() as SourceRequest[],
         segment: null,
