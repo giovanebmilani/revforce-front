@@ -211,7 +211,6 @@ function RouteComponent() {
         : selectedGranularityType;
 
     try {
-      console.log("Selected Chart:", selectedChart === ChartType.pizza);
       await postNewChart({
         account_id: localStorage.getItem("account_id") || "",
         name: name,
