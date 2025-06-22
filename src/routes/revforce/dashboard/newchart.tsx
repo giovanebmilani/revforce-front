@@ -60,13 +60,7 @@ function RouteComponent() {
       key={ChartType.line}
       type={ChartType.line}
       isSelected={selectedChart === ChartType.line}
-    ></ChartSelect>,
-    <ChartSelect
-      key={ChartType.area}
-      type={ChartType.area}
-      onClick={() => setSelectedChart(ChartType.area)}
-      isSelected={selectedChart === ChartType.area}
-    ></ChartSelect>,
+    ></ChartSelect>
   ];
 
   const { mutateAsync: postNewChart, isPending: isPostNewChartPending } =
