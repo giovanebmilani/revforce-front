@@ -285,7 +285,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div>
+      <div data-testid={"metric-section"}>
         {Array.from({ length: metricClick })
           .slice(0, 3)
           .map((_, index) => (
@@ -381,7 +381,7 @@ function RouteComponent() {
           </Button>
         </div>
 
-        <div>
+        <div data-testid={"source-section"}>
           {Array.from({ length: sourceClick }).map((_, index) => (
             <div key={index} className="mb-5">
               <h3 className="font-medium">Fonte do gráfico {index + 1}</h3>
