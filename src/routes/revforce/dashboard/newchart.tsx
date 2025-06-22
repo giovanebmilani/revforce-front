@@ -71,7 +71,6 @@ function RouteComponent() {
 
   const { mutateAsync: postNewChart, isPending: isPostNewChartPending } =
     usePostNewChart();
-
   const {
     data: getAllCampaigns,
     isLoading: isLoadingAllCampaigns,
@@ -222,7 +221,7 @@ function RouteComponent() {
         },
         granularity: {
           type: granularityTypeToSend as PeriodType,
-          amount: ChartType.pizza ? Number(selectedPeriodAmount) : 1,
+          amount: selectedChart === 'pizza' ? Number(selectedPeriodAmount) : 1,
         },
         sources: createSource() as SourceRequest[],
         segment: null,
