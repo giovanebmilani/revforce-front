@@ -2,12 +2,10 @@ import { Pie, PieChart } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ChartResponse } from "@/api/charts";
+import { ChartMetric, ChartResponse, SourceTable } from "@/api/charts";
 
 interface PieChartDataItem {
   identifier: string;
@@ -15,26 +13,63 @@ interface PieChartDataItem {
   fill: string;
 }
 
+function getRandomColor(): string {
+  const hue = Math.floor(Math.random() * 360);
+  const saturation = Math.floor(Math.random() * 20) + 70;
+  const lightness = Math.floor(Math.random() * 20) + 50;
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+function getSourceName(sourceTable: SourceTable, sourceId: string): string {
+  return sourceTable === "campaign"
+    ? `Campanha #${sourceId}`
+    : `Anúncio #${sourceId}`;
+}
+
+function getMetricName(metricKey: ChartMetric): string {
+  switch (metricKey) {
+    case "impression":
+      return "Impressoes";
+    case "spend":
+      return "Investimento";
+    case "ctr":
+      return "Taxa de Cliques (CTR)";
+    case "click":
+      return "Cliques";
+    default:
+      return metricKey;
+  }
+}
+
 function treatDataForPie(response: ChartResponse): PieChartDataItem[] {
   const pieDict: { [key: string]: number } = {};
+  const itemLabels: { [key: string]: string } = {};
+  const itemColors: { [key: string]: string } = {};
 
-  response.data.forEach((value) => {
-    if (typeof response.chart.segment === "string") {
-      const key = String(value[response.chart.segment] ?? "unknown");
-      if (key in pieDict) {
-        pieDict[key] += value.value;
-      } else {
-        pieDict[key] = value.value;
-      }
+  response.data.forEach((dataPoint) => {
+    const internalKey = `${dataPoint.source_table}-${dataPoint.source_id}-${dataPoint.metric}`;
+    const friendlySourceName = getSourceName(
+      dataPoint.source_table,
+      dataPoint.source_id
+    );
+    const friendlyMetricName = getMetricName(dataPoint.metric);
+    const combinedLabel = `${friendlySourceName} - ${friendlyMetricName}`;
+
+    if (internalKey in pieDict) {
+      pieDict[internalKey] += dataPoint.value;
+    } else {
+      pieDict[internalKey] = dataPoint.value;
+      itemLabels[internalKey] = combinedLabel;
+      itemColors[internalKey] = getRandomColor();
     }
   });
 
   const pieData: PieChartDataItem[] = [];
-  Object.keys(pieDict).forEach((value) => {
+  Object.keys(pieDict).forEach((key) => {
     pieData.push({
-      identifier: value,
-      value: pieDict[value],
-      fill: `var(--color-${value})`,
+      identifier: itemLabels[key],
+      value: pieDict[key],
+      fill: itemColors[key],
     });
   });
 
@@ -46,7 +81,6 @@ export function createDashboardPieChartComponent(
   chartConfig: ChartConfig
 ) {
   const entries = treatDataForPie(response);
-
   return (
     <ChartContainer
       config={chartConfig}
@@ -54,13 +88,8 @@ export function createDashboardPieChartComponent(
     >
       <PieChart>
         <Pie data={entries} dataKey="value" nameKey={"identifier"} />
-        <ChartLegend
-          content={<ChartLegendContent nameKey="identifier" />}
-          className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-        />
         <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={<ChartTooltipContent/>}
         />
       </PieChart>
     </ChartContainer>
