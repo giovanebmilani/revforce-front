@@ -44,12 +44,6 @@ function RouteComponent() {
       isSelected={selectedChart === ChartType.barVertical}
     ></ChartSelect>,
     <ChartSelect
-      onClick={() => setSelectedChart(ChartType.barHorizontal)}
-      key={ChartType.barHorizontal}
-      type={ChartType.barHorizontal}
-      isSelected={selectedChart === ChartType.barHorizontal}
-    ></ChartSelect>,
-    <ChartSelect
       onClick={() => setSelectedChart(ChartType.pizza)}
       key={ChartType.pizza}
       type={ChartType.pizza}
